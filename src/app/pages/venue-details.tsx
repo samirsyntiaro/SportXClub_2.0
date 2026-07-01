@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router";
 import {
   ArrowRight,
@@ -23,6 +23,7 @@ import { Badge } from "../components/ui/badge";
 import { Button } from "../components/ui/button";
 import { Card, CardContent } from "../components/ui/card";
 import { ImageWithFallback } from "../components/figma/ImageWithFallback";
+import { AnimatePresence } from "motion/react";
 
 const asset = (path: string) => `/assets${path}`;
 
@@ -92,6 +93,128 @@ export function VenueDetails() {
   const [selectedSport, setSelectedSport] = useState(venue.sport);
   const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split("T")[0]);
   const [selectedSlot, setSelectedSlot] = useState("7:00 PM - 8:00 PM");
+  const [isMobileBookingOpen, setIsMobileBookingOpen] = useState(false);
+
+  useEffect(() => {
+    if (isMobileBookingOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [isMobileBookingOpen]);
+
+  const renderBookingFlow = (isMobile = false) => (
+    <div className={`flex flex-col space-y-5 h-full overflow-y-auto ${isMobile ? 'px-6 pb-[120px] pt-6' : 'p-6'}`}>
+      <div className="flex items-start justify-between gap-4">
+        <div>
+          <p className="text-xs  uppercase tracking-[0.28em] text-white/45">
+            Booking flow
+          </p>
+          <h2 className="mt-2 text-xl  text-white">Select sport, date, and slot</h2>
+        </div>
+        <div className="flex h-12 w-12 items-center justify-center shrink-0 rounded-full border border-[#6DFF3B]/18 bg-[#6DFF3B]/10">
+          <Calendar className="h-5 w-5 text-[#6DFF3B]" />
+        </div>
+      </div>
+
+      <div className="space-y-3">
+        <p className="text-sm  text-white/78">Select sport</p>
+        <div className="flex flex-wrap gap-2">
+          {["Football", "Cricket", "Basketball"].map((item) => (
+            <button
+              key={item}
+              type="button"
+              onClick={() => setSelectedSport(item)}
+              className={`rounded-full border px-4 py-2 text-sm transition ${
+                selectedSport === item
+                  ? "border-[#6DFF3B]/30 bg-[#6DFF3B]/10 text-[#6DFF3B]"
+                  : "border-white/[0.08] bg-white/[0.03] text-white/68 hover:bg-white/[0.06]"
+              }`}
+            >
+              {item}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <div className="space-y-3">
+        <p className="text-sm  text-white/78">Select date</p>
+        <label className="flex items-center gap-3 rounded-[18px] border border-white/[0.08] bg-white/[0.03] px-4 py-3">
+          <Calendar className="h-4 w-4 text-[#6DFF3B]" />
+          <input
+            type="date"
+            value={selectedDate}
+            onChange={(event) => setSelectedDate(event.target.value)}
+            className="w-full bg-transparent text-sm text-white outline-none"
+          />
+        </label>
+      </div>
+
+      <div className="space-y-3">
+        <p className="text-sm  text-white/78">Select time slot</p>
+        <div className="grid gap-2">
+          {slots.map((slot) => (
+            <button
+              key={slot.time}
+              type="button"
+              disabled={!slot.available}
+              onClick={() => slot.available && setSelectedSlot(slot.time)}
+              className={`flex items-center justify-between rounded-[18px] border px-4 py-3 text-left transition ${
+                !slot.available
+                  ? "cursor-not-allowed border-white/[0.08] bg-white/[0.02] text-white/30"
+                  : selectedSlot === slot.time
+                    ? "border-[#6DFF3B]/30 bg-[#6DFF3B]/10 text-white"
+                    : "border-white/[0.08] bg-white/[0.03] text-white/72 hover:bg-white/[0.06]"
+              }`}
+            >
+              <span className="text-sm">{slot.time}</span>
+              {slot.available ? (
+                <Check className="h-4 w-4 text-[#6DFF3B]" />
+              ) : (
+                <span className="text-xs">Booked</span>
+              )}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <div className="rounded-[20px] border border-[#6DFF3B]/18 bg-[#6DFF3B]/10 p-4">
+        <p className="text-xs uppercase tracking-[0.22em] text-[#6DFF3B]/80">Review booking</p>
+        <div className="mt-3 space-y-2 text-sm text-white/72">
+          <p>{selectedSport}</p>
+          <p>{selectedDate}</p>
+          <p>{selectedSlot}</p>
+        </div>
+      </div>
+
+      <Link to="/payment" className="block">
+        <Button className="h-12 w-full rounded-[18px] bg-[#6DFF3B]  text-[#050505] hover:bg-[#86ff60]">
+          Continue to payment
+          <ArrowRight className="h-4 w-4 ml-2" />
+        </Button>
+      </Link>
+
+      <div className="grid grid-cols-2 gap-3 pb-8">
+        <Button
+          variant="ghost"
+          className="h-11 rounded-[16px] border border-white/[0.08] bg-white/[0.03] text-white hover:bg-white/[0.06]"
+        >
+          <Phone className="h-4 w-4 mr-2" />
+          Call venue
+        </Button>
+        <Button
+          variant="ghost"
+          className="h-11 rounded-[16px] border border-white/[0.08] bg-white/[0.03] text-white hover:bg-white/[0.06]"
+        >
+          <Menu className="h-4 w-4 mr-2" />
+          Compare
+        </Button>
+      </div>
+    </div>
+  );
 
   return (
     <div className="theme-adaptive bg-[#050505] text-white">
@@ -298,115 +421,9 @@ export function VenueDetails() {
             </Card>
           </div>
 
-          <aside className="space-y-4 lg:sticky lg:top-24 lg:self-start">
+          <aside className="hidden space-y-4 lg:sticky lg:top-24 lg:block lg:self-start">
             <Card className="rounded-[28px] border-white/[0.08] bg-[#101216] shadow-[0_18px_56px_-30px_rgba(0,0,0,0.85)]">
-              <CardContent className="space-y-5 p-6">
-                <div className="flex items-start justify-between gap-4">
-                  <div>
-                    <p className="text-xs  uppercase tracking-[0.28em] text-white/45">
-                      Booking flow
-                    </p>
-                    <h2 className="mt-2 text-xl  text-white">Select sport, date, and slot</h2>
-                  </div>
-                  <div className="flex h-12 w-12 items-center justify-center rounded-full border border-[#6DFF3B]/18 bg-[#6DFF3B]/10">
-                    <Calendar className="h-5 w-5 text-[#6DFF3B]" />
-                  </div>
-                </div>
-
-                <div className="space-y-3">
-                  <p className="text-sm  text-white/78">Select sport</p>
-                  <div className="flex flex-wrap gap-2">
-                    {["Football", "Cricket", "Basketball"].map((item) => (
-                      <button
-                        key={item}
-                        type="button"
-                        onClick={() => setSelectedSport(item)}
-                        className={`rounded-full border px-4 py-2 text-sm transition ${
-                          selectedSport === item
-                            ? "border-[#6DFF3B]/30 bg-[#6DFF3B]/10 text-[#6DFF3B]"
-                            : "border-white/[0.08] bg-white/[0.03] text-white/68 hover:bg-white/[0.06]"
-                        }`}
-                      >
-                        {item}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="space-y-3">
-                  <p className="text-sm  text-white/78">Select date</p>
-                  <label className="flex items-center gap-3 rounded-[18px] border border-white/[0.08] bg-white/[0.03] px-4 py-3">
-                    <Calendar className="h-4 w-4 text-[#6DFF3B]" />
-                    <input
-                      type="date"
-                      value={selectedDate}
-                      onChange={(event) => setSelectedDate(event.target.value)}
-                      className="w-full bg-transparent text-sm text-white outline-none"
-                    />
-                  </label>
-                </div>
-
-                <div className="space-y-3">
-                  <p className="text-sm  text-white/78">Select time slot</p>
-                  <div className="grid gap-2">
-                    {slots.map((slot) => (
-                      <button
-                        key={slot.time}
-                        type="button"
-                        disabled={!slot.available}
-                        onClick={() => slot.available && setSelectedSlot(slot.time)}
-                        className={`flex items-center justify-between rounded-[18px] border px-4 py-3 text-left transition ${
-                          !slot.available
-                            ? "cursor-not-allowed border-white/[0.08] bg-white/[0.02] text-white/30"
-                            : selectedSlot === slot.time
-                              ? "border-[#6DFF3B]/30 bg-[#6DFF3B]/10 text-white"
-                              : "border-white/[0.08] bg-white/[0.03] text-white/72 hover:bg-white/[0.06]"
-                        }`}
-                      >
-                        <span className="text-sm">{slot.time}</span>
-                        {slot.available ? (
-                          <Check className="h-4 w-4 text-[#6DFF3B]" />
-                        ) : (
-                          <span className="text-xs">Booked</span>
-                        )}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="rounded-[20px] border border-[#6DFF3B]/18 bg-[#6DFF3B]/10 p-4">
-                  <p className="text-xs uppercase tracking-[0.22em] text-[#6DFF3B]/80">Review booking</p>
-                  <div className="mt-3 space-y-2 text-sm text-white/72">
-                    <p>{selectedSport}</p>
-                    <p>{selectedDate}</p>
-                    <p>{selectedSlot}</p>
-                  </div>
-                </div>
-
-                <Link to="/payment">
-                  <Button className="h-12 w-full rounded-[18px] bg-[#6DFF3B]  text-[#050505] hover:bg-[#86ff60]">
-                    Continue to payment
-                    <ArrowRight className="h-4 w-4" />
-                  </Button>
-                </Link>
-
-                <div className="grid grid-cols-2 gap-3">
-                  <Button
-                    variant="ghost"
-                    className="h-11 rounded-[16px] border border-white/[0.08] bg-white/[0.03] text-white hover:bg-white/[0.06]"
-                  >
-                    <Phone className="h-4 w-4" />
-                    Call venue
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    className="h-11 rounded-[16px] border border-white/[0.08] bg-white/[0.03] text-white hover:bg-white/[0.06]"
-                  >
-                    <Menu className="h-4 w-4" />
-                    Compare
-                  </Button>
-                </div>
-              </CardContent>
+              {renderBookingFlow()}
             </Card>
           </aside>
         </div>
@@ -415,13 +432,43 @@ export function VenueDetails() {
           <div className="mx-auto flex max-w-[1400px] items-center justify-between gap-3">
             <div>
               <p className="text-xs uppercase tracking-[0.24em] text-white/45">Next step</p>
-              <p className="mt-1 text-sm  text-white">Continue to payment</p>
+              <p className="mt-1 text-sm  text-white">Choose your slot</p>
             </div>
-            <Button asChild className="h-11 rounded-[16px] bg-[#6DFF3B] px-5  text-[#050505] hover:bg-[#86ff60]">
-              <Link to="/payment">Book now</Link>
+            <Button
+              className="h-11 rounded-[16px] bg-[#6DFF3B] px-5  text-[#050505] hover:bg-[#86ff60]"
+              onClick={() => setIsMobileBookingOpen(true)}
+            >
+              Book now
             </Button>
           </div>
         </div>
+
+        <AnimatePresence>
+          {isMobileBookingOpen && (
+            <>
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.2 }}
+                className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm lg:hidden"
+                onClick={() => setIsMobileBookingOpen(false)}
+              />
+              <motion.div
+                initial={{ y: "100%" }}
+                animate={{ y: 0 }}
+                exit={{ y: "100%" }}
+                transition={{ type: "spring", damping: 25, stiffness: 200 }}
+                className="fixed inset-x-0 bottom-0 z-50 flex max-h-[85vh] flex-col rounded-t-[28px] border-t border-white/[0.08] bg-[#101216] lg:hidden"
+              >
+                <div className="flex items-center justify-center pt-3 pb-1">
+                  <div className="h-1.5 w-12 rounded-full bg-white/20" />
+                </div>
+                {renderBookingFlow(true)}
+              </motion.div>
+            </>
+          )}
+        </AnimatePresence>
       </div>
     </div>
   );
