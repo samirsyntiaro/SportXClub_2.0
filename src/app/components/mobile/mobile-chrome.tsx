@@ -93,8 +93,6 @@ export function MobileAppBar() {
     { label: "Coaching", to: "/ai-assistant", hasChevron: true },
     { label: "Tournaments", to: "/tournaments", hasChevron: true },
     { label: "Membership", to: "/profile", hasChevron: true },
-    { label: "Owner Dashboard", to: "/owner-dashboard", hasChevron: true },
-    { label: "Admin Panel", to: "/organizer-dashboard", hasChevron: true },
     { label: "Notifications", to: "/dashboard", hasChevron: true, isNotification: true, badge: 3 },
     { label: "Cart", to: "/bookings", hasChevron: true, isCart: true, badge: 2 },
   ];
@@ -220,32 +218,6 @@ export function MobileAppBar() {
                   );
                 })}
 
-                {/* Dark Mode toggle item */}
-                <button
-                  onClick={() => setTheme(isDark ? "light" : "dark")}
-                  className="flex items-center justify-between w-full py-4 px-1 border-b border-border/40 transition-colors duration-150 hover:bg-muted/40 text-left cursor-pointer"
-                >
-                  <div className="flex items-center gap-3">
-                    {isDark ? (
-                      <Moon className="h-5 w-5 text-primary" />
-                    ) : (
-                      <Moon className="h-5 w-5 text-muted-foreground/60" />
-                    )}
-                    <span className="text-sm tracking-wide text-foreground">
-                      Dark Mode
-                    </span>
-                  </div>
-                  {/* Toggle Switch */}
-                  <div className={cn(
-                    "w-9 h-5 rounded-full p-0.5 transition-colors duration-200",
-                    isDark ? "bg-primary" : "bg-muted"
-                  )}>
-                    <div className={cn(
-                      "w-4 h-4 rounded-full bg-white shadow-md transform transition-transform duration-200",
-                      isDark ? "translate-x-4" : "translate-x-0"
-                    )} />
-                  </div>
-                </button>
               </div>
             </motion.div>
           </>

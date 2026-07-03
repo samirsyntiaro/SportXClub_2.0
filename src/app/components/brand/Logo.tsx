@@ -7,14 +7,9 @@ export function Logo({ className, ...props }: HTMLAttributes<HTMLDivElement>) {
   return (
     <div className={cn("relative flex items-center justify-start shrink-0", className)} {...props}>
       <img 
-        src="/assets/icons/SportXClub-light.png" 
+        src="/assets/icons/SportXClub.png" 
         alt="SportXClub" 
-        className="block h-6 md:h-7 w-auto object-contain dark:hidden" 
-      />
-      <img 
-        src="/assets/icons/SportXClub-dark.png" 
-        alt="SportXClub" 
-        className="hidden h-6 md:h-7 w-auto object-contain dark:block" 
+        className="block h-[65px] md:h-[100px] w-auto object-contain mt-[15px] mr-[15px] md:mr-[30px] dark:invert transition-all duration-300" 
       />
     </div>
   );

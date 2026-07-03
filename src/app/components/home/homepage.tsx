@@ -308,8 +308,6 @@ export function Navbar() {
     { label: "Coaching", to: "/ai-assistant", hasChevron: true },
     { label: "Tournaments", to: "/tournaments", hasChevron: true },
     { label: "Membership", to: "/profile", hasChevron: true },
-    { label: "Owner Dashboard", to: "/owner-dashboard", hasChevron: true },
-    { label: "Admin Panel", to: "/organizer-dashboard", hasChevron: true },
     { label: "Cart", to: "/bookings", hasChevron: true, isCart: true, badge: 2 },
   ];
 
@@ -619,32 +617,7 @@ export function Navbar() {
                   );
                 })}
 
-                {/* Dark Mode toggle item */}
-                <button
-                  onClick={() => setTheme(isDark ? "light" : "dark")}
-                  className="flex items-center justify-between w-full py-4 px-3 border-b border-slate-100 dark:border-white/[0.05] transition-colors duration-150 hover:bg-slate-50/50 dark:hover:bg-white/[0.02] text-left cursor-pointer"
-                >
-                  <div className="flex items-center gap-3">
-                    {isDark ? (
-                      <Moon className="h-5 w-5 text-emerald-400" />
-                    ) : (
-                      <Moon className="h-5 w-5 text-slate-400" />
-                    )}
-                    <span className={cn("text-sm tracking-wide", isDark ? "text-white/90" : "text-slate-800")}>
-                      Dark Mode
-                    </span>
-                  </div>
-                  {/* Toggle Switch */}
-                  <div className={cn(
-                    "w-9 h-5 rounded-full p-0.5 transition-colors duration-200",
-                    isDark ? "bg-[#6DFF3B]" : "bg-slate-300"
-                  )}>
-                    <div className={cn(
-                      "w-4 h-4 rounded-full bg-white shadow-md transform transition-transform duration-200",
-                      isDark ? "translate-x-4" : "translate-x-0"
-                    )} />
-                  </div>
-                </button>
+
               </div>
             </motion.div>
           </>
@@ -1740,7 +1713,6 @@ export function Footer() {
             {
               title: "For business",
               links: [
-                { label: "Venue owners", to: "/owner-dashboard" },
                 { label: "Organizers", to: "/organizer-dashboard" },
                 { label: "Dashboard", to: "/dashboard" },
                 { label: "Support", to: "/profile" },
