@@ -1,0 +1,6 @@
+import { RouterProvider } from "react-router";
+import { ThemeProvider } from "./providers/theme-provider";
+import { router } from "./routes";
+export default function App() {
+  return /* @__PURE__ */ React.createElement(ThemeProvider, null, /* @__PURE__ */ React.createElement(RouterProvider, { router }));
+}
