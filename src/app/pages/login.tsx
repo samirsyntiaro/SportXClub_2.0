@@ -24,7 +24,7 @@ import { cn } from "../components/ui/utils";
 export function LoginPage() {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
-  const [loginType, setLoginType] = useState<"player" | "owner" | "admin">("player");
+  const [loginType, setLoginType] = useState<"player" | "owner">("player");
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -58,7 +58,6 @@ export function LoginPage() {
     
     setTimeout(() => {
       if (loginType === "owner") navigate("/owner-dashboard");
-      else if (loginType === "admin") navigate("/admin-dashboard");
       else navigate("/dashboard");
     }, 1500);
   };
@@ -155,7 +154,7 @@ export function LoginPage() {
             <form onSubmit={handleSubmit} className="space-y-4">
               {/* Account Type Selector */}
               <div className="flex p-1 space-x-1 rounded-xl bg-muted/50 border border-border/50">
-                {(["player", "owner", "admin"] as const).map((type) => (
+                {(["player", "owner"] as const).map((type) => (
                   <button
                     key={type}
                     type="button"
@@ -167,13 +166,13 @@ export function LoginPage() {
                         : "text-muted-foreground hover:text-foreground hover:bg-background/50"
                     )}
                   >
-                    {type === "player" ? "Player" : type === "owner" ? "Turf Owner" : "Site Maker"}
+                    {type === "player" ? "Player" : "Turf Owner"}
                   </button>
                 ))}
               </div>
 
               <div className="space-y-1.5">
-                <Label htmlFor="email">{loginType === "admin" ? "Admin Email" : "Email Address"}</Label>
+                <Label htmlFor="email">Email Address</Label>
                 <div className="relative">
                   <Mail className="absolute left-3 top-2.5 h-4.5 w-4.5 text-muted-foreground" />
                   <Input
@@ -274,7 +273,6 @@ export function LoginPage() {
                   setIsSuccess(true);
                   setTimeout(() => {
                     if (loginType === "owner") navigate("/owner-dashboard");
-                    else if (loginType === "admin") navigate("/admin-dashboard");
                     else navigate("/dashboard");
                   }, 1500);
                 }, 1200);
@@ -296,13 +294,6 @@ export function LoginPage() {
                 <Link to="/register" className="text-primary hover:underline">
                   Register your turf
                 </Link>
-              </>
-            ) : loginType === "admin" ? (
-              <>
-                New site maker?{" "}
-                <span className="text-primary hover:underline cursor-pointer">
-                  Contact Super Admin
-                </span>
               </>
             ) : (
               <>
