@@ -17,11 +17,22 @@ function figmaAssetResolver() {
 }
 
 export default defineConfig({
+  esbuild: {
+    loader: 'tsx',
+    include: /src\/.*\.[tj]sx?$/,
+    exclude: [],
+  },
   plugins: [
     figmaAssetResolver(),
     // The React and Tailwind plugins are both required for Make, even if
     // Tailwind is not being actively used – do not remove them
-    react(),
+    react({
+      babel: {
+        parserOpts: {
+          plugins: ['typescript']
+        }
+      }
+    }),
     tailwindcss(),
   ],
   resolve: {
