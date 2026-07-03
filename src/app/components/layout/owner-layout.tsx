@@ -48,7 +48,7 @@ export function OwnerLayout() {
   const SidebarContent = () => (
     <div className="flex flex-col h-full">
       <div className="flex h-16 shrink-0 items-center px-6">
-        <Link to="/owner-dashboard" className="flex items-center gap-2">
+        <Link to="/" className="flex items-center gap-2">
           <Logo />
         </Link>
       </div>
@@ -62,7 +62,7 @@ export function OwnerLayout() {
               key={item.name}
               to={item.href}
               onClick={() => setIsMobileMenuOpen(false)}
-              className={`flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-colors ${
+              className={`flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm transition-colors ${
                 isActive
                   ? "bg-primary/10 text-primary"
                   : "text-muted-foreground hover:bg-accent/50 hover:text-foreground"
@@ -104,7 +104,7 @@ export function OwnerLayout() {
 
           <div className="flex flex-1 gap-x-4 self-stretch lg:gap-x-6">
             <div className="flex flex-1 items-center">
-              <h1 className="text-lg font-semibold capitalize">
+              <h1 className="text-lg capitalize">
                 {ownerNavigation.find(n => location.pathname === n.href || (n.href !== "/owner-dashboard" && location.pathname.startsWith(n.href)))?.name || "Admin Panel"}
               </h1>
             </div>

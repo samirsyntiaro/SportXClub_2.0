@@ -50,7 +50,7 @@ export function TurfList() {
     return (
       <div className="flex h-[400px] flex-col items-center justify-center text-muted-foreground space-y-4">
         <AlertCircle className="h-12 w-12 text-destructive" />
-        <p className="text-lg font-medium text-foreground">Failed to Load Turfs</p>
+        <p className="text-lg text-foreground">Failed to Load Turfs</p>
         <p className="text-sm max-w-md text-center">{error}</p>
         <Button variant="outline" onClick={() => window.location.reload()}>Retry</Button>
       </div>
@@ -66,7 +66,7 @@ export function TurfList() {
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">My Turfs</h1>
+          <h1 className="text-3xl tracking-tight">My Turfs</h1>
           <p className="text-muted-foreground mt-1">Manage your sports venues</p>
         </div>
         <Link to="/owner-dashboard/turfs/add">
@@ -94,7 +94,7 @@ export function TurfList() {
         <Card className="border-border/50 bg-card/50 border-dashed">
           <CardContent className="flex flex-col items-center justify-center py-12 text-center">
             <MapPin className="h-12 w-12 text-muted-foreground mb-4" />
-            <h3 className="text-lg font-semibold">No turfs found</h3>
+            <h3 className="text-lg">No turfs found</h3>
             <p className="text-muted-foreground mt-2 mb-4">
               {searchQuery ? "No turfs match your search criteria." : "You haven't added any turfs yet."}
             </p>
@@ -126,7 +126,7 @@ export function TurfList() {
               <CardContent className="p-5">
                 <div className="flex justify-between items-start mb-2">
                   <div>
-                    <h3 className="font-semibold text-lg line-clamp-1">{turf.name}</h3>
+                    <h3 className=" text-lg line-clamp-1">{turf.name}</h3>
                     <p className="text-sm text-muted-foreground flex items-center gap-1 mt-1">
                       <MapPin className="h-3.5 w-3.5" />
                       {turf.location}
@@ -152,14 +152,14 @@ export function TurfList() {
                 <div className="flex items-center gap-4 mt-4 text-sm">
                   <div className="flex items-center gap-1">
                     <Star className="h-4 w-4 fill-amber-400 text-amber-400" />
-                    <span className="font-medium">{turf.rating}</span>
+                    <span className="">{turf.rating}</span>
                   </div>
                   <div className="w-1 h-1 rounded-full bg-border" />
                   <span className="text-muted-foreground">{turf.sportType}</span>
                 </div>
                 
                 <div className="mt-4 pt-4 border-t border-border/50 flex justify-between items-center">
-                  <span className="font-semibold">₹{turf.price}<span className="text-sm font-normal text-muted-foreground">/hr</span></span>
+                  <span className="">₹{turf.price}<span className="text-sm font-normal text-muted-foreground">/hr</span></span>
                   <Link to={`/owner-dashboard/turfs/${turf.id}/edit`}>
                     <Button variant="secondary" size="sm">Edit</Button>
                   </Link>

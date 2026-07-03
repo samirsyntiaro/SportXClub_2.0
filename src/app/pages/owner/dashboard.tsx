@@ -61,7 +61,7 @@ export function Dashboard() {
     return (
       <div className="flex h-[400px] flex-col items-center justify-center text-muted-foreground space-y-4">
         <AlertCircle className="h-12 w-12 text-destructive" />
-        <p className="text-lg font-medium text-foreground">API Endpoint Missing</p>
+        <p className="text-lg text-foreground">API Endpoint Missing</p>
         <p className="text-sm max-w-md text-center">{error}</p>
         <div className="mt-4 p-4 bg-muted/50 rounded-lg text-sm font-mono text-left w-full max-w-lg overflow-hidden">
           <p className="text-muted-foreground mb-2">// Expected API Response Structure:</p>
@@ -97,7 +97,7 @@ export function Dashboard() {
   return (
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
       <div>
-        <h1 className="text-3xl font-bold tracking-tight">Dashboard Overview</h1>
+        <h1 className="text-3xl tracking-tight">Dashboard Overview</h1>
         <p className="text-muted-foreground mt-2">Monitor your turf performance, bookings, and revenue.</p>
       </div>
 
@@ -137,12 +137,12 @@ export function Dashboard() {
             <Card key={stat.title} className="border-border/50 bg-card/50 backdrop-blur-sm">
               <CardContent className="p-6">
                 <div className="flex items-center justify-between mb-4">
-                  <p className="text-sm font-medium text-muted-foreground">{stat.title}</p>
+                  <p className="text-sm text-muted-foreground">{stat.title}</p>
                   <div className={`flex h-10 w-10 items-center justify-center rounded-full ${stat.bgColor}`}>
                     <Icon className={`h-5 w-5 ${stat.color}`} />
                   </div>
                 </div>
-                <p className="text-2xl font-bold">{stat.value}</p>
+                <p className="text-2xl">{stat.value}</p>
               </CardContent>
             </Card>
           );
@@ -215,7 +215,7 @@ export function Dashboard() {
                       <Activity className="h-5 w-5 text-primary" />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium truncate">{activity.title}</p>
+                      <p className="text-sm truncate">{activity.title}</p>
                       <p className="text-xs text-muted-foreground truncate">{activity.description}</p>
                     </div>
                     <div className="text-xs text-muted-foreground shrink-0">{activity.time}</div>

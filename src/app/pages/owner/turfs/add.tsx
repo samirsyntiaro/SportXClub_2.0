@@ -77,7 +77,7 @@ export function AddTurf() {
           </Button>
         </Link>
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Add New Turf</h1>
+          <h1 className="text-3xl tracking-tight">Add New Turf</h1>
           <p className="text-muted-foreground mt-1">Fill in the details to list your sports venue</p>
         </div>
       </div>
@@ -185,7 +185,7 @@ export function AddTurf() {
                       />
                       <label
                         htmlFor={`amenity-${amenity}`}
-                        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                        className="text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                       >
                         {amenity}
                       </label>
@@ -266,7 +266,7 @@ export function AddTurf() {
                   <div className="p-4 rounded-full bg-primary/10 text-primary mb-2">
                     <Upload className="h-8 w-8" />
                   </div>
-                  <h3 className="font-semibold text-lg">Click to upload photos</h3>
+                  <h3 className=" text-lg">Click to upload photos</h3>
                   <p className="text-sm text-muted-foreground max-w-xs">
                     Support for JPG, PNG. Max file size 5MB.
                   </p>

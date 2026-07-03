@@ -18,10 +18,13 @@ import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
 import { Checkbox } from "../components/ui/checkbox";
+import { Logo } from "../components/brand/Logo";
+import { cn } from "../components/ui/utils";
 
 export function LoginPage() {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
+  const [loginType, setLoginType] = useState<"player" | "owner" | "admin">("player");
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -54,7 +57,9 @@ export function LoginPage() {
     setIsSuccess(true);
     
     setTimeout(() => {
-      navigate("/dashboard");
+      if (loginType === "owner") navigate("/owner-dashboard");
+      else if (loginType === "admin") navigate("/admin-dashboard");
+      else navigate("/dashboard");
     }, 1500);
   };
 
@@ -100,15 +105,10 @@ export function LoginPage() {
 
       {/* HEADER LOGO */}
       <div className="w-full max-w-md flex items-center mb-6 z-10">
-        <Link to="/" className="flex items-center gap-2">
-          <div className="flex h-10 w-10 items-center justify-center rounded-2xl border border-primary/20 bg-primary/10 text-sm  text-primary">
-            SX
-          </div>
-          <div>
-            <p className="text-[0.65rem]  uppercase tracking-[0.28em] text-muted-foreground">
-              SportXClub
-            </p>
-            <p className="text-sm ">Sign In Platform</p>
+        <Link to="/" className="flex items-center gap-3">
+          <Logo />
+          <div className="flex flex-col justify-center">
+            <p className="text-sm">Sign In Platform</p>
           </div>
         </Link>
       </div>
@@ -153,8 +153,27 @@ export function LoginPage() {
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-4">
+              {/* Account Type Selector */}
+              <div className="flex p-1 space-x-1 rounded-xl bg-muted/50 border border-border/50">
+                {(["player", "owner", "admin"] as const).map((type) => (
+                  <button
+                    key={type}
+                    type="button"
+                    onClick={() => setLoginType(type)}
+                    className={cn(
+                      "flex-1 rounded-lg py-2 text-xs transition-all duration-200",
+                      loginType === type
+                        ? "bg-background text-foreground shadow-sm ring-1 ring-border"
+                        : "text-muted-foreground hover:text-foreground hover:bg-background/50"
+                    )}
+                  >
+                    {type === "player" ? "Player" : type === "owner" ? "Turf Owner" : "Site Maker"}
+                  </button>
+                ))}
+              </div>
+
               <div className="space-y-1.5">
-                <Label htmlFor="email">Email Address</Label>
+                <Label htmlFor="email">{loginType === "admin" ? "Admin Email" : "Email Address"}</Label>
                 <div className="relative">
                   <Mail className="absolute left-3 top-2.5 h-4.5 w-4.5 text-muted-foreground" />
                   <Input
@@ -253,7 +272,11 @@ export function LoginPage() {
                 setTimeout(() => {
                   setIsSubmitting(false);
                   setIsSuccess(true);
-                  setTimeout(() => navigate("/dashboard"), 1500);
+                  setTimeout(() => {
+                    if (loginType === "owner") navigate("/owner-dashboard");
+                    else if (loginType === "admin") navigate("/admin-dashboard");
+                    else navigate("/dashboard");
+                  }, 1500);
                 }, 1200);
               }}
               className="w-full h-11 rounded-full border border-border bg-card/30 hover:bg-muted/40 transition-all flex items-center justify-center gap-2.5 "
@@ -267,10 +290,28 @@ export function LoginPage() {
         {/* Form Footer */}
         {!isSuccess && (
           <div className="text-center text-sm text-muted-foreground mt-8 pt-6 border-t border-border/40">
-            Don't have an account yet?{" "}
-            <Link to="/register" className="text-primary  hover:underline">
-              Sign up
-            </Link>
+            {loginType === "owner" ? (
+              <>
+                Want to add your turf to our platform?{" "}
+                <Link to="/register" className="text-primary hover:underline">
+                  Register your turf
+                </Link>
+              </>
+            ) : loginType === "admin" ? (
+              <>
+                New site maker?{" "}
+                <span className="text-primary hover:underline cursor-pointer">
+                  Contact Super Admin
+                </span>
+              </>
+            ) : (
+              <>
+                Don't have an account yet?{" "}
+                <Link to="/register" className="text-primary hover:underline">
+                  Sign up
+                </Link>
+              </>
+            )}
           </div>
         )}
       </div>

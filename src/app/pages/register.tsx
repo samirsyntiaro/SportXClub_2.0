@@ -28,6 +28,8 @@ import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
 import { Badge } from "../components/ui/badge";
+import { Logo } from "../components/brand/Logo";
+import { cn } from "../components/ui/utils";
 
 const sportsOptions = [
   { id: "football", name: "Football", emoji: "⚽", category: "Outdoor" },
@@ -51,7 +53,7 @@ export function RegisterPage() {
     email: "",
     password: "",
     confirmPassword: "",
-    role: "athlete", // athlete | owner | organizer
+    role: "athlete", // athlete | owner | admin
     selectedSports: [] as string[],
     skillLevel: "Intermediate", // Beginner | Intermediate | Pro
     city: "Mumbai",
@@ -147,8 +149,10 @@ export function RegisterPage() {
     setIsSuccess(true);
     
     setTimeout(() => {
-      navigate("/dashboard");
-    }, 3000);
+      if (formData.role === "owner") navigate("/owner-dashboard");
+      else if (formData.role === "admin") navigate("/admin-dashboard");
+      else navigate("/dashboard");
+    }, 1500);
   };
 
   const passwordStrength = getPasswordStrength();
@@ -197,15 +201,10 @@ export function RegisterPage() {
 
       {/* HEADER LOGO */}
       <div className="w-full max-w-xl flex items-center mb-6 z-10">
-        <Link to="/" className="flex items-center gap-2">
-          <div className="flex h-10 w-10 items-center justify-center rounded-2xl border border-primary/20 bg-primary/10 text-sm  text-primary">
-            SX
-          </div>
-          <div>
-            <p className="text-[0.65rem]  uppercase tracking-[0.28em] text-muted-foreground">
-              SportXClub
-            </p>
-            <p className="text-sm ">Register Platform</p>
+        <Link to="/" className="flex items-center gap-3">
+          <Logo />
+          <div className="flex flex-col justify-center">
+            <p className="text-sm">Register Platform</p>
           </div>
         </Link>
       </div>
@@ -319,6 +318,25 @@ export function RegisterPage() {
                 {/* STEP 1: ACCOUNT DETAILS */}
                 {step === 1 && (
                   <div className="space-y-4">
+                    {/* Account Type Selector */}
+                    <div className="flex p-1 space-x-1 rounded-xl bg-muted/50 border border-border/50 mb-2">
+                      {(["athlete", "owner", "admin"] as const).map((type) => (
+                        <button
+                          key={type}
+                          type="button"
+                          onClick={() => handleRoleSelect(type)}
+                          className={cn(
+                            "flex-1 rounded-lg py-2 text-xs transition-all duration-200",
+                            formData.role === type
+                              ? "bg-background text-foreground shadow-sm ring-1 ring-border"
+                              : "text-muted-foreground hover:text-foreground hover:bg-background/50"
+                          )}
+                        >
+                          {type === "athlete" ? "Player" : type === "owner" ? "Turf Owner" : "Site Maker"}
+                        </button>
+                      ))}
+                    </div>
+
                     <div className="space-y-1.5">
                       <Label htmlFor="fullName">Full Name</Label>
                       <div className="relative">
@@ -440,41 +458,6 @@ export function RegisterPage() {
                 {/* STEP 2: PROFILE SETUP (ROLE & SPORTS) */}
                 {step === 2 && (
                   <div className="space-y-5">
-                    {/* Role Selection */}
-                    <div className="space-y-2">
-                      <Label>Select Account Type</Label>
-                      <div className="grid grid-cols-3 gap-2.5">
-                        {[
-                          { id: "athlete", label: "Player", icon: Target, desc: "Book turfs & play" },
-                          { id: "owner", label: "Venue Owner", icon: Building, desc: "List & manage turfs" },
-                          { id: "organizer", label: "Organizer", icon: Trophy, desc: "Host tournaments" },
-                        ].map((role) => {
-                          const Icon = role.icon;
-                          const isSelected = formData.role === role.id;
-                          return (
-                            <button
-                              key={role.id}
-                              type="button"
-                              onClick={() => handleRoleSelect(role.id)}
-                              className={`flex flex-col items-center p-3 rounded-2xl border text-center transition-all ${
-                                isSelected
-                                  ? "border-primary bg-primary/5 ring-2 ring-primary/20 dark:bg-primary/10"
-                                  : "border-border bg-background/40 hover:bg-muted/40"
-                              }`}
-                            >
-                              <div className={`h-8 w-8 rounded-full flex items-center justify-center mb-1.5 ${
-                                isSelected ? "bg-primary/20 text-primary" : "bg-muted text-muted-foreground"
-                              }`}>
-                                  <Icon className="h-4.5 w-4.5" />
-                              </div>
-                              <span className="text-xs  block">{role.label}</span>
-                              <span className="text-[0.62rem] text-muted-foreground mt-0.5 line-clamp-1">{role.desc}</span>
-                            </button>
-                          );
-                        })}
-                      </div>
-                    </div>
-
                     {/* Dynamic Preferences */}
                     {formData.role === "athlete" ? (
                       <>

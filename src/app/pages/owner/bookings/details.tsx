@@ -41,7 +41,7 @@ export function BookingDetails() {
     return (
       <div className="flex h-[400px] flex-col items-center justify-center text-destructive space-y-4">
         <AlertCircle className="h-12 w-12" />
-        <p className="text-lg font-medium">{error}</p>
+        <p className="text-lg">{error}</p>
         <Button variant="outline" onClick={() => window.location.reload()}>Retry</Button>
       </div>
     );
@@ -50,7 +50,7 @@ export function BookingDetails() {
   return (
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
       <div>
-        <h1 className="text-3xl font-bold tracking-tight">Booking Details</h1>
+        <h1 className="text-3xl tracking-tight">Booking Details</h1>
         <p className="text-muted-foreground mt-2">Manage your booking details</p>
       </div>
 

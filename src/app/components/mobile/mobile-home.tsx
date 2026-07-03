@@ -1,5 +1,6 @@
+import { useState, useEffect } from "react";
 import { Link } from "react-router";
-import { motion } from "motion/react";
+import { motion, AnimatePresence } from "motion/react";
 import {
   ArrowRight,
   ChevronRight,
@@ -35,38 +36,6 @@ const sportsCategories = [
   { name: "More", image: asset("/sports/cat-boxmma.webp"), accent: "from-primary/20 to-primary/5" },
 ];
 
-const featuredVenues = [
-  {
-    id: 1,
-    name: "Elite Turf Arena",
-    sport: "Football",
-    location: "Powai, 1.2 km",
-    rating: 4.9,
-    price: "₹1,200",
-    image: asset("/venues/turf-1.webp"),
-    tag: "Top rated",
-  },
-  {
-    id: 2,
-    name: "Metro Sports Park",
-    sport: "Cricket",
-    location: "Bandra, 2.5 km",
-    rating: 4.8,
-    price: "₹950",
-    image: asset("/venues/turf-2.webp"),
-    tag: "Fast slots",
-  },
-  {
-    id: 3,
-    name: "Grand Playfield",
-    sport: "Badminton",
-    location: "Andheri, 3.8 km",
-    rating: 5,
-    price: "₹1,500",
-    image: asset("/venues/turf-3.webp"),
-    tag: "Verified",
-  },
-];
 
 const nearbyTurfs = [
   {
@@ -237,74 +206,6 @@ function SearchBar() {
   );
 }
 
-function VenueCard({
-  venue,
-}: {
-  venue: {
-    id: number;
-    name: string;
-    sport: string;
-    location: string;
-    rating: number;
-    price: string;
-    image: string;
-    tag: string;
-  };
-}) {
-  return (
-    <motion.article
-      whileTap={{ scale: 0.985 }}
-      className="min-w-[84%] overflow-hidden rounded-[24px] border border-border/60 bg-card shadow-[0_12px_30px_-24px_rgba(15,23,42,0.32)]"
-    >
-      <div className="relative aspect-[16/11] overflow-hidden">
-        <ImageWithFallback
-          src={venue.image}
-          alt={venue.name}
-          loading="lazy"
-          decoding="async"
-          className="h-full w-full object-cover"
-        />
-        <div className="absolute inset-0 image-overlay bg-[linear-gradient(180deg,rgba(5,5,5,0.02),rgba(5,5,5,0.62))]" />
-        <button
-          type="button"
-          className="absolute right-3 top-3 flex h-10 w-10 items-center justify-center rounded-full border border-white/15 bg-black/35 text-white backdrop-blur-md"
-          aria-label={`Save ${venue.name}`}
-        >
-          <Heart className="h-4.5 w-4.5" />
-        </button>
-        <Badge className="absolute left-3 top-3 rounded-full border border-primary/20 bg-primary/10 px-3 py-1 text-[0.65rem]  uppercase tracking-[0.18em] text-primary">
-          {venue.tag}
-        </Badge>
-      </div>
-
-      <div className="space-y-4 p-4">
-        <div className="flex items-start justify-between gap-3">
-          <div className="min-w-0">
-            <h3 className="truncate text-base  text-foreground">{venue.name}</h3>
-            <p className="mt-1 text-sm text-muted-foreground">{venue.sport}</p>
-          </div>
-          <div className="inline-flex shrink-0 items-center gap-1 rounded-full border border-amber-500/15 bg-amber-500/10 px-2.5 py-1 text-xs  text-amber-700">
-            <Star className="h-3.5 w-3.5 fill-amber-500 text-amber-500" />
-            {venue.rating.toFixed(1)}
-          </div>
-        </div>
-
-        <div className="flex items-center justify-between gap-3 text-sm text-muted-foreground">
-          <span className="inline-flex items-center gap-1.5">
-            <MapPin className="h-4 w-4 text-primary" />
-            {venue.location}
-          </span>
-          <span className=" text-foreground">{venue.price}/hr</span>
-        </div>
-
-        <Button className="h-11 w-full rounded-[16px] bg-primary  text-primary-foreground shadow-[0_12px_22px_-16px_rgba(34,197,94,0.85)] hover:bg-primary/90">
-          Book now
-          <ChevronRight className="h-4 w-4" />
-        </Button>
-      </div>
-    </motion.article>
-  );
-}
 
 function CarouselCard({
   title,
@@ -343,6 +244,21 @@ function CarouselCard({
 }
 
 export function MobileHomePage() {
+  const [currentBg, setCurrentBg] = useState(0);
+  const bgImages = [
+    asset("/hero/stadium-bg.png"),
+    asset("/venues/turf-1.webp"),
+    asset("/venues/turf-2.webp"),
+    asset("/venues/turf-3.webp"),
+  ];
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentBg((prev) => (prev + 1) % bgImages.length);
+    }, 6000);
+    return () => clearInterval(timer);
+  }, [bgImages.length]);
+
   return (
     <div className="theme-adaptive min-h-dvh bg-background text-foreground">
       <MobileAppBar />
@@ -353,23 +269,38 @@ export function MobileHomePage() {
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.35 }}
-            className="rounded-[28px] border border-primary/10 bg-gradient-to-br from-primary/8 via-background to-background p-4 shadow-[0_18px_40px_-30px_rgba(15,23,42,0.35)]"
+            className="relative overflow-hidden rounded-[28px] p-4 shadow-[0_18px_40px_-30px_rgba(15,23,42,0.35)] min-h-[160px] flex flex-col justify-end"
           >
-            <div className="flex items-start justify-between gap-4">
+            <div className="absolute inset-0 z-0">
+              <AnimatePresence mode="popLayout">
+                <motion.div
+                  key={currentBg}
+                  initial={{ x: "100%", opacity: 1 }}
+                  animate={{ x: 0, opacity: 1 }}
+                  exit={{ x: "-100%", opacity: 1 }}
+                  transition={{ duration: 0.8, ease: "easeInOut" }}
+                  className="absolute inset-0 bg-cover bg-no-repeat bg-center brightness-[0.7] saturate-[1.1]"
+                  style={{ backgroundImage: `url(${bgImages[currentBg]})` }}
+                />
+              </AnimatePresence>
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
+            </div>
+
+            <div className="relative z-10 flex items-start justify-between gap-4">
               <div>
-                <p className="text-xs  uppercase tracking-[0.24em] text-primary">
+                <p className="text-xs uppercase tracking-[0.24em] text-white/90 drop-shadow-md">
                   Good evening
                 </p>
-                <h1 className="mt-2 text-2xl  tracking-tight text-foreground">
+                <h1 className="mt-2 text-2xl tracking-tight text-white drop-shadow-md">
                   Ready for your next game, Rohan?
                 </h1>
-                <div className="mt-3 inline-flex items-center gap-2 rounded-full border border-border/60 bg-background/80 px-3 py-1.5 text-sm text-muted-foreground">
-                  <MapPin className="h-4 w-4 text-primary" />
+                <div className="mt-3 inline-flex items-center gap-2 rounded-full border border-white/20 bg-black/40 px-3 py-1.5 text-sm text-white/90 backdrop-blur-md">
+                  <MapPin className="h-4 w-4 text-[#6DFF3B]" />
                   Mumbai Central
                 </div>
               </div>
 
-              <div className="flex h-14 w-14 items-center justify-center rounded-[22px] border border-primary/15 bg-primary/10 text-primary shadow-sm">
+              <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-[22px] border border-[#6DFF3B]/30 bg-[#6DFF3B]/20 text-[#6DFF3B] shadow-sm backdrop-blur-md">
                 <Sparkles className="h-6 w-6" />
               </div>
             </div>
@@ -388,17 +319,17 @@ export function MobileHomePage() {
                 >
                   <span
                     className={cn(
-                      "flex h-16 w-16 items-center justify-center rounded-full border border-border/60 bg-gradient-to-br shadow-[0_10px_20px_-16px_rgba(15,23,42,0.35)]",
+                      "flex h-[72px] w-[72px] items-center justify-center rounded-[20px] border border-border/60 bg-gradient-to-br shadow-sm transition-all group-hover:shadow-md",
                       item.accent,
                     )}
                   >
-                    <span className="flex h-12 w-12 overflow-hidden rounded-full bg-background/90">
+                    <span className="flex h-[56px] w-[56px] overflow-hidden rounded-xl bg-background/90 relative">
                       <ImageWithFallback
                         src={item.image}
                         alt={item.name}
                         loading="lazy"
                         decoding="async"
-                        className="h-full w-full object-cover"
+                        className="h-full w-full object-cover transition-transform duration-300 hover:scale-110"
                       />
                     </span>
                   </span>
@@ -406,15 +337,6 @@ export function MobileHomePage() {
                     {item.name}
                   </span>
                 </motion.button>
-              ))}
-            </div>
-          </section>
-
-          <section className="space-y-3">
-            <SectionHeader title="Featured venues" />
-            <div className="flex gap-3 overflow-x-auto pb-1 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
-              {featuredVenues.map((venue) => (
-                <VenueCard key={venue.id} venue={venue} />
               ))}
             </div>
           </section>

@@ -105,7 +105,7 @@ export function Layout() {
       <header className="sticky top-0 z-50 hidden border-b border-border/40 bg-background/90 backdrop-blur-xl supports-[backdrop-filter]:bg-background/70 md:block">
         <Container className="flex h-16 items-center justify-between">
           <div className="flex items-center gap-8">
-            <Link to="/dashboard" className="flex items-center gap-2">
+            <Link to="/" className="flex items-center gap-2">
               <Logo />
             </Link>
 
@@ -145,8 +145,9 @@ export function Layout() {
             <ThemeToggleButton className="h-10 w-10" />
 
             <Link to="/profile">
-              <Button variant="ghost" size="icon" className="h-10 w-10" aria-label="View profile">
-                <UserCircle className="h-5 w-5" />
+              <Button variant="ghost" className="h-10 px-3 flex items-center gap-2 rounded-full border border-border/50 bg-background/50 hover:bg-accent/50 transition-all shadow-sm" aria-label="View profile">
+                <UserCircle className="h-5 w-5 text-primary" />
+                <span className="text-sm pr-1">John Doe</span>
               </Button>
             </Link>
           </div>
@@ -163,7 +164,7 @@ export function Layout() {
         transition={{ duration: 0.22, ease: "easeOut" }}
         className="pb-[calc(104px+env(safe-area-inset-bottom))] md:pb-0"
       >
-        <div className="px-0 py-0 md:mx-auto md:max-w-7xl md:px-6 md:py-6 lg:px-8">
+        <div className="px-4 py-5 md:mx-auto md:max-w-7xl md:px-6 md:py-6 lg:px-8">
           <Outlet />
         </div>
       </motion.main>

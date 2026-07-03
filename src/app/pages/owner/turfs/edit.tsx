@@ -100,7 +100,7 @@ export function EditTurf() {
     return (
       <div className="flex h-[400px] flex-col items-center justify-center text-muted-foreground space-y-4">
         <AlertCircle className="h-12 w-12 text-destructive" />
-        <p className="text-lg font-medium text-foreground">Failed to Load</p>
+        <p className="text-lg text-foreground">Failed to Load</p>
         <p className="text-sm max-w-md text-center">{error}</p>
         <Link to="/owner-dashboard/turfs">
           <Button variant="outline">Go Back</Button>
@@ -119,7 +119,7 @@ export function EditTurf() {
             </Button>
           </Link>
           <div>
-            <h1 className="text-3xl font-bold tracking-tight">Edit Turf</h1>
+            <h1 className="text-3xl tracking-tight">Edit Turf</h1>
             <p className="text-muted-foreground mt-1">Update details for your turf</p>
           </div>
         </div>
@@ -181,7 +181,7 @@ export function EditTurf() {
                         checked={selectedAmenities.includes(amenity)}
                         onCheckedChange={(checked) => handleAmenityChange(amenity, checked as boolean)}
                       />
-                      <label htmlFor={`amenity-${amenity}`} className="text-sm font-medium leading-none">
+                      <label htmlFor={`amenity-${amenity}`} className="text-sm leading-none">
                         {amenity}
                       </label>
                     </div>

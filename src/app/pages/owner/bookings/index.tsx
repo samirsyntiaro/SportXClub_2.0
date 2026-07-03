@@ -76,7 +76,7 @@ export function BookingsList() {
     return (
       <div className="flex h-[400px] flex-col items-center justify-center text-muted-foreground space-y-4">
         <AlertCircle className="h-12 w-12 text-destructive" />
-        <p className="text-lg font-medium text-foreground">Failed to Load Bookings</p>
+        <p className="text-lg text-foreground">Failed to Load Bookings</p>
         <p className="text-sm max-w-md text-center">{error}</p>
         <Button variant="outline" onClick={() => window.location.reload()}>Retry</Button>
       </div>
@@ -106,7 +106,7 @@ export function BookingsList() {
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Booking Management</h1>
+          <h1 className="text-3xl tracking-tight">Booking Management</h1>
           <p className="text-muted-foreground mt-1">Manage and track all venue bookings</p>
         </div>
         <div className="flex gap-2">
@@ -147,7 +147,7 @@ export function BookingsList() {
         {filteredData.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-16 text-center text-muted-foreground">
             <Calendar className="h-12 w-12 mb-4 text-muted" />
-            <h3 className="text-lg font-semibold text-foreground">No bookings found</h3>
+            <h3 className="text-lg text-foreground">No bookings found</h3>
             <p className="mt-1">No bookings match the selected filters.</p>
           </div>
         ) : (
@@ -155,34 +155,34 @@ export function BookingsList() {
             <table className="w-full text-sm text-left">
               <thead className="text-xs text-muted-foreground uppercase bg-muted/50 border-b border-border/50">
                 <tr>
-                  <th className="px-6 py-4 font-medium">Booking ID</th>
-                  <th className="px-6 py-4 font-medium">Customer</th>
-                  <th className="px-6 py-4 font-medium">Turf & Sport</th>
-                  <th className="px-6 py-4 font-medium">Date & Time</th>
-                  <th className="px-6 py-4 font-medium">Amount</th>
-                  <th className="px-6 py-4 font-medium">Status</th>
-                  <th className="px-6 py-4 font-medium text-right">Actions</th>
+                  <th className="px-6 py-4">Booking ID</th>
+                  <th className="px-6 py-4">Customer</th>
+                  <th className="px-6 py-4">Turf & Sport</th>
+                  <th className="px-6 py-4">Date & Time</th>
+                  <th className="px-6 py-4">Amount</th>
+                  <th className="px-6 py-4">Status</th>
+                  <th className="px-6 py-4 text-right">Actions</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-border/50">
                 {filteredData.map((booking) => (
                   <tr key={booking.id} className="hover:bg-muted/30 transition-colors">
-                    <td className="px-6 py-4 font-medium">{booking.id}</td>
+                    <td className="px-6 py-4">{booking.id}</td>
                     <td className="px-6 py-4">
                       <div>
-                        <div className="font-medium">{booking.customerName}</div>
+                        <div className="">{booking.customerName}</div>
                         <div className="text-xs text-muted-foreground">{booking.customerPhone}</div>
                       </div>
                     </td>
                     <td className="px-6 py-4">
                       <div>
-                        <div className="font-medium">{booking.turfName}</div>
+                        <div className="">{booking.turfName}</div>
                         <div className="text-xs text-muted-foreground">{booking.sportType}</div>
                       </div>
                     </td>
                     <td className="px-6 py-4">
                       <div>
-                        <div className="flex items-center gap-1.5 font-medium">
+                        <div className="flex items-center gap-1.5">
                           <Calendar className="h-3.5 w-3.5 text-muted-foreground" />
                           {booking.date}
                         </div>
@@ -193,11 +193,11 @@ export function BookingsList() {
                       </div>
                     </td>
                     <td className="px-6 py-4">
-                      <div className="font-medium">₹{booking.amount}</div>
+                      <div className="">₹{booking.amount}</div>
                       <div className="text-xs text-muted-foreground">{booking.paymentStatus}</div>
                     </td>
                     <td className="px-6 py-4">
-                      <Badge variant="outline" className={`border-0 font-medium ${getStatusColor(booking.status)}`}>
+                      <Badge variant="outline" className={`border-0 ${getStatusColor(booking.status)}`}>
                         {booking.status}
                       </Badge>
                     </td>

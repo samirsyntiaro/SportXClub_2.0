@@ -1,12 +1,13 @@
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router";
-import { motion, useInView } from "motion/react";
+import { motion, useInView, AnimatePresence } from "motion/react";
 import { useTheme } from "next-themes";
 import {
   ArrowRight,
   CalendarDays,
   Clock3,
   ChevronDown,
+  ChevronRight,
   Heart,
   Locate,
   MapPin,
@@ -21,7 +22,14 @@ import {
   Facebook,
   Linkedin,
   Twitter,
+  ShoppingCart,
+  Menu,
+  X,
+  Moon,
+  Sun,
 } from "lucide-react";
+
+import { useIsMobile } from "../ui/use-mobile";
 
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
@@ -99,98 +107,6 @@ const events = [
   },
 ];
 
-const featuredVenues = [
-  {
-    id: 1,
-    name: "Elite Turf Arena",
-    location: "Powai, Mumbai",
-    price: "₹1,200/hr",
-    rating: 4.9,
-    reviews: 184,
-    image: asset("/venues/turf-1.webp"),
-    badges: [asset("/venues/badge-top-rated.svg")],
-    amenities: [
-      { icon: asset("/icons/flood-light.svg"), label: "Flood lights" },
-      { icon: asset("/icons/parking.svg"), label: "Parking" },
-      { icon: asset("/icons/verified-badge.svg"), label: "Verified" },
-    ],
-  },
-  {
-    id: 2,
-    name: "Metro Sports Park",
-    location: "Bandra West, Mumbai",
-    price: "₹950/hr",
-    rating: 4.8,
-    reviews: 146,
-    image: asset("/venues/turf-2.webp"),
-    badges: [asset("/venues/badge-new.svg")],
-    amenities: [
-      { icon: asset("/icons/wifi.svg"), label: "Wi-Fi" },
-      { icon: asset("/icons/shower.svg"), label: "Shower" },
-      { icon: asset("/icons/verified-badge.svg"), label: "Verified" },
-    ],
-  },
-  {
-    id: 3,
-    name: "Grand Playfield",
-    location: "Andheri East, Mumbai",
-    price: "₹1,500/hr",
-    rating: 5.0,
-    reviews: 92,
-    image: asset("/venues/turf-3.webp"),
-    badges: [asset("/venues/badge-top-rated.svg")],
-    amenities: [
-      { icon: asset("/icons/flood-light.svg"), label: "Flood lights" },
-      { icon: asset("/icons/parking.svg"), label: "Parking" },
-      { icon: asset("/icons/verified-badge.svg"), label: "Verified" },
-    ],
-  },
-  {
-    id: 4,
-    name: "Victory Greens",
-    location: "Juhu, Mumbai",
-    price: "₹1,050/hr",
-    rating: 4.7,
-    reviews: 128,
-    image: asset("/venues/turf-4.webp"),
-    badges: [asset("/venues/badge-new.svg")],
-    amenities: [
-      { icon: asset("/icons/flood-light.svg"), label: "Flood lights" },
-      { icon: asset("/icons/wifi.svg"), label: "Wi-Fi" },
-      { icon: asset("/icons/verified-badge.svg"), label: "Verified" },
-    ],
-  },
-  {
-    id: 5,
-    name: "Pro Match Grounds",
-    location: "Thane West, Thane",
-    price: "₹800/hr",
-    rating: 4.8,
-    reviews: 101,
-    image: asset("/venues/turf-5.webp"),
-    badges: [asset("/venues/badge-top-rated.svg")],
-    amenities: [
-      { icon: asset("/icons/parking.svg"), label: "Parking" },
-      { icon: asset("/icons/shower.svg"), label: "Shower" },
-      { icon: asset("/icons/verified-badge.svg"), label: "Verified" },
-    ],
-  },
-  {
-    id: 6,
-    name: "Apex Turf Club",
-    location: "Navi Mumbai",
-    price: "₹1,300/hr",
-    rating: 4.9,
-    reviews: 76,
-    image: asset("/venues/turf-6.webp"),
-    badges: [asset("/venues/badge-new.svg")],
-    amenities: [
-      { icon: asset("/icons/flood-light.svg"), label: "Flood lights" },
-      { icon: asset("/icons/wifi.svg"), label: "Wi-Fi" },
-      { icon: asset("/icons/verified-badge.svg"), label: "Verified" },
-    ],
-  },
-];
 
 const tournaments = [
   {
@@ -344,81 +260,192 @@ function SectionHeading({
 export function Navbar() {
   const { resolvedTheme } = useTheme();
   const isDark = resolvedTheme !== "light";
+  const [activeCity, setActiveCity] = useState(() => localStorage.getItem("preferred-city") || "Mumbai");
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [searchValue, setSearchValue] = useState("");
+
+  useEffect(() => {
+    const handleCityChange = (e: Event) => {
+      const customEvent = e as CustomEvent;
+      setActiveCity(customEvent.detail);
+    };
+    window.addEventListener("preferredCityChanged", handleCityChange);
+    return () => window.removeEventListener("preferredCityChanged", handleCityChange);
+  }, []);
+
+  useEffect(() => {
+    if (menuOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [menuOpen]);
+
+  const handleCitySelect = (selected: string) => {
+    localStorage.setItem("preferred-city", selected);
+    setActiveCity(selected);
+    window.dispatchEvent(new CustomEvent("preferredCityChanged", { detail: selected }));
+  };
+
+  const cities = [
+    "Mumbai",
+    "Bengaluru",
+    "Delhi NCR",
+    "Pune",
+    "Chennai",
+    "Hyderabad",
+    "Kolkata",
+    "Ahmedabad",
+    "Jaipur",
+  ];
+
+  const menuItems = [
+    { label: "Turf", to: "/venues", hasChevron: true },
+    { label: "Events", to: "/community", hasChevron: true, isGreen: true },
+    { label: "Coaching", to: "/ai-assistant", hasChevron: true },
+    { label: "Tournaments", to: "/tournaments", hasChevron: true },
+    { label: "Membership", to: "/profile", hasChevron: true },
+    { label: "Owner Dashboard", to: "/owner-dashboard", hasChevron: true },
+    { label: "Admin Panel", to: "/organizer-dashboard", hasChevron: true },
+    { label: "Cart", to: "/bookings", hasChevron: true, isCart: true, badge: 2 },
+  ];
 
   return (
     <header
       className={cn(
-        "sticky top-0 z-50 border-b backdrop-blur-2xl transition-colors duration-200",
+        "sticky top-0 z-50 border-b backdrop-blur-2xl transition-colors duration-200 shadow-sm dark:shadow-[0_4px_30px_rgba(0,0,0,0.6)]",
         isDark
-          ? "border-white/[0.08] bg-[#050505]/92 text-white"
-          : "border-slate-200/80 bg-white/92 text-slate-900 shadow-sm"
+          ? "border-white/[0.08] bg-[#050505]/95 text-white"
+          : "border-slate-200/80 bg-white/95 text-slate-900"
       )}
     >
-      <div className="mx-auto flex max-w-[1400px] items-center justify-between gap-4 px-4 py-4 sm:px-6 lg:px-8">
-        <div className="flex items-center gap-3 sm:gap-5">
-          <Link to="/" className="flex items-center gap-3">
-            <Logo className="h-8 sm:h-9" />
+      <div className="mx-auto flex h-[76px] max-w-[1440px] items-center justify-between gap-4 px-6 lg:px-8">
+        {/* Left Section: Logo */}
+        <div className="flex flex-1 items-center justify-start">
+          <Link to="/" className="flex items-center">
+            <Logo />
           </Link>
         </div>
 
-        <nav className="hidden items-center gap-7 lg:flex">
-          {[
-            { label: "Home", to: "/" },
-            { label: "Explore Turfs", to: "/venues" },
-            { label: "How it works", to: "#how-it-works", isHash: true },
-            { label: "Turf Onboarding", to: "/owner-dashboard" },
-            { label: "About", to: "#about", isHash: true },
-            { label: "Contact", to: "#contact", isHash: true },
-          ].map((item) => {
-            if (item.isHash) {
-              return (
-                <a
-                  key={item.label}
-                  href={item.to}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    document.querySelector(item.to)?.scrollIntoView({ behavior: "smooth" });
-                  }}
-                  className={cn(
-                    "text-[0.92rem] uppercase tracking-wide transition cursor-pointer",
-                    isDark ? "text-white/68 hover:text-white" : "text-slate-600 hover:text-slate-900"
-                  )}
-                >
-                  {item.label}
-                </a>
-              );
-            }
-            return (
-              <Link
-                key={item.label}
-                to={item.to}
-                className={cn(
-                  "text-[0.92rem] uppercase tracking-wide transition",
-                  isDark ? "text-white/68 hover:text-white" : "text-slate-600 hover:text-slate-900"
-                )}
-              >
-                {item.label}
-              </Link>
-            );
-          })}
-        </nav>
-
-        <div className="flex items-center gap-4 sm:gap-6">
-          <Button
-            asChild
-            variant="ghost"
+        {/* Center Section: Sleek Search Bar */}
+        <div className="hidden md:flex items-center justify-center shrink-0 w-full max-w-[400px] lg:max-w-[460px] mx-4 relative">
+          <div
             className={cn(
-              "hidden h-10 rounded-full border px-4 sm:inline-flex uppercase tracking-wide text-xs",
+              "flex items-center w-full rounded-full border px-4 py-2 shadow-sm transition-all duration-200 focus-within:ring-2",
               isDark
-                ? "border-white/[0.08] bg-white/[0.03] text-white/80 hover:bg-white/[0.06] hover:text-white"
-                : "border-slate-200 bg-slate-50 text-slate-700 hover:bg-slate-100 hover:text-slate-900"
+                ? "border-white/[0.08] bg-white/[0.03] focus-within:border-[#6DFF3B]/30 focus-within:ring-[#6DFF3B]/10"
+                : "border-slate-200 bg-[#F1F3F6]/60 hover:bg-[#F1F3F6]/80 focus-within:bg-white focus-within:border-emerald-500/30 focus-within:ring-emerald-500/10"
             )}
           >
-            <Link to="/login">Sign in</Link>
-          </Button>
+            {/* Search Icon */}
+            <Search className={cn("h-4 w-4 shrink-0 mr-2.5", isDark ? "text-[#6DFF3B]" : "text-emerald-600")} />
+
+            {/* Real Search Input */}
+            <input
+              type="text"
+              value={searchValue}
+              onChange={(e) => setSearchValue(e.target.value)}
+              placeholder="Search venues, areas, sports..."
+              className={cn(
+                "w-full bg-transparent border-0 p-0 text-[0.825rem] lg:text-[0.875rem] font-normal outline-none focus:ring-0 focus:outline-none",
+                isDark ? "placeholder:text-white/40 text-white" : "placeholder:text-slate-400 text-slate-800"
+              )}
+            />
+
+            {/* Divider Line */}
+            <div className={cn("h-4 w-[1px] shrink-0 mx-3", isDark ? "bg-white/[0.12]" : "bg-slate-300")} />
+
+            {/* Location Selector (with Dialog Trigger) */}
+            <Dialog>
+              <DialogTrigger asChild>
+                <button className="flex items-center gap-1.5 shrink-0 text-[0.825rem] lg:text-[0.875rem] transition hover:opacity-80 cursor-pointer">
+                  <MapPin className={cn("h-3.5 w-3.5 shrink-0", isDark ? "text-[#6DFF3B]" : "text-emerald-600")} />
+                  <span className={isDark ? "text-white" : "text-slate-700"}>{activeCity === "All" ? "All Cities" : activeCity}</span>
+                  <ChevronDown className={cn("h-3 w-3 shrink-0 transition-transform", isDark ? "text-white/40" : "text-slate-400")} />
+                </button>
+              </DialogTrigger>
+              <DialogContent className={cn("sm:max-w-[425px]", isDark ? "bg-[#101216] border-white/[0.08]" : "bg-white border-slate-200")}>
+                <DialogHeader>
+                  <DialogTitle className={cn(isDark ? "text-white" : "text-slate-900")}>Select your city</DialogTitle>
+                </DialogHeader>
+                <div className="flex flex-col gap-4 mt-2">
+                  <button
+                    type="button"
+                    onClick={() => handleCitySelect("All")}
+                    className={cn(
+                      "flex items-center gap-3 w-full p-3 rounded-xl transition text-left",
+                      isDark
+                        ? "bg-[#6DFF3B]/10 text-[#6DFF3B] hover:bg-[#6DFF3B]/20"
+                        : "bg-emerald-50 text-emerald-700 hover:bg-emerald-100"
+                    )}
+                  >
+                    <Locate className="h-5 w-5" />
+                    <div className="flex flex-col">
+                      <span className=" text-sm">All Cities</span>
+                      <span className={cn("text-xs", isDark ? "text-[#6DFF3B]/70" : "text-emerald-600/70")}>Detect my location</span>
+                    </div>
+                  </button>
+                  <div className="grid grid-cols-3 gap-3 mt-2">
+                    {cities.map((city) => (
+                      <button
+                        key={city}
+                        type="button"
+                        onClick={() => handleCitySelect(city)}
+                        className={cn(
+                          "flex flex-col items-center justify-center p-3 rounded-xl transition text-center gap-2 border",
+                          activeCity === city
+                            ? (isDark ? "border-[#6DFF3B] bg-[#6DFF3B]/5 text-[#6DFF3B]" : "border-emerald-500 bg-emerald-50 text-emerald-700")
+                            : (isDark ? "border-transparent hover:bg-white/[0.04] text-white/80 hover:text-white" : "border-transparent hover:bg-slate-50 text-slate-700 hover:text-slate-900")
+                        )}
+                      >
+                        <MapPin className={cn("h-5 w-5", activeCity === city ? (isDark ? "text-[#6DFF3B]" : "text-emerald-600") : "opacity-50")} />
+                        <span className="text-xs">{city}</span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </DialogContent>
+            </Dialog>
+          </div>
+        </div>
+
+        {/* Right Section: Sign In + Hamburger Menu Toggle */}
+        <div className="flex flex-1 items-center justify-end gap-4">
+          {/* Login Button with green text and green outline */}
+          <Link to="/login">
+            <button
+              className={cn(
+                "flex h-10 items-center justify-center rounded-full border px-5 text-sm tracking-wide transition cursor-pointer hover:bg-opacity-10",
+                isDark
+                  ? "border-[#6DFF3B] text-[#6DFF3B] hover:bg-[#6DFF3B]/10"
+                  : "border-emerald-500 text-emerald-600 hover:bg-emerald-50"
+              )}
+            >
+              Login
+            </button>
+          </Link>
+
+          {/* Hamburger Menu Toggle Button */}
+          <button
+            onClick={() => setMenuOpen(!menuOpen)}
+            className={cn(
+              "flex h-10 w-10 items-center justify-center rounded-full transition duration-200 cursor-pointer",
+              isDark
+                ? "text-white/80 hover:bg-white/[0.08] hover:text-white"
+                : "text-slate-700 hover:bg-slate-100 hover:text-slate-900"
+            )}
+            aria-label="Toggle menu"
+          >
+            {menuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+          </button>
+
+          {/* Theme Toggle Button */}
           <ThemeToggleButton
             className={cn(
-              "hidden h-10 w-10 rounded-full border sm:inline-flex ml-4 sm:ml-8",
+              "flex h-10 w-10 items-center justify-center rounded-full border shadow-sm transition",
               isDark
                 ? "border-white/[0.08] bg-white/[0.03] text-white/80 hover:bg-white/[0.06] hover:text-white"
                 : "border-slate-200 bg-slate-50 text-slate-700 hover:bg-slate-100 hover:text-slate-900"
@@ -427,6 +454,202 @@ export function Navbar() {
           />
         </div>
       </div>
+
+      {/* Mobile/Tablet Search pill (shown only below 'md' screen size) */}
+      <div className="md:hidden px-4 pb-3">
+        <div
+          className={cn(
+            "flex items-center w-full rounded-full border px-4 py-2 shadow-sm transition-all duration-200",
+            isDark
+              ? "border-white/[0.08] bg-white/[0.03] focus-within:border-[#6DFF3B]/30 focus-within:ring-2 focus-within:ring-[#6DFF3B]/10"
+              : "border-slate-200 bg-[#F1F3F6]/60 focus-within:bg-white focus-within:border-emerald-500/30 focus-within:ring-2 focus-within:ring-emerald-500/10"
+          )}
+        >
+          <Search className={cn("h-4 w-4 shrink-0 mr-2.5", isDark ? "text-[#6DFF3B]" : "text-emerald-600")} />
+          <input
+            type="text"
+            value={searchValue}
+            onChange={(e) => setSearchValue(e.target.value)}
+            placeholder="Search venues, sports..."
+            className={cn(
+              "w-full bg-transparent border-0 p-0 text-sm font-normal outline-none focus:ring-0",
+              isDark ? "placeholder:text-white/40 text-white" : "placeholder:text-slate-400 text-slate-800"
+            )}
+          />
+          <div className={cn("h-4 w-[1px] shrink-0 mx-2", isDark ? "bg-white/[0.12]" : "bg-slate-300")} />
+          <Dialog>
+            <DialogTrigger asChild>
+              <button className="flex items-center gap-1 shrink-0 text-xs cursor-pointer">
+                <MapPin className={cn("h-3.5 w-3.5 shrink-0", isDark ? "text-[#6DFF3B]" : "text-emerald-600")} />
+                <span>{activeCity === "All" ? "Cities" : activeCity}</span>
+              </button>
+            </DialogTrigger>
+            <DialogContent className={cn("sm:max-w-[425px]", isDark ? "bg-[#101216] border-white/[0.08]" : "bg-white border-slate-200")}>
+              <DialogHeader>
+                <DialogTitle className={cn(isDark ? "text-white" : "text-slate-900")}>Select your city</DialogTitle>
+              </DialogHeader>
+              <div className="flex flex-col gap-4 mt-2">
+                <button
+                  type="button"
+                  onClick={() => handleCitySelect("All")}
+                  className={cn(
+                    "flex items-center gap-3 w-full p-3 rounded-xl transition text-left",
+                    isDark
+                      ? "bg-[#6DFF3B]/10 text-[#6DFF3B] hover:bg-[#6DFF3B]/20"
+                      : "bg-emerald-50 text-emerald-700 hover:bg-emerald-100"
+                  )}
+                >
+                  <Locate className="h-5 w-5" />
+                  <div className="flex flex-col">
+                    <span className=" text-sm">All Cities</span>
+                    <span className={cn("text-xs", isDark ? "text-[#6DFF3B]/70" : "text-emerald-600/70")}>Detect my location</span>
+                  </div>
+                </button>
+                <div className="grid grid-cols-3 gap-3 mt-2">
+                  {cities.map((city) => (
+                    <button
+                      key={city}
+                      type="button"
+                      onClick={() => handleCitySelect(city)}
+                      className={cn(
+                        "flex flex-col items-center justify-center p-3 rounded-xl transition text-center gap-2 border",
+                        activeCity === city
+                          ? (isDark ? "border-[#6DFF3B] bg-[#6DFF3B]/5 text-[#6DFF3B]" : "border-emerald-500 bg-emerald-50 text-emerald-700")
+                          : (isDark ? "border-transparent hover:bg-white/[0.04] text-white/80 hover:text-white" : "border-transparent hover:bg-slate-50 text-slate-700 hover:text-slate-900")
+                      )}
+                    >
+                      <MapPin className={cn("h-5 w-5", activeCity === city ? (isDark ? "text-[#6DFF3B]" : "text-emerald-600") : "opacity-50")} />
+                      <span className="text-xs">{city}</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </DialogContent>
+          </Dialog>
+        </div>
+      </div>
+
+      {/* Hamburger Dropdown Drawer with AnimatePresence */}
+      <AnimatePresence>
+        {menuOpen && (
+          <>
+            {/* Backdrop */}
+            <div className="fixed inset-0 top-[122px] md:top-[76px] z-40 bg-black/20 backdrop-blur-sm" onClick={() => setMenuOpen(false)} />
+
+            {/* Menu container */}
+            <motion.div
+              initial={{ opacity: 0, y: -15 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -15 }}
+              transition={{ duration: 0.2, ease: "easeOut" }}
+              className={cn(
+                "absolute top-full left-0 right-0 z-50 border-b shadow-xl px-6 py-5 flex flex-col gap-4 max-h-[calc(100vh-140px)] overflow-y-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden",
+                isDark
+                  ? "bg-[#0b0c0e]/98 border-white/[0.08]"
+                  : "bg-white/98 border-slate-200/80"
+              )}
+            >
+              {/* SELECT LOCATION section */}
+              <div className="flex flex-col gap-2 px-3 pt-2">
+                <span className={cn("text-[0.68rem] uppercase tracking-wider text-left", isDark ? "text-white/40" : "text-slate-400")}>
+                  Select Location
+                </span>
+                <div className="flex gap-2 overflow-x-auto pb-2 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+                  {cities.map((city) => (
+                    <button
+                      key={city}
+                      onClick={() => handleCitySelect(city)}
+                      className={cn(
+                        "px-4 py-1.5 rounded-full text-xs whitespace-nowrap transition cursor-pointer border",
+                        activeCity === city
+                          ? (isDark ? "bg-[#6DFF3B]/10 border-[#6DFF3B] text-[#6DFF3B]" : "bg-emerald-50 border-emerald-500 text-emerald-700")
+                          : (isDark ? "bg-white/[0.03] border-white/[0.08] text-white/70 hover:text-white" : "bg-slate-50 border-slate-200 text-slate-600 hover:bg-slate-100")
+                      )}
+                    >
+                      {city}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Menu list items */}
+              <div className="flex flex-col">
+                {menuItems.map((item) => {
+                  const itemContent = (
+                    <div className="flex items-center justify-between w-full py-4 px-3 border-b border-slate-100 dark:border-white/[0.05] transition-colors duration-150 hover:bg-slate-50/50 dark:hover:bg-white/[0.02]">
+                      <div className="flex items-center gap-3">
+                        {item.isCart && (
+                          <ShoppingCart className={cn("h-5 w-5", isDark ? "text-[#6DFF3B]" : "text-emerald-600")} />
+                        )}
+                        <span className={cn(
+                          "text-sm tracking-wide",
+                          item.isGreen
+                            ? (isDark ? "text-[#6DFF3B]" : "text-emerald-600")
+                            : (isDark ? "text-white/90" : "text-slate-800")
+                        )}>
+                          {item.label}
+                        </span>
+                      </div>
+
+                      <div className="flex items-center gap-2">
+                        {item.badge !== undefined && (
+                          <span className={cn(
+                            "flex h-5 w-5 items-center justify-center rounded-full text-[10px] text-white",
+                            isDark ? "bg-[#6DFF3B] text-black" : "bg-emerald-600"
+                          )}>
+                            {item.badge}
+                          </span>
+                        )}
+                        {item.hasChevron && (
+                          <ChevronRight className={cn("h-4 w-4", isDark ? "text-white/20" : "text-slate-300")} />
+                        )}
+                      </div>
+                    </div>
+                  );
+
+                  return (
+                    <Link
+                      key={item.label}
+                      to={item.to}
+                      onClick={() => setMenuOpen(false)}
+                      className="block text-left"
+                    >
+                      {itemContent}
+                    </Link>
+                  );
+                })}
+
+                {/* Dark Mode toggle item */}
+                <button
+                  onClick={() => setTheme(isDark ? "light" : "dark")}
+                  className="flex items-center justify-between w-full py-4 px-3 border-b border-slate-100 dark:border-white/[0.05] transition-colors duration-150 hover:bg-slate-50/50 dark:hover:bg-white/[0.02] text-left cursor-pointer"
+                >
+                  <div className="flex items-center gap-3">
+                    {isDark ? (
+                      <Moon className="h-5 w-5 text-emerald-400" />
+                    ) : (
+                      <Moon className="h-5 w-5 text-slate-400" />
+                    )}
+                    <span className={cn("text-sm tracking-wide", isDark ? "text-white/90" : "text-slate-800")}>
+                      Dark Mode
+                    </span>
+                  </div>
+                  {/* Toggle Switch */}
+                  <div className={cn(
+                    "w-9 h-5 rounded-full p-0.5 transition-colors duration-200",
+                    isDark ? "bg-[#6DFF3B]" : "bg-slate-300"
+                  )}>
+                    <div className={cn(
+                      "w-4 h-4 rounded-full bg-white shadow-md transform transition-transform duration-200",
+                      isDark ? "translate-x-4" : "translate-x-0"
+                    )} />
+                  </div>
+                </button>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
     </header>
   );
 }
@@ -483,7 +706,7 @@ function SearchBar() {
                 >
                   <Locate className="h-5 w-5" />
                   <div className="flex flex-col">
-                    <span className="font-medium text-sm">Detect my location</span>
+                    <span className=" text-sm">Detect my location</span>
                     <span className={cn("text-xs", isDark ? "text-[#6DFF3B]/70" : "text-emerald-600/70")}>Using GPS</span>
                   </div>
                 </button>
@@ -510,7 +733,7 @@ function SearchBar() {
                       )}
                     >
                       <MapPin className="h-5 w-5 opacity-50" />
-                      <span className="text-xs font-medium">{city}</span>
+                      <span className="text-xs">{city}</span>
                     </button>
                   ))}
                 </div>
@@ -651,29 +874,56 @@ function StatsRow() {
   );
 }
 
+
 export function HeroSection() {
   const { resolvedTheme } = useTheme();
   const isDark = resolvedTheme !== "light";
+  const isMobile = useIsMobile();
+  const [currentBg, setCurrentBg] = useState(0);
+
+  const bgImages = isDark
+    ? [
+      "/assets/hero/stadium-bg.png",
+      "/assets/venues/turf-1.webp",
+      "/assets/venues/turf-2.webp",
+      "/assets/venues/turf-3.webp",
+    ]
+    : [
+      "/assets/hero/stadium-light.png",
+      "/assets/venues/turf-1.webp",
+      "/assets/venues/turf-2.webp",
+      "/assets/venues/turf-3.webp",
+    ];
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentBg((prev) => (prev + 1) % bgImages.length);
+    }, 6000);
+    return () => clearInterval(timer);
+  }, [bgImages.length]);
 
   return (
     <section
       className="relative isolate overflow-hidden bg-white dark:bg-[#050505]"
     >
-      <div className="absolute inset-0 -z-20">
-        {/* Light Background Image */}
-        <div
-          className="absolute inset-0 bg-cover bg-no-repeat bg-center bg-[url('/assets/hero/stadium-light.png')] dark:hidden opacity-100 brightness-[0.94] contrast-[1.08] saturate-[1.05]"
-        />
-        {/* Dark Background Image */}
-        <div
-          className="absolute inset-0 bg-cover bg-no-repeat bg-center bg-[url('/assets/hero/stadium-bg.png')] hidden dark:block"
-        />
+      <div className="absolute inset-0 -z-20 overflow-hidden">
+        <AnimatePresence mode="popLayout">
+          <motion.div
+            key={currentBg}
+            initial={isMobile ? { x: "100%", opacity: 1 } : { opacity: 0 }}
+            animate={isMobile ? { x: 0, opacity: 1 } : { opacity: 1 }}
+            exit={isMobile ? { x: "-100%", opacity: 1 } : { opacity: 0 }}
+            transition={{ duration: 1.2, ease: "easeInOut" }}
+            className="absolute inset-0 bg-cover bg-no-repeat bg-center brightness-100 contrast-[1.02] saturate-[1.05]"
+            style={{ backgroundImage: `url(${bgImages[currentBg]})` }}
+          />
+        </AnimatePresence>
 
         {/* Light Overlay Gradients */}
         <div
           className="absolute inset-0 dark:hidden"
           style={{
-            backgroundImage: "linear-gradient(90deg, rgba(255,255,255,0.7) 0%, rgba(255,255,255,0.15) 50%, transparent 100%)",
+            backgroundImage: "linear-gradient(90deg, rgba(255,255,255,0.75) 0%, rgba(255,255,255,0.28) 45%, transparent 85%)",
           }}
         />
 
@@ -681,22 +931,23 @@ export function HeroSection() {
         <div
           className="absolute inset-0 hidden dark:block"
           style={{
-            backgroundImage: "linear-gradient(90deg,rgba(0,0,0,0.82)_0%,rgba(0,0,0,0.76)_34%,rgba(0,0,0,0.34)_100%)",
+            backgroundImage: "linear-gradient(90deg, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.4) 45%, transparent 85%)",
           }}
         />
         <div
           className="absolute inset-0 hidden dark:block"
           style={{
-            backgroundImage: "linear-gradient(180deg,rgba(0,0,0,0.1)_0%,rgba(0,0,0,0.34)_56%,rgba(0,0,0,0.64)_100%)",
+            backgroundImage: "linear-gradient(180deg,rgba(0,0,0,0.2)_0%,rgba(0,0,0,0.4)_56%,rgba(0,0,0,0.75)_100%)",
           }}
         />
         <div
           className="absolute inset-0 hidden dark:block"
           style={{
-            backgroundImage: "radial-gradient(circle at 88% 88%, rgba(109,255,59,0.1), transparent 30%)",
+            backgroundImage: "radial-gradient(circle at 88% 88%, rgba(109,255,59,0.12), transparent 35%)",
           }}
         />
       </div>
+
       <img
         src={asset("/hero/hero-overlay-pattern.svg")}
         alt=""
@@ -710,77 +961,78 @@ export function HeroSection() {
       <div className="mx-auto flex min-h-[92svh] max-w-[1200px] flex-col justify-center items-start px-4 py-10 sm:px-6 md:min-h-[94svh] md:py-14 lg:px-8 lg:py-16 xl:min-h-[96svh]">
         <div className="relative w-full max-w-4xl">
           <div className="relative z-10 flex flex-col items-start text-left">
-          <div className="flex justify-start">
-            <Badge
+            <div className="flex justify-start">
+              <Badge
+                className={cn(
+                  "rounded-full px-4 py-2 text-xs  uppercase tracking-[0.26em]",
+                  isDark ? "border border-[#6DFF3B]/20 bg-[#6DFF3B]/10 text-[#6DFF3B]" : "border border-emerald-500/30 bg-emerald-500/10 text-emerald-700"
+                )}
+              >
+                Premium sports booking
+              </Badge>
+            </div>
+
+            <h1
               className={cn(
-                "rounded-full px-4 py-2 text-xs  uppercase tracking-[0.26em]",
-                isDark ? "border border-[#6DFF3B]/20 bg-[#6DFF3B]/10 text-[#6DFF3B]" : "border border-emerald-500/30 bg-emerald-500/10 text-emerald-700"
+                "mt-6 font-normal max-w-2xl text-left text-4xl sm:text-6xl tracking-tight lg:text-[4.8rem] lg:leading-[1.05]",
+                isDark ? "text-white" : "text-slate-900"
               )}
             >
-              Premium sports booking
-            </Badge>
-          </div>
+              Play. Book. <span className={cn(isDark ? "text-[#6DFF3B] drop-shadow-[0_0_20px_rgba(109,255,59,0.18)]" : "text-[#16A34A]")}>
+                Compete.
+              </span>
+            </h1>
 
-          <h1
-            className={cn(
-              "mt-6 max-w-2xl text-left text-4xl sm:text-6xl tracking-tight lg:text-[4.8rem] lg:leading-[1.05]",
-              isDark ? "text-white" : "text-slate-900"
-            )}
-          >
-            Play. Book. <span className={cn(isDark ? "text-[#6DFF3B] drop-shadow-[0_0_20px_rgba(109,255,59,0.18)]" : "text-[#16A34A]")}>
-              Compete.
-            </span>
-          </h1>
+            <p
+              className={cn(
+                "mt-6 max-w-2xl text-left text-base sm:text-lg",
+                isDark ? "leading-8 text-white/68" : "leading-[1.7] text-slate-700"
+              )}
+            >
+              Discover elite turf venues, tournaments, and community sessions on a booking flow
+              designed to feel premium from the first tap to the final confirmation.
+            </p>
 
-          <p 
-            className={cn(
-              "mt-6 max-w-2xl text-left text-base sm:text-lg", 
-              isDark ? "leading-8 text-white/68" : "leading-[1.7] text-slate-700"
-            )}
-          >
-            Discover elite turf venues, tournaments, and community sessions on a booking flow
-            designed to feel premium from the first tap to the final confirmation.
-          </p>
-
-          {/* Social Links Row */}
-          <div className="mt-6 flex flex-wrap items-center justify-start gap-4">
-            <span className={cn("text-xs  uppercase tracking-widest", isDark ? "text-white/60" : "text-slate-600")}>Connect with us:</span>
-            <div className="flex items-center gap-2.5">
-              {[
-                { name: "Instagram", icon: Instagram, href: "https://instagram.com" },
-                { name: "Facebook", icon: Facebook, href: "https://facebook.com" },
-                { name: "LinkedIn", icon: Linkedin, href: "https://linkedin.com" },
-                { name: "Twitter", icon: Twitter, href: "https://twitter.com" },
-              ].map((social) => {
-                const Icon = social.icon;
-                return (
-                  <a
-                    key={social.name}
-                    href={social.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className={cn(
-                      "flex h-9.5 w-9.5 items-center justify-center rounded-xl border transition-all duration-300 shadow-xs",
-                      isDark
-                        ? "border-white/[0.08] bg-white/[0.03] text-white/60 hover:bg-[#6DFF3B]/10 hover:text-[#6DFF3B] hover:border-[#6DFF3B]/30 hover:shadow-[0_0_15px_rgba(109,255,59,0.15)]"
-                        : "border-slate-200 bg-slate-50 text-slate-500 hover:bg-emerald-50 hover:text-emerald-600 hover:border-emerald-200 hover:shadow-[0_0_15px_rgba(16,185,129,0.15)]"
-                    )}
-                    aria-label={social.name}
-                  >
-                    <Icon className="h-4.5 w-4.5" />
-                  </a>
-                );
-              })}
+            {/* Social Links Row */}
+            <div className="mt-6 flex flex-wrap items-center justify-start gap-4">
+              <span className={cn("text-xs  uppercase tracking-widest", isDark ? "text-white/60" : "text-slate-600")}>Connect with us:</span>
+              <div className="flex items-center gap-2.5">
+                {[
+                  { name: "Instagram", icon: Instagram, href: "https://instagram.com" },
+                  { name: "Facebook", icon: Facebook, href: "https://facebook.com" },
+                  { name: "LinkedIn", icon: Linkedin, href: "https://linkedin.com" },
+                  { name: "Twitter", icon: Twitter, href: "https://twitter.com" },
+                ].map((social) => {
+                  const Icon = social.icon;
+                  return (
+                    <a
+                      key={social.name}
+                      href={social.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={cn(
+                        "flex h-9.5 w-9.5 items-center justify-center rounded-xl border transition-all duration-300 shadow-xs",
+                        isDark
+                          ? "border-white/[0.08] bg-white/[0.03] text-white/60 hover:bg-[#6DFF3B]/10 hover:text-[#6DFF3B] hover:border-[#6DFF3B]/30 hover:shadow-[0_0_15px_rgba(109,255,59,0.15)]"
+                          : "border-slate-200 bg-slate-50 text-slate-500 hover:bg-emerald-50 hover:text-emerald-600 hover:border-emerald-200 hover:shadow-[0_0_15px_rgba(16,185,129,0.15)]"
+                      )}
+                      aria-label={social.name}
+                    >
+                      <Icon className="h-4.5 w-4.5" />
+                    </a>
+                  );
+                })}
+              </div>
             </div>
-          </div>
 
-          <div className="mt-8 w-full">
-            <SearchBar />
-          </div>
-
+            <div className="mt-8 w-full">
+              <SearchBar />
+            </div>
           </div>
         </div>
       </div>
+
+
     </section>
   );
 }
@@ -811,8 +1063,8 @@ function SportCard({
       <Link to="/venues" className="block">
         <div className={cn(
           "relative aspect-[4/5] overflow-hidden rounded-3xl border transition-all duration-300 ease-out",
-          isDark 
-            ? "border-white/[0.08] bg-[#101216]" 
+          isDark
+            ? "border-white/[0.08] bg-[#101216]"
             : "border-slate-300 bg-white shadow-sm hover:shadow-2xl hover:border-emerald-500/20"
         )}>
           <ImageWithFallback
@@ -823,7 +1075,7 @@ function SportCard({
               !isDark && "brightness-[1.05] contrast-[1.08] saturate-[1.08]"
             )}
           />
-          <div 
+          <div
             className="absolute inset-0 transition-all duration-300 ease-out opacity-100 group-hover:opacity-95"
             style={{
               background: isDark
@@ -843,8 +1095,8 @@ function SportCard({
               )}>{count}</p>
               <div className={cn(
                 "flex h-10 w-10 items-center justify-center rounded-full border transition-all duration-300 ease-out",
-                isDark 
-                  ? "border-white/[0.08] bg-white/[0.08] text-[#6DFF3B] group-hover:bg-[#6DFF3B] group-hover:text-[#050505]" 
+                isDark
+                  ? "border-white/[0.08] bg-white/[0.08] text-[#6DFF3B] group-hover:bg-[#6DFF3B] group-hover:text-[#050505]"
                   : "border-emerald-600/30 bg-white text-emerald-600 shadow-sm hover:scale-110 hover:bg-emerald-600 hover:text-white hover:border-emerald-600 hover:shadow-md hover:shadow-emerald-500/20"
               )}>
                 <ArrowRight className="h-4 w-4" />
@@ -873,8 +1125,8 @@ function MoreSportsCard() {
       <Link to="/venues" className="block h-full">
         <div className={cn(
           "relative flex h-full min-h-[280px] overflow-hidden rounded-3xl border transition-all duration-300 ease-out",
-          isDark 
-            ? "border-white/[0.08] bg-[#101216]" 
+          isDark
+            ? "border-white/[0.08] bg-[#101216]"
             : "border-slate-300 bg-white shadow-sm hover:shadow-2xl hover:border-emerald-500/20"
         )}>
           <div className="absolute inset-0 grid grid-cols-2 gap-[1px] opacity-80 transition duration-500 ease-out group-hover:scale-[1.06]">
@@ -890,7 +1142,7 @@ function MoreSportsCard() {
               />
             ))}
           </div>
-          <div 
+          <div
             className="absolute inset-0 transition-all duration-300 ease-out"
             style={{
               background: isDark
@@ -902,16 +1154,16 @@ function MoreSportsCard() {
             <div className="flex items-center justify-between">
               <Badge className={cn(
                 "rounded-full border px-3 py-1 text-[0.7rem]  uppercase tracking-[0.2em] transition-all duration-300",
-                isDark 
-                  ? "border-white/[0.08] bg-white/[0.06] text-white/80" 
+                isDark
+                  ? "border-white/[0.08] bg-white/[0.06] text-white/80"
                   : "border-emerald-200 bg-emerald-50 text-emerald-700"
               )}>
                 More
               </Badge>
               <div className={cn(
                 "flex h-10 w-10 items-center justify-center rounded-full border transition-all duration-300 ease-out",
-                isDark 
-                  ? "border-white/[0.08] bg-[#050505]/70 text-[#6DFF3B]" 
+                isDark
+                  ? "border-white/[0.08] bg-[#050505]/70 text-[#6DFF3B]"
                   : "border-emerald-600/30 bg-white text-emerald-600 shadow-sm hover:scale-110 hover:bg-emerald-600 hover:text-white hover:border-emerald-600 hover:shadow-md hover:shadow-emerald-500/20"
               )}>
                 <ArrowRight className="h-4 w-4" />
@@ -937,8 +1189,8 @@ function MoreSportsCard() {
                     key={label}
                     className={cn(
                       "rounded-full border px-3 py-1 text-xs  transition-all duration-300",
-                      isDark 
-                        ? "border-white/[0.08] bg-white/[0.05] text-white/72" 
+                      isDark
+                        ? "border-white/[0.08] bg-white/[0.05] text-white/72"
                         : "border-slate-200 bg-slate-50/80 text-slate-700"
                     )}
                   >
@@ -1287,243 +1539,8 @@ export function DiscoveryRails() {
   );
 }
 
-function VenueCard({
-  venue,
-  index,
-}: {
-  venue: (typeof featuredVenues)[number];
-  index: number;
-}) {
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 18 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.3 }}
-      transition={{ duration: 0.45, delay: index * 0.05 }}
-      whileHover={{ y: -6 }}
-    >
-      <div className="group h-full overflow-hidden rounded-[24px] border border-white/[0.08] bg-[#101216] shadow-[0_18px_60px_-30px_rgba(0,0,0,0.85)]">
-        <Link to={`/venues/${venue.id}`} className="block">
-          <div className="relative aspect-[4/3] overflow-hidden">
-            <ImageWithFallback
-              src={venue.image}
-              alt={venue.name}
-              className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
-            />
-            <div className="absolute inset-0 image-overlay bg-[linear-gradient(180deg,rgba(5,5,5,0.03),rgba(5,5,5,0.6))]" />
-            <div className="absolute left-4 top-4 flex items-center gap-2">
-              {venue.badges.map((badge) => (
-                <img key={badge} src={badge} alt="" aria-hidden="true" className="h-6 w-6" />
-              ))}
-            </div>
-            <button
-              type="button"
-              aria-label={`Save ${venue.name}`}
-              className="absolute right-4 top-4 flex h-10 w-10 items-center justify-center rounded-full border border-white/[0.08] bg-[#050505]/70 text-white/75 transition hover:bg-[#050505]/90 hover:text-white"
-            >
-              <Heart className="h-4 w-4" />
-            </button>
-            <div className="absolute left-4 bottom-4 rounded-full border border-[#6DFF3B]/18 bg-[#6DFF3B] px-3 py-1.5 text-xs  text-[#050505]">
-              {venue.price}
-            </div>
-          </div>
-        </Link>
 
-        <CardContent className="flex h-full flex-col gap-4 p-5">
-          <div className="flex items-start justify-between gap-3">
-            <div>
-              <h3 className="text-lg  text-white">{venue.name}</h3>
-              <div className="mt-2 flex items-center gap-2 text-sm text-white/58">
-                <MapPin className="h-4 w-4" />
-                <span>{venue.location}</span>
-              </div>
-            </div>
-            <div className="flex items-center gap-1 rounded-full border border-white/[0.08] bg-white/[0.04] px-3 py-1.5 text-sm text-white">
-              <Star className="h-4 w-4 fill-[#6DFF3B] text-[#6DFF3B]" />
-              <span>{venue.rating.toFixed(1)}</span>
-              <span className="text-white/45">({venue.reviews})</span>
-            </div>
-          </div>
 
-          <div className="grid grid-cols-3 gap-2">
-            {venue.amenities.map((item) => (
-              <div
-                key={item.label}
-                className="flex flex-col items-start gap-2 rounded-[18px] border border-white/[0.08] bg-white/[0.03] p-3"
-              >
-                <img src={item.icon} alt="" aria-hidden="true" className="h-4 w-4" />
-                <span className="text-xs  text-white/62">{item.label}</span>
-              </div>
-            ))}
-          </div>
-
-          <div className="mt-auto flex items-center gap-3">
-            <Button asChild className="h-11 flex-1 rounded-[16px] bg-[#6DFF3B] text-sm  text-[#050505] hover:bg-[#86ff60]">
-              <Link to={`/venues/${venue.id}`}>Book now</Link>
-            </Button>
-            <Button
-              asChild
-              variant="ghost"
-              className="h-11 rounded-[16px] border border-white/[0.08] bg-white/[0.04] px-4 text-white hover:bg-white/[0.08]"
-            >
-              <Link to={`/venues/${venue.id}`}>Details</Link>
-            </Button>
-          </div>
-        </CardContent>
-      </div>
-    </motion.div>
-  );
-}
-
-function TournamentSidebar() {
-  return (
-    <Card className="overflow-hidden rounded-[26px] border-white/[0.08] bg-[#101216] shadow-[0_18px_60px_-30px_rgba(0,0,0,0.85)]">
-      <div className="relative aspect-[16/11] overflow-hidden">
-        <ImageWithFallback
-          src={tournaments[0].image}
-          alt={tournaments[0].title}
-          className="h-full w-full object-cover"
-        />
-        <div className="absolute inset-0 image-overlay bg-[linear-gradient(180deg,rgba(5,5,5,0.02),rgba(5,5,5,0.78))]" />
-        <div className="absolute left-4 top-4 rounded-full border border-[#6DFF3B]/20 bg-[#6DFF3B]/10 px-3 py-1 text-xs  uppercase tracking-[0.22em] text-[#6DFF3B]">
-          Upcoming tournament
-        </div>
-        <div className="absolute right-4 top-4 rounded-full border border-white/[0.08] bg-[#050505]/70 px-3 py-1 text-xs  text-white/80">
-          12 teams
-        </div>
-      </div>
-
-      <CardContent className="space-y-5 p-5">
-        <div className="flex items-start justify-between gap-3">
-          <div>
-            <h3 className="text-xl  text-white">{tournaments[0].title}</h3>
-            <div className="mt-3 space-y-2 text-sm text-white/58">
-              <div className="flex items-center gap-2">
-                <CalendarDays className="h-4 w-4" />
-                <span>{tournaments[0].date}</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Clock3 className="h-4 w-4" />
-                <span>{tournaments[0].time}</span>
-              </div>
-            </div>
-          </div>
-          <div className="flex h-14 w-14 items-center justify-center rounded-full border border-[#6DFF3B]/18 bg-[#6DFF3B]/10">
-            <Trophy className="h-6 w-6 text-[#6DFF3B]" />
-          </div>
-        </div>
-
-        <div className="rounded-[20px] border border-white/[0.08] bg-white/[0.03] p-4">
-          <p className="text-xs uppercase tracking-[0.22em] text-white/45">Prize pool</p>
-          <p className="mt-2 text-2xl  text-white">{tournaments[0].prize}</p>
-        </div>
-
-        <Button asChild className="h-12 w-full rounded-[18px] bg-[#6DFF3B] text-[#050505] hover:bg-[#86ff60]">
-          <Link to="/tournaments">Register now</Link>
-        </Button>
-
-        <div className="space-y-3">
-          {tournaments.slice(1).map((tournament) => (
-            <Link key={tournament.title} to="/tournaments" className="block">
-              <div className="flex gap-3 rounded-[18px] border border-white/[0.08] bg-white/[0.03] p-3 transition hover:border-[#6DFF3B]/25 hover:bg-white/[0.05]">
-                <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-[16px]">
-                  <ImageWithFallback
-                    src={tournament.image}
-                    alt={tournament.title}
-                    className="h-full w-full object-cover"
-                  />
-                </div>
-                <div className="min-w-0 flex-1">
-                  <div className="flex items-start justify-between gap-2">
-                    <p className="truncate text-sm  text-white">{tournament.title}</p>
-                    <ArrowRight className="mt-0.5 h-4 w-4 shrink-0 text-white/35" />
-                  </div>
-                  <div className="mt-2 flex items-center gap-3 text-xs text-white/55">
-                    <span className="inline-flex items-center gap-1">
-                      <CalendarDays className="h-3.5 w-3.5" />
-                      {tournament.date}
-                    </span>
-                    <span className="inline-flex items-center gap-1">
-                      <Clock3 className="h-3.5 w-3.5" />
-                      {tournament.time}
-                    </span>
-                  </div>
-                  <p className="mt-2 text-xs  text-[#6DFF3B]">{tournament.prize}</p>
-                </div>
-              </div>
-            </Link>
-          ))}
-        </div>
-      </CardContent>
-    </Card>
-  );
-}
-
-export function FeaturedVenues() {
-  const [activeCity, setActiveCity] = useState(() => localStorage.getItem("preferred-city") || "All");
-
-  useEffect(() => {
-    const handleCityChange = (e: Event) => {
-      const customEvent = e as CustomEvent;
-      setActiveCity(customEvent.detail);
-    };
-    window.addEventListener("preferredCityChanged", handleCityChange);
-    return () => window.removeEventListener("preferredCityChanged", handleCityChange);
-  }, []);
-
-  const filtered = featuredVenues.filter((venue) => {
-    if (activeCity === "All") return true;
-    const isThane = venue.location.toLowerCase().includes("thane");
-    const isNavi = venue.location.toLowerCase().includes("navi");
-    if (activeCity === "Thane") return isThane;
-    if (activeCity === "Navi Mumbai") return isNavi;
-    return !isThane && !isNavi;
-  });
-
-  return (
-    <section className="py-[100px]">
-      <div className="mx-auto max-w-[1400px] px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
-          <SectionHeading
-            eyebrow="Featured venues"
-            title="Trending venues with the clarity players need to book fast."
-            description="See location, rating, price, and trust signals instantly before you commit."
-          />
-          <Button
-            asChild
-            variant="ghost"
-            className="h-11 w-fit rounded-full border border-white/[0.08] bg-white/[0.04] px-5 text-white hover:bg-white/[0.08]"
-          >
-            <Link to="/venues">
-              Browse all venues
-              <ArrowRight className="h-4 w-4" />
-            </Link>
-          </Button>
-        </div>
-
-        <div className="mt-12 grid gap-8 lg:grid-cols-[minmax(0,1fr)_380px]">
-          <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-            {filtered.length > 0 ? (
-              filtered.map((venue, index) => (
-                <VenueCard key={venue.id} venue={venue} index={index} />
-              ))
-            ) : (
-              <div className="col-span-full flex flex-col items-center justify-center p-12 text-center rounded-[28px] border border-white/[0.08] bg-white/[0.02]">
-                <MapPin className="h-8 w-8 text-primary mb-3" />
-                <p className="text-sm  text-foreground/80">No featured turfs listed in {activeCity === "All" ? "All Cities" : activeCity}</p>
-                <p className="text-xs text-muted-foreground mt-1 max-w-xs leading-relaxed">Try switching to Mumbai or All Cities to explore available slot bookings.</p>
-              </div>
-            )}
-          </div>
-
-          <div className="lg:sticky lg:top-24">
-            <TournamentSidebar />
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-}
 
 export function WhySportXClub() {
   return (
@@ -1686,8 +1703,7 @@ export function Footer() {
         <div className="grid gap-10 lg:grid-cols-[1.18fr_0.8fr_0.8fr_0.8fr]">
           <div className="max-w-md">
             <div className="flex items-center gap-3">
-              <Logo className="h-10" />
-              <img src={asset("/icons/logo-mark.svg")} alt="" aria-hidden="true" className="h-9 w-9" />
+              <Logo />
             </div>
             <p className="mt-5 text-sm leading-7 text-white/64">
               SportXClub is the premium way to discover, book, and compete across the best
@@ -1791,6 +1807,248 @@ export function Footer() {
   );
 }
 
+const storeProducts = [
+  {
+    id: 1,
+    name: "Premium Football Size 5",
+    category: "Equipment",
+    price: "₹1,499",
+    rating: "4.8",
+    image: "https://images.unsplash.com/photo-1614632537190-23e4146777db?w=500&q=80",
+  },
+  {
+    id: 2,
+    name: "Professional Badminton Racket",
+    category: "Equipment",
+    price: "₹3,499",
+    rating: "4.9",
+    image: "https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?w=500&q=80",
+  },
+  {
+    id: 3,
+    name: "Cricket Bat Grade 1 English Willow",
+    category: "Equipment",
+    price: "₹8,500",
+    rating: "4.7",
+    image: "https://images.unsplash.com/photo-1593341646782-e0b495cff86d?w=500&q=80",
+  },
+  {
+    id: 4,
+    name: "Sports Training Cones Set",
+    category: "Accessories",
+    price: "₹599",
+    rating: "4.6",
+    image: "https://images.unsplash.com/photo-1579952363873-27f3bade9f55?w=500&q=80",
+  },
+];
+
+export function StoreSection() {
+  const { resolvedTheme } = useTheme();
+  const isDark = resolvedTheme !== "light";
+
+  return (
+    <section className="py-[100px] relative overflow-hidden">
+      <div className="mx-auto max-w-[1400px] px-4 sm:px-6 lg:px-8">
+        <SectionHeading
+          eyebrow="Pro Store"
+          title="Sport Related Facilities & Equipment"
+          description="Gear up with the best sports merchandise and equipment. Delivered straight to your venue or home."
+        />
+
+        <div className="mt-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {storeProducts.map((product) => (
+            <motion.div
+              key={product.id}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5 }}
+              whileHover={{ y: -5 }}
+              className="group"
+            >
+              <div className={cn(
+                "relative flex flex-col h-full overflow-hidden rounded-3xl border transition-all duration-300",
+                isDark
+                  ? "border-white/[0.08] bg-[#101216] hover:border-[#6DFF3B]/30 hover:shadow-[0_0_20px_rgba(109,255,59,0.05)]"
+                  : "border-slate-200 bg-white shadow-sm hover:shadow-xl hover:border-emerald-500/30"
+              )}>
+                <div className="aspect-[4/3] w-full overflow-hidden bg-slate-100">
+                  <ImageWithFallback
+                    src={product.image}
+                    alt={product.name}
+                    className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
+                  />
+                  <div className="absolute top-4 right-4">
+                    <Badge className={cn(
+                      "rounded-full px-2 py-1 flex items-center gap-1",
+                      isDark ? "bg-[#050505]/80 text-[#6DFF3B] border border-[#6DFF3B]/30" : "bg-white/90 text-emerald-700 border border-emerald-200"
+                    )}>
+                      <Star className="h-3 w-3 fill-current" />
+                      <span className="text-xs">{product.rating}</span>
+                    </Badge>
+                  </div>
+                </div>
+
+                <div className="flex flex-col flex-1 p-5">
+                  <span className={cn("text-xs uppercase tracking-wider mb-2", isDark ? "text-white/50" : "text-slate-500")}>
+                    {product.category}
+                  </span>
+                  <h3 className={cn("text-lg leading-tight mb-3 line-clamp-2", isDark ? "text-white" : "text-slate-900")}>
+                    {product.name}
+                  </h3>
+
+                  <div className="mt-auto flex items-center justify-between pt-4 border-t border-dashed border-white/10">
+                    <span className={cn("text-xl", isDark ? "text-[#6DFF3B]" : "text-emerald-600")}>
+                      {product.price}
+                    </span>
+                    <Button
+                      size="sm"
+                      className={cn(
+                        "rounded-full px-4 text-xs tracking-wide transition-all",
+                        isDark
+                          ? "bg-white/[0.08] text-white hover:bg-[#6DFF3B] hover:text-[#050505]"
+                          : "bg-emerald-50 text-emerald-700 hover:bg-emerald-600 hover:text-white"
+                      )}
+                    >
+                      <ShoppingCart className="h-3.5 w-3.5 mr-1.5" />
+                      Add
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+
+        <div className="mt-10 flex justify-center">
+          <Button
+            variant="outline"
+            className={cn(
+              "rounded-full border-dashed px-8 h-12 transition-all",
+              isDark
+                ? "border-white/20 text-white hover:border-[#6DFF3B]/50 hover:bg-[#6DFF3B]/10 hover:text-[#6DFF3B]"
+                : "border-slate-300 text-slate-700 hover:border-emerald-500 hover:bg-emerald-50 hover:text-emerald-700"
+            )}
+          >
+            View All Products
+          </Button>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+const galleryTurfs = [
+  {
+    id: 1,
+    name: "Elite Football Arena",
+    location: "Mumbai Central",
+    rating: "4.9",
+    reviews: 124,
+    image: "https://images.unsplash.com/photo-1459865264687-595d652de67e?w=800&q=80",
+    className: "md:col-span-2 md:row-span-2",
+  },
+  {
+    id: 2,
+    name: "Smash & Drive Badminton",
+    location: "Andheri West",
+    rating: "4.8",
+    reviews: 89,
+    image: "https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?w=800&q=80",
+    className: "md:col-span-1 md:row-span-1",
+  },
+  {
+    id: 3,
+    name: "GreenPark Tennis Club",
+    location: "Bandra",
+    rating: "4.7",
+    reviews: 56,
+    image: "https://images.unsplash.com/photo-1595435934249-5df7ed86e1c0?w=800&q=80",
+    className: "md:col-span-1 md:row-span-1",
+  },
+  {
+    id: 4,
+    name: "Hoops Rooftop Court",
+    location: "South Mumbai",
+    rating: "5.0",
+    reviews: 210,
+    image: "https://images.unsplash.com/photo-1505666287802-931dc83948e9?w=800&q=80",
+    className: "md:col-span-2 md:row-span-1",
+  },
+];
+
+export function TurfGallery() {
+  const { resolvedTheme } = useTheme();
+  const isDark = resolvedTheme !== "light";
+
+  return (
+    <section className="py-[100px] relative overflow-hidden">
+      <div className="mx-auto max-w-[1400px] px-4 sm:px-6 lg:px-8">
+        <SectionHeading
+          eyebrow="Gallery"
+          title="Immersive Turf Experiences"
+          description="A glimpse into the premium sports facilities available for booking."
+        />
+
+        <div className="mt-12 grid grid-cols-1 md:grid-cols-4 auto-rows-[280px] gap-4">
+          {galleryTurfs.map((turf) => (
+            <motion.div
+              key={turf.id}
+              initial={{ opacity: 0, scale: 0.98 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5 }}
+              className={cn("group relative overflow-hidden rounded-3xl", turf.className)}
+            >
+              <ImageWithFallback
+                src={turf.image}
+                alt={turf.name}
+                className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
+              />
+
+              <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-80 transition-opacity duration-300 group-hover:opacity-95" />
+
+              <div className="absolute top-4 right-4 z-10">
+                <div className="flex flex-col items-end">
+                  <Badge className={cn(
+                    "rounded-full px-3 py-1.5 flex items-center gap-1.5 shadow-lg backdrop-blur-md border",
+                    isDark
+                      ? "bg-[#050505]/60 text-[#6DFF3B] border-[#6DFF3B]/30"
+                      : "bg-white/80 text-emerald-700 border-emerald-200"
+                  )}>
+                    <Star className="h-3.5 w-3.5 fill-current" />
+                    <span className="text-sm">{turf.rating}</span>
+                  </Badge>
+                  <span className="mt-1 text-[10px] text-white/90 drop-shadow-md mr-1">
+                    {turf.reviews} Reviews
+                  </span>
+                </div>
+              </div>
+
+              <div className="absolute bottom-0 left-0 w-full p-6 z-10 translate-y-2 transition-transform duration-300 group-hover:translate-y-0">
+                <div className="flex items-center gap-2 mb-2">
+                  <MapPin className="h-4 w-4 text-[#6DFF3B]" />
+                  <span className="text-sm text-white/90 drop-shadow-md">{turf.location}</span>
+                </div>
+                <h3 className="text-2xl text-white drop-shadow-lg">{turf.name}</h3>
+
+                <div className="mt-4 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                  <Button
+                    variant="outline"
+                    className="rounded-full bg-white/10 text-white border-white/20 hover:bg-[#6DFF3B] hover:text-black hover:border-transparent backdrop-blur-sm transition-all"
+                  >
+                    View Details
+                  </Button>
+                </div>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 export function HomePage() {
   const { resolvedTheme } = useTheme();
   const isDark = resolvedTheme !== "light";
@@ -1799,9 +2057,10 @@ export function HomePage() {
     <div className={cn("theme-adaptive min-h-screen", isDark ? "bg-[#050505] text-white" : "bg-white text-slate-900")}>
       <Navbar />
       <HeroSection />
+      <StoreSection />
       <SportsCategories />
       <DiscoveryRails />
-      <FeaturedVenues />
+      <TurfGallery />
       <WhySportXClub />
       <TournamentCTA />
 
