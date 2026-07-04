@@ -57,8 +57,10 @@ export function LoginPage() {
     setIsSuccess(true);
     
     setTimeout(() => {
+      localStorage.setItem("isLoggedIn", "true");
+      localStorage.setItem("userName", formData.email.split("@")[0]);
       if (loginType === "owner") navigate("/owner-dashboard");
-      else navigate("/dashboard");
+      else navigate("/");
     }, 1500);
   };
 
@@ -272,8 +274,10 @@ export function LoginPage() {
                   setIsSubmitting(false);
                   setIsSuccess(true);
                   setTimeout(() => {
+                    localStorage.setItem("isLoggedIn", "true");
+                    localStorage.setItem("userName", "Guest");
                     if (loginType === "owner") navigate("/owner-dashboard");
-                    else navigate("/dashboard");
+                    else navigate("/");
                   }, 1500);
                 }, 1200);
               }}

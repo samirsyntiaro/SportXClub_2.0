@@ -149,9 +149,11 @@ export function RegisterPage() {
     setIsSuccess(true);
     
     setTimeout(() => {
+      localStorage.setItem("isLoggedIn", "true");
+      localStorage.setItem("userName", formData.fullName.split(" ")[0]);
       if (formData.role === "owner") navigate("/owner-dashboard");
       else if (formData.role === "admin") navigate("/admin-dashboard");
-      else navigate("/dashboard");
+      else navigate("/");
     }, 1500);
   };
 
@@ -271,10 +273,14 @@ export function RegisterPage() {
 
               <div className="pt-4">
                 <Button
-                  onClick={() => navigate("/dashboard")}
+                  onClick={() => {
+                    localStorage.setItem("isLoggedIn", "true");
+                    localStorage.setItem("userName", formData.fullName.split(" ")[0]);
+                    navigate("/");
+                  }}
                   className="w-full h-11 rounded-full bg-primary text-primary-foreground  shadow-lg shadow-primary/10 hover:shadow-primary/25 transition-all"
                 >
-                  Go to Dashboard Now
+                  Go to Home Now
                 </Button>
               </div>
             </motion.div>

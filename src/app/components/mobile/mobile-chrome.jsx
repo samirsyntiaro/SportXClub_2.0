@@ -90,7 +90,6 @@ export function MobileAppBar() {
   const menuItems = [
     { label: "Turf", to: "/venues", hasChevron: true },
     { label: "Events", to: "/community", hasChevron: true, isGreen: true },
-    { label: "Coaching", to: "/ai-assistant", hasChevron: true },
     { label: "Tournaments", to: "/tournaments", hasChevron: true },
     { label: "Membership", to: "/profile", hasChevron: true },
     { label: "Notifications", to: "/dashboard", hasChevron: true, isNotification: true, badge: 3 },
