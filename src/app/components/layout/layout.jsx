@@ -1,7 +1,7 @@
 import { useMemo, useState, useEffect } from "react";
 import { Link, Outlet, useLocation } from "react-router";
 import { motion, AnimatePresence } from "motion/react";
-import { Home, MapPin, Trophy, Users, UserCircle, MessageSquare, Bot, ChevronDown, Check } from "lucide-react";
+import { Home, MapPin, Trophy, Users, UserCircle, MessageSquare, ChevronDown, Check } from "lucide-react";
 
 import { Container } from "../ui/container";
 import { Button } from "../ui/button";
@@ -15,7 +15,6 @@ const navigation = [
   { name: "Tournaments", href: "/tournaments", icon: Trophy },
   { name: "Players", href: "/players", icon: Users },
   { name: "Community", href: "/community", icon: MessageSquare },
-  { name: "AI Assistant", href: "/ai-assistant", icon: Bot },
 ];
 
 function getMobileTab(pathname: string) {
@@ -101,75 +100,73 @@ export function Layout() {
   const mobileTab = useMemo(() => getMobileTab(location.pathname), [location.pathname]);
 
   return (
-    <div className="min-h-dvh bg-background text-foreground">
-      <header className="sticky top-0 z-50 hidden border-b border-border/40 bg-background/90 backdrop-blur-xl supports-[backdrop-filter]:bg-background/70 md:block">
-        <Container className="flex h-16 items-center justify-between">
-          <div className="flex items-center gap-8">
+    <div className="flex min-h-dvh bg-background text-foreground">
+      {/* Desktop Sidebar */}
+      <aside className="hidden w-64 flex-col border-r border-border/40 bg-card/30 md:flex fixed inset-y-0 z-50">
+        <div className="flex flex-col h-full">
+          <div className="flex h-16 shrink-0 items-center px-6">
             <Link to="/" className="flex items-center gap-2">
               <Logo />
             </Link>
-
+          </div>
+          
+          <div className="px-6 mb-4">
             <CitySelector />
-
-            <nav className="flex items-center gap-1">
-              {navigation.map((item) => {
-                const Icon = item.icon;
-                const isActive = location.pathname === item.href;
-
-                return (
-                  <Link
-                    key={item.name}
-                    to={item.href}
-                    className={`relative flex items-center gap-2 rounded-lg px-3 py-2 transition-colors ${
-                      isActive
-                        ? "text-primary"
-                        : "text-muted-foreground hover:bg-accent/50 hover:text-foreground"
-                    }`}
-                  >
-                    <Icon className="h-4 w-4" />
-                    <span className="text-sm">{item.name}</span>
-                    {isActive && (
-                      <motion.div
-                        layoutId="active-nav"
-                        className="absolute inset-0 -z-10 rounded-lg bg-primary/10"
-                        transition={{ type: "spring", duration: 0.45 }}
-                      />
-                    )}
-                  </Link>
-                );
-              })}
-            </nav>
           </div>
 
-          <div className="flex items-center gap-3">
-            <ThemeToggleButton className="h-10 w-10" />
+          <div className="flex flex-1 flex-col overflow-y-auto px-4 py-4 space-y-1">
+            {navigation.map((item) => {
+              const Icon = item.icon;
+              const isActive = location.pathname === item.href || (item.href !== "/dashboard" && location.pathname.startsWith(item.href));
+              
+              return (
+                <Link
+                  key={item.name}
+                  to={item.href}
+                  className={`flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm transition-colors ${
+                    isActive
+                      ? "bg-primary/10 text-primary"
+                      : "text-muted-foreground hover:bg-accent/50 hover:text-foreground"
+                  }`}
+                >
+                  <Icon className="h-5 w-5" />
+                  {item.name}
+                </Link>
+              );
+            })}
+          </div>
 
+          <div className="p-4 mt-auto border-t border-border/40 flex flex-col gap-3">
+            <ThemeToggleButton className="h-10 w-10" />
             <Link to="/profile">
-              <Button variant="ghost" className="h-10 px-3 flex items-center gap-2 rounded-full border border-border/50 bg-background/50 hover:bg-accent/50 transition-all shadow-sm" aria-label="View profile">
-                <UserCircle className="h-5 w-5 text-primary" />
-                <span className="text-sm pr-1">John Doe</span>
+              <Button variant="ghost" className="w-full justify-start gap-3 text-muted-foreground hover:text-foreground">
+                <UserCircle className="h-5 w-5" />
+                <span>John Doe</span>
               </Button>
             </Link>
           </div>
-        </Container>
-      </header>
-
-      <MobileAppBar />
-
-      <motion.main
-        key={location.pathname}
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        exit={{ opacity: 0, y: -10 }}
-        transition={{ duration: 0.22, ease: "easeOut" }}
-        className="pb-[calc(104px+env(safe-area-inset-bottom))] md:pb-0"
-      >
-        <div className="px-4 py-5 md:mx-auto md:max-w-7xl md:px-6 md:py-6 lg:px-8">
-          <Outlet />
         </div>
-      </motion.main>
+      </aside>
 
-      <MobileBottomNav activeTab={mobileTab as "home" | "explore" | "bookings" | "tournaments" | "profile"} />
+      {/* Main Content Area */}
+      <div className="flex flex-col flex-1 md:pl-64">
+        <MobileAppBar />
+
+        <motion.main
+          key={location.pathname}
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -10 }}
+          transition={{ duration: 0.22, ease: "easeOut" }}
+          className="flex-1 pb-[calc(104px+env(safe-area-inset-bottom))] md:pb-0"
+        >
+          <div className="px-4 py-5 md:mx-auto md:max-w-7xl md:px-6 md:py-6 lg:px-8">
+            <Outlet />
+          </div>
+        </motion.main>
+
+        <MobileBottomNav activeTab={mobileTab as "home" | "explore" | "bookings" | "tournaments" | "profile"} />
+      </div>
     </div>
   );
 }

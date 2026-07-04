@@ -9,10 +9,7 @@ import {
   IndianRupee, 
   Users, 
   Star, 
-  Tag, 
-  Bell, 
-  FileText, 
-  Settings,
+  Tag,
   Menu,
   X,
   LogOut
@@ -30,9 +27,6 @@ const ownerNavigation = [
   { name: "Customers", href: "/owner-dashboard/customers", icon: Users },
   { name: "Reviews", href: "/owner-dashboard/reviews", icon: Star },
   { name: "Promotions", href: "/owner-dashboard/promotions", icon: Tag },
-  { name: "Notifications", href: "/owner-dashboard/notifications", icon: Bell },
-  { name: "Documents", href: "/owner-dashboard/documents", icon: FileText },
-  { name: "Settings", href: "/owner-dashboard/settings", icon: Settings },
 ];
 
 export function OwnerLayout() {
@@ -118,13 +112,7 @@ export function OwnerLayout() {
         <AnimatePresence>
           {isMobileMenuOpen && (
             <>
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                className="fixed inset-0 z-50 bg-background/80 backdrop-blur-sm md:hidden"
-                onClick={() => setIsMobileMenuOpen(false)}
-              />
+
               <motion.div
                 initial={{ x: "-100%" }}
                 animate={{ x: 0 }}

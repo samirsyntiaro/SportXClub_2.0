@@ -25,6 +25,8 @@ import {
   ShoppingCart,
   Menu,
   X,
+  User,
+  LogOut,
   Moon,
   Sun,
 } from "lucide-react";
@@ -263,6 +265,16 @@ export function Navbar() {
   const [activeCity, setActiveCity] = useState(() => localStorage.getItem("preferred-city") || "Mumbai");
   const [menuOpen, setMenuOpen] = useState(false);
   const [searchValue, setSearchValue] = useState("");
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [profileOpen, setProfileOpen] = useState(false);
+  const [userName, setUserName] = useState("");
+
+  useEffect(() => {
+    const loggedIn = localStorage.getItem("isLoggedIn") === "true";
+    const name = localStorage.getItem("userName") || "User";
+    setIsLoggedIn(loggedIn);
+    setUserName(name);
+  }, []);
 
   useEffect(() => {
     const handleCityChange = (e: Event) => {
@@ -312,6 +324,7 @@ export function Navbar() {
   ];
 
   return (
+    <>
     <header
       className={cn(
         "sticky top-0 z-50 border-b backdrop-blur-2xl transition-colors duration-200 shadow-sm dark:shadow-[0_4px_30px_rgba(0,0,0,0.6)]",
@@ -412,19 +425,67 @@ export function Navbar() {
 
         {/* Right Section: Sign In + Hamburger Menu Toggle */}
         <div className="flex flex-1 items-center justify-end gap-4">
-          {/* Login Button with green text and green outline */}
-          <Link to="/login">
-            <button
-              className={cn(
-                "flex h-10 items-center justify-center rounded-full border px-5 text-sm tracking-wide transition cursor-pointer hover:bg-opacity-10",
-                isDark
-                  ? "border-[#6DFF3B] text-[#6DFF3B] hover:bg-[#6DFF3B]/10"
-                  : "border-emerald-500 text-emerald-600 hover:bg-emerald-50"
+          {/* Auth Section: Login or Profile */}
+          {isLoggedIn ? (
+            <div className="relative">
+              <button
+                onClick={() => setProfileOpen(!profileOpen)}
+                className={cn(
+                  "flex h-10 items-center justify-center gap-2 rounded-full border shadow-sm transition px-4",
+                  isDark
+                    ? "border-white/[0.08] bg-white/[0.03] text-[#6DFF3B] hover:bg-white/[0.06]"
+                    : "border-slate-200 bg-slate-50 text-emerald-600 hover:bg-slate-100"
+                )}
+              >
+                <User className="h-5 w-5" />
+                <span className="text-sm font-medium">{userName}</span>
+              </button>
+              
+              {/* Profile Dropdown */}
+              {profileOpen && (
+                <div
+                  className={cn(
+                    "absolute right-0 mt-2 w-48 rounded-xl border shadow-lg overflow-hidden z-50",
+                    isDark ? "bg-[#101216] border-white/[0.08]" : "bg-white border-slate-200"
+                  )}
+                >
+                  <div className="p-2 space-y-1">
+                    <Link to="/dashboard" onClick={() => setProfileOpen(false)}>
+                      <button className={cn("w-full flex items-center gap-2 px-3 py-2 text-sm rounded-md transition", isDark ? "hover:bg-white/5 text-white" : "hover:bg-slate-100 text-slate-800")}>
+                        <User className="h-4 w-4" />
+                        Dashboard
+                      </button>
+                    </Link>
+                    <div className={cn("h-[1px] w-full my-1", isDark ? "bg-white/10" : "bg-slate-100")} />
+                    <button
+                      onClick={() => {
+                        localStorage.removeItem("isLoggedIn");
+                        setIsLoggedIn(false);
+                        setProfileOpen(false);
+                      }}
+                      className={cn("w-full flex items-center gap-2 px-3 py-2 text-sm rounded-md transition", isDark ? "hover:bg-white/5 text-red-400" : "hover:bg-slate-100 text-red-600")}
+                    >
+                      <LogOut className="h-4 w-4" />
+                      Logout
+                    </button>
+                  </div>
+                </div>
               )}
-            >
-              Login
-            </button>
-          </Link>
+            </div>
+          ) : (
+            <Link to="/login">
+              <button
+                className={cn(
+                  "flex h-10 items-center justify-center rounded-full border px-5 text-sm tracking-wide transition cursor-pointer hover:bg-opacity-10",
+                  isDark
+                    ? "border-[#6DFF3B] text-[#6DFF3B] hover:bg-[#6DFF3B]/10"
+                    : "border-emerald-500 text-emerald-600 hover:bg-emerald-50"
+                )}
+              >
+                Login
+              </button>
+            </Link>
+          )}
 
           {/* Hamburger Menu Toggle Button */}
           <button
@@ -526,27 +587,42 @@ export function Navbar() {
           </Dialog>
         </div>
       </div>
+    </header>
 
       {/* Hamburger Dropdown Drawer with AnimatePresence */}
       <AnimatePresence>
         {menuOpen && (
-          <>
-            {/* Backdrop */}
-            <div className="fixed inset-0 top-[122px] md:top-[76px] z-40 bg-black/20 backdrop-blur-sm" onClick={() => setMenuOpen(false)} />
-
-            {/* Menu container */}
-            <motion.div
-              initial={{ opacity: 0, y: -15 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -15 }}
-              transition={{ duration: 0.2, ease: "easeOut" }}
-              className={cn(
-                "absolute top-full left-0 right-0 z-50 border-b shadow-xl px-6 py-5 flex flex-col gap-4 max-h-[calc(100vh-140px)] overflow-y-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden",
+          <motion.div
+            key="backdrop"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[60] bg-black/40 backdrop-blur-sm"
+            onClick={() => setMenuOpen(false)}
+          />
+        )}
+      </AnimatePresence>
+      <AnimatePresence>
+        {menuOpen && (
+          <motion.div
+            key="drawer"
+            initial={{ x: "-100%" }}
+            animate={{ x: 0 }}
+            exit={{ x: "-100%" }}
+            transition={{ type: "spring", damping: 25, stiffness: 200 }}
+            className={cn(
+              "fixed top-0 left-0 bottom-0 w-80 max-w-[85vw] z-[70] shadow-2xl px-6 py-6 flex flex-col gap-4 overflow-y-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden border-r",
                 isDark
-                  ? "bg-[#0b0c0e]/98 border-white/[0.08]"
-                  : "bg-white/98 border-slate-200/80"
+                  ? "bg-[#0b0c0e] border-white/[0.08]"
+                  : "bg-white border-slate-200"
               )}
             >
+              <div className="flex items-center justify-between mb-2">
+                <span className={cn("text-lg font-semibold", isDark ? "text-white" : "text-slate-900")}>Menu</span>
+                <button onClick={() => setMenuOpen(false)} className={cn("p-2 rounded-full transition cursor-pointer", isDark ? "hover:bg-white/10" : "hover:bg-slate-100")}>
+                  <X className={cn("h-5 w-5", isDark ? "text-white/80" : "text-slate-700")} />
+                </button>
+              </div>
               {/* SELECT LOCATION section */}
               <div className="flex flex-col gap-2 px-3 pt-2">
                 <span className={cn("text-[0.68rem] uppercase tracking-wider text-left", isDark ? "text-white/40" : "text-slate-400")}>
@@ -617,13 +693,47 @@ export function Navbar() {
                   );
                 })}
 
-
+                {isLoggedIn && (
+                  <>
+                    <div className={cn("h-[1px] w-full my-2", isDark ? "bg-white/10" : "bg-slate-200")} />
+                    <Link
+                      to="/dashboard"
+                      onClick={() => setMenuOpen(false)}
+                      className="block text-left"
+                    >
+                      <div className="flex items-center justify-between w-full py-4 px-3 border-b border-slate-100 dark:border-white/[0.05] transition-colors duration-150 hover:bg-slate-50/50 dark:hover:bg-white/[0.02]">
+                        <div className="flex items-center gap-3">
+                          <User className={cn("h-5 w-5", isDark ? "text-[#6DFF3B]" : "text-emerald-600")} />
+                          <span className={cn("text-sm tracking-wide", isDark ? "text-white/90" : "text-slate-800")}>
+                            Dashboard
+                          </span>
+                        </div>
+                      </div>
+                    </Link>
+                    <button
+                      onClick={() => {
+                        localStorage.removeItem("isLoggedIn");
+                        setIsLoggedIn(false);
+                        setMenuOpen(false);
+                      }}
+                      className="block text-left w-full cursor-pointer"
+                    >
+                      <div className="flex items-center justify-between w-full py-4 px-3 border-b border-slate-100 dark:border-white/[0.05] transition-colors duration-150 hover:bg-slate-50/50 dark:hover:bg-white/[0.02]">
+                        <div className="flex items-center gap-3">
+                          <LogOut className="h-5 w-5 text-red-500" />
+                          <span className="text-sm tracking-wide text-red-500">
+                            Logout
+                          </span>
+                        </div>
+                      </div>
+                    </button>
+                  </>
+                )}
               </div>
             </motion.div>
-          </>
         )}
       </AnimatePresence>
-    </header>
+    </>
   );
 }
 
