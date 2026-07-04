@@ -22,7 +22,12 @@ import { Badge } from "../components/ui/badge";
 import { Button } from "../components/ui/button";
 import { Card, CardContent } from "../components/ui/card";
 import { Container } from "../components/ui/container";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "../components/ui/tabs";
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "../components/ui/tabs";
 
 const sports = ["Cricket", "Football", "Tennis"];
 const recentBookings = [
@@ -93,203 +98,215 @@ function MobileProfilePage() {
   return (
     <div className="space-y-5 px-4 py-4">
       <div className="space-y-5">
-          <motion.section
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3 }}
-            className="rounded-[28px] border border-primary/10 bg-gradient-to-br from-primary/10 via-card to-card p-4 shadow-[0_16px_38px_-28px_rgba(15,23,42,0.35)]"
-          >
-            <div className="flex items-start gap-4">
-              <Avatar className="h-20 w-20 border border-primary/15">
-                <AvatarFallback className="bg-primary/10 text-2xl  text-primary">
-                  RV
-                </AvatarFallback>
-              </Avatar>
-              <div className="min-w-0 flex-1">
-                <div className="flex items-start justify-between gap-3">
-                  <div className="min-w-0">
-                    <p className="text-xs  uppercase tracking-[0.24em] text-primary">
-                      Account
-                    </p>
-                    <h1 className="mt-2 truncate text-2xl  tracking-tight">
-                      Rohan Verma
-                    </h1>
-                    <p className="mt-1 text-sm text-muted-foreground">@rohanv</p>
-                  </div>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="h-11 w-11 rounded-2xl border border-border/60 bg-background/80"
-                    aria-label="Edit profile"
-                  >
-                    <Edit className="h-4.5 w-4.5" />
-                  </Button>
+        <motion.section
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3 }}
+          className="rounded-[28px] border border-primary/10 bg-gradient-to-br from-primary/10 via-card to-card p-4 shadow-[0_16px_38px_-28px_rgba(15,23,42,0.35)]"
+        >
+          <div className="flex items-start gap-4">
+            <Avatar className="h-20 w-20 border border-primary/15">
+              <AvatarFallback className="bg-primary/10 text-2xl  text-primary">
+                RV
+              </AvatarFallback>
+            </Avatar>
+            <div className="min-w-0 flex-1">
+              <div className="flex items-start justify-between gap-3">
+                <div className="min-w-0">
+                  <p className="text-xs  uppercase tracking-[0.24em] text-primary">
+                    Account
+                  </p>
+                  <h1 className="mt-2 truncate text-2xl  tracking-tight">
+                    Rohan Verma
+                  </h1>
+                  <p className="mt-1 text-sm text-muted-foreground">@rohanv</p>
                 </div>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-11 w-11 rounded-2xl border border-border/60 bg-background/80"
+                  aria-label="Edit profile"
+                >
+                  <Edit className="h-4.5 w-4.5" />
+                </Button>
+              </div>
 
-                <div className="mt-3 inline-flex items-center gap-2 rounded-full border border-border/60 bg-background/80 px-3 py-1.5 text-sm text-muted-foreground">
-                  <MapPin className="h-4 w-4 text-primary" />
-                  Mumbai, India
-                </div>
+              <div className="mt-3 inline-flex items-center gap-2 rounded-full border border-border/60 bg-background/80 px-3 py-1.5 text-sm text-muted-foreground">
+                <MapPin className="h-4 w-4 text-primary" />
+                Mumbai, India
               </div>
             </div>
+          </div>
 
-            <div className="mt-4 flex flex-wrap gap-2">
-              {sports.map((sport) => (
-                <Badge
-                  key={sport}
-                  className="rounded-full border border-primary/15 bg-primary/10 px-3 py-1 text-[0.68rem]  uppercase tracking-[0.16em] text-primary"
-                >
-                  {sport}
-                </Badge>
-              ))}
-            </div>
-          </motion.section>
-
-          <section className="grid grid-cols-4 gap-3">
-            {[
-              { label: "Matches", value: "124" },
-              { label: "Rating", value: "4.8" },
-              { label: "Wins", value: "24" },
-              { label: "Wallet", value: "₹1,250" },
-            ].map((stat) => (
-              <motion.div
-                key={stat.label}
-                whileTap={{ scale: 0.98 }}
-                className="rounded-[22px] border border-border/60 bg-card p-3 text-center shadow-[0_10px_24px_-20px_rgba(15,23,42,0.28)]"
+          <div className="mt-4 flex flex-wrap gap-2">
+            {sports.map((sport) => (
+              <Badge
+                key={sport}
+                className="rounded-full border border-primary/15 bg-primary/10 px-3 py-1 text-[0.68rem]  uppercase tracking-[0.16em] text-primary"
               >
-                <p className="text-lg  text-foreground">{stat.value}</p>
-                <p className="mt-1 text-[0.72rem] text-muted-foreground">{stat.label}</p>
-              </motion.div>
+                {sport}
+              </Badge>
             ))}
-          </section>
+          </div>
+        </motion.section>
 
-          <section className="space-y-3">
-            <h2 className="text-base ">Quick actions</h2>
-            <div className="grid grid-cols-2 gap-3">
-              {accountActions.map((action) => {
-                const Icon = action.icon;
+        <section className="grid grid-cols-4 gap-3">
+          {[
+            { label: "Matches", value: "124" },
+            { label: "Rating", value: "4.8" },
+            { label: "Wins", value: "24" },
+            { label: "Wallet", value: "₹1,250" },
+          ].map((stat) => (
+            <motion.div
+              key={stat.label}
+              whileTap={{ scale: 0.98 }}
+              className="rounded-[22px] border border-border/60 bg-card p-3 text-center shadow-[0_10px_24px_-20px_rgba(15,23,42,0.28)]"
+            >
+              <p className="text-lg  text-foreground">{stat.value}</p>
+              <p className="mt-1 text-[0.72rem] text-muted-foreground">
+                {stat.label}
+              </p>
+            </motion.div>
+          ))}
+        </section>
 
-                return (
-                  <Link key={action.label} to={action.href}>
-                    <motion.div
-                      whileTap={{ scale: 0.985 }}
-                      className="rounded-[22px] border border-border/60 bg-card p-4 shadow-[0_10px_24px_-20px_rgba(15,23,42,0.28)]"
-                    >
-                      <div className="flex h-12 w-12 items-center justify-center rounded-2xl border border-primary/15 bg-primary/10 text-primary">
-                        <Icon className="h-5 w-5" />
-                      </div>
-                      <p className="mt-4 text-sm  text-foreground">{action.label}</p>
-                    </motion.div>
-                  </Link>
-                );
-              })}
-            </div>
-          </section>
+        <section className="space-y-3">
+          <h2 className="text-base ">Quick actions</h2>
+          <div className="grid grid-cols-2 gap-3">
+            {accountActions.map((action) => {
+              const Icon = action.icon;
 
-          <section className="space-y-3">
-            <h2 className="text-base ">Membership</h2>
-            <Card className="rounded-[24px] border-primary/10 bg-gradient-to-br from-primary/10 via-card to-card">
-              <CardContent className="space-y-3 p-4">
-                <div className="flex items-start justify-between gap-3">
-                  <div>
-                    <p className="text-xs  uppercase tracking-[0.22em] text-primary">
-                      SportXClub Plus
-                    </p>
-                    <h3 className="mt-2 text-lg ">Premium booking perks</h3>
-                  </div>
-                  <Medal className="h-5 w-5 text-primary" />
-                </div>
-                <p className="text-sm leading-6 text-muted-foreground">
-                  Priority support, selected venue discounts, and early tournament access.
-                </p>
-                <Button className="h-11 w-full rounded-[16px] bg-primary  text-primary-foreground hover:bg-primary/90">
-                  Upgrade membership
-                </Button>
-              </CardContent>
-            </Card>
-          </section>
-
-          <section className="space-y-3">
-            <h2 className="text-base ">Recent bookings</h2>
-            <div className="space-y-3">
-              {recentBookings.map((booking) => (
-                <motion.article
-                  key={booking.title}
-                  whileTap={{ scale: 0.99 }}
-                  className="rounded-[22px] border border-border/60 bg-card p-4 shadow-[0_10px_24px_-20px_rgba(15,23,42,0.28)]"
-                >
-                  <div className="flex items-center justify-between gap-3">
-                    <div>
-                      <p className="text-xs  uppercase tracking-[0.18em] text-primary">
-                        {booking.accent}
-                      </p>
-                      <h3 className="mt-2 text-base ">{booking.title}</h3>
-                      <p className="mt-1 text-sm text-muted-foreground">{booking.subtitle}</p>
-                    </div>
-                    <ChevronRight className="h-5 w-5 text-muted-foreground" />
-                  </div>
-                  <p className="mt-3 text-sm  text-muted-foreground">{booking.meta}</p>
-                </motion.article>
-              ))}
-            </div>
-          </section>
-
-          <section className="space-y-3">
-            <h2 className="text-base ">Achievements</h2>
-            <div className="grid gap-3">
-              {achievements.map((achievement) => {
-                const Icon = achievement.icon;
-
-                return (
+              return (
+                <Link key={action.label} to={action.href}>
                   <motion.div
-                    key={achievement.title}
-                    whileTap={{ scale: 0.99 }}
-                    className="flex items-center gap-3 rounded-[22px] border border-border/60 bg-card p-4 shadow-[0_10px_24px_-20px_rgba(15,23,42,0.28)]"
+                    whileTap={{ scale: 0.985 }}
+                    className="rounded-[22px] border border-border/60 bg-card p-4 shadow-[0_10px_24px_-20px_rgba(15,23,42,0.28)]"
                   >
-                    <div className="flex h-12 w-12 items-center justify-center rounded-2xl border border-primary/15 bg-primary/10">
-                      <Icon className={`h-5 w-5 ${achievement.color}`} />
+                    <div className="flex h-12 w-12 items-center justify-center rounded-2xl border border-primary/15 bg-primary/10 text-primary">
+                      <Icon className="h-5 w-5" />
                     </div>
-                    <p className="">{achievement.title}</p>
+                    <p className="mt-4 text-sm  text-foreground">
+                      {action.label}
+                    </p>
                   </motion.div>
-                );
-              })}
-            </div>
-          </section>
+                </Link>
+              );
+            })}
+          </div>
+        </section>
 
-          <section className="space-y-3">
-            <div className="flex items-center justify-between">
-              <h2 className="text-base ">Settings</h2>
-              <Button variant="ghost" className="h-9 rounded-full px-3 text-sm text-primary">
-                Manage
+        <section className="space-y-3">
+          <h2 className="text-base ">Membership</h2>
+          <Card className="rounded-[24px] border-primary/10 bg-gradient-to-br from-primary/10 via-card to-card">
+            <CardContent className="space-y-3 p-4">
+              <div className="flex items-start justify-between gap-3">
+                <div>
+                  <p className="text-xs  uppercase tracking-[0.22em] text-primary">
+                    SportXClub Plus
+                  </p>
+                  <h3 className="mt-2 text-lg ">Premium booking perks</h3>
+                </div>
+                <Medal className="h-5 w-5 text-primary" />
+              </div>
+              <p className="text-sm leading-6 text-muted-foreground">
+                Priority support, selected venue discounts, and early tournament
+                access.
+              </p>
+              <Button className="h-11 w-full rounded-[16px] bg-primary  text-primary-foreground hover:bg-primary/90">
+                Upgrade membership
               </Button>
-            </div>
-            <div className="space-y-2">
-              {settingsItems.map((item) => {
-                const Icon = item.icon;
+            </CardContent>
+          </Card>
+        </section>
 
-                return (
-                  <motion.button
-                    key={item.label}
-                    whileTap={{ scale: 0.99 }}
-                    onClick={() => {
-                      if (item.label === "Logout") {
-                        navigate("/login");
-                      }
-                    }}
-                    className="flex w-full items-center justify-between rounded-[20px] border border-border/60 bg-card px-4 py-3 shadow-[0_10px_24px_-20px_rgba(15,23,42,0.28)]"
-                  >
-                    <div className="flex items-center gap-3">
-                      <div className="flex h-10 w-10 items-center justify-center rounded-2xl border border-primary/15 bg-primary/10 text-primary">
-                        <Icon className="h-4.5 w-4.5" />
-                      </div>
-                      <span className="">{item.label}</span>
+        <section className="space-y-3">
+          <h2 className="text-base ">Recent bookings</h2>
+          <div className="space-y-3">
+            {recentBookings.map((booking) => (
+              <motion.article
+                key={booking.title}
+                whileTap={{ scale: 0.99 }}
+                className="rounded-[22px] border border-border/60 bg-card p-4 shadow-[0_10px_24px_-20px_rgba(15,23,42,0.28)]"
+              >
+                <div className="flex items-center justify-between gap-3">
+                  <div>
+                    <p className="text-xs  uppercase tracking-[0.18em] text-primary">
+                      {booking.accent}
+                    </p>
+                    <h3 className="mt-2 text-base ">{booking.title}</h3>
+                    <p className="mt-1 text-sm text-muted-foreground">
+                      {booking.subtitle}
+                    </p>
+                  </div>
+                  <ChevronRight className="h-5 w-5 text-muted-foreground" />
+                </div>
+                <p className="mt-3 text-sm  text-muted-foreground">
+                  {booking.meta}
+                </p>
+              </motion.article>
+            ))}
+          </div>
+        </section>
+
+        <section className="space-y-3">
+          <h2 className="text-base ">Achievements</h2>
+          <div className="grid gap-3">
+            {achievements.map((achievement) => {
+              const Icon = achievement.icon;
+
+              return (
+                <motion.div
+                  key={achievement.title}
+                  whileTap={{ scale: 0.99 }}
+                  className="flex items-center gap-3 rounded-[22px] border border-border/60 bg-card p-4 shadow-[0_10px_24px_-20px_rgba(15,23,42,0.28)]"
+                >
+                  <div className="flex h-12 w-12 items-center justify-center rounded-2xl border border-primary/15 bg-primary/10">
+                    <Icon className={`h-5 w-5 ${achievement.color}`} />
+                  </div>
+                  <p className="">{achievement.title}</p>
+                </motion.div>
+              );
+            })}
+          </div>
+        </section>
+
+        <section className="space-y-3">
+          <div className="flex items-center justify-between">
+            <h2 className="text-base ">Settings</h2>
+            <Button
+              variant="ghost"
+              className="h-9 rounded-full px-3 text-sm text-primary"
+            >
+              Manage
+            </Button>
+          </div>
+          <div className="space-y-2">
+            {settingsItems.map((item) => {
+              const Icon = item.icon;
+
+              return (
+                <motion.button
+                  key={item.label}
+                  whileTap={{ scale: 0.99 }}
+                  onClick={() => {
+                    if (item.label === "Logout") {
+                      navigate("/login");
+                    }
+                  }}
+                  className="flex w-full items-center justify-between rounded-[20px] border border-border/60 bg-card px-4 py-3 shadow-[0_10px_24px_-20px_rgba(15,23,42,0.28)]"
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-2xl border border-primary/15 bg-primary/10 text-primary">
+                      <Icon className="h-4.5 w-4.5" />
                     </div>
-                    <ChevronRight className="h-5 w-5 text-muted-foreground" />
-                  </motion.button>
-                );
-              })}
-            </div>
-          </section>
+                    <span className="">{item.label}</span>
+                  </div>
+                  <ChevronRight className="h-5 w-5 text-muted-foreground" />
+                </motion.button>
+              );
+            })}
+          </div>
+        </section>
       </div>
     </div>
   );
@@ -442,11 +459,20 @@ export function UserProfile() {
                       { label: "Goals Scored", value: "18", sport: "Football" },
                       { label: "Assists", value: "12", sport: "Football" },
                       { label: "Aces", value: "34", sport: "Tennis" },
-                      { label: "Break Points Won", value: "68%", sport: "Tennis" },
+                      {
+                        label: "Break Points Won",
+                        value: "68%",
+                        sport: "Tennis",
+                      },
                     ].map((stat) => (
-                      <div key={`${stat.label}-${stat.sport}`} className="rounded-lg border border-border/50 p-4">
+                      <div
+                        key={`${stat.label}-${stat.sport}`}
+                        className="rounded-lg border border-border/50 p-4"
+                      >
                         <div className="mb-2 flex items-center justify-between">
-                          <p className="text-sm text-muted-foreground">{stat.label}</p>
+                          <p className="text-sm text-muted-foreground">
+                            {stat.label}
+                          </p>
                           <Badge variant="outline" className="text-xs">
                             {stat.sport}
                           </Badge>
@@ -466,27 +492,41 @@ export function UserProfile() {
                     {
                       from: "Rahul Sharma",
                       rating: 5,
-                      comment: "Great player! Excellent teamwork and sportsmanship.",
+                      comment:
+                        "Great player! Excellent teamwork and sportsmanship.",
                       date: "2 weeks ago",
                     },
                     {
                       from: "Priya Patel",
                       rating: 5,
-                      comment: "Very skilled and reliable. Would play with again!",
+                      comment:
+                        "Very skilled and reliable. Would play with again!",
                       date: "1 month ago",
                     },
                   ].map((review, i) => (
-                    <div key={i} className="border-b border-border/50 pb-4 last:border-0">
+                    <div
+                      key={i}
+                      className="border-b border-border/50 pb-4 last:border-0"
+                    >
                       <div className="mb-2 flex items-center justify-between">
                         <p className="">{review.from}</p>
                         <div className="flex gap-1">
-                          {Array.from({ length: review.rating }).map((_, starIndex) => (
-                            <Trophy key={starIndex} className="h-4 w-4 fill-amber-400 text-amber-400" />
-                          ))}
+                          {Array.from({ length: review.rating }).map(
+                            (_, starIndex) => (
+                              <Trophy
+                                key={starIndex}
+                                className="h-4 w-4 fill-amber-400 text-amber-400"
+                              />
+                            ),
+                          )}
                         </div>
                       </div>
-                      <p className="mb-1 text-muted-foreground">{review.comment}</p>
-                      <p className="text-sm text-muted-foreground">{review.date}</p>
+                      <p className="mb-1 text-muted-foreground">
+                        {review.comment}
+                      </p>
+                      <p className="text-sm text-muted-foreground">
+                        {review.date}
+                      </p>
                     </div>
                   ))}
                 </CardContent>
@@ -498,4 +538,3 @@ export function UserProfile() {
     </>
   );
 }
-

@@ -8,10 +8,9 @@ import {
   ChevronRight,
   Eye,
   EyeOff,
-  Trophy,
   Shield,
   Chrome,
-  Activity
+  Activity,
 } from "lucide-react";
 
 import { Button } from "../components/ui/button";
@@ -24,7 +23,7 @@ import { cn } from "../components/ui/utils";
 export function LoginPage() {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
-  const [loginType, setLoginType] = useState<"player" | "owner">("player");
+  const [loginType, setLoginType] = useState("player");
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -34,12 +33,12 @@ export function LoginPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleCheckboxChange = (checked: boolean) => {
+  const handleCheckboxChange = (checked) => {
     setFormData((prev) => ({ ...prev, rememberMe: checked }));
   };
 
@@ -47,7 +46,7 @@ export function LoginPage() {
     return formData.email.includes("@") && formData.password.length >= 6;
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!isFormValid()) return;
 
@@ -55,7 +54,6 @@ export function LoginPage() {
     await new Promise((resolve) => setTimeout(resolve, 1200));
     setIsSubmitting(false);
     setIsSuccess(true);
-    
     setTimeout(() => {
       localStorage.setItem("isLoggedIn", "true");
       localStorage.setItem("userName", formData.email.split("@")[0]);
@@ -68,10 +66,16 @@ export function LoginPage() {
     <div className="min-h-screen bg-background relative overflow-hidden flex flex-col items-center justify-center p-4 sm:p-6 md:p-10 transition-colors duration-200">
       {/* BACKGROUND ELEMENTS (Grid + Radial Accent Glows) */}
       <div className="absolute inset-0 opacity-[0.03] dark:opacity-[0.06] bg-[radial-gradient(#22c55e_1px,transparent_1px)] [background-size:24px_24px] pointer-events-none" />
-      
+
       {/* Floating Blur Circles (Dynamic glow backdrop) */}
-      <div className="absolute top-[10%] right-[5%] w-72 h-72 md:w-96 md:h-96 rounded-full bg-emerald-500/10 blur-[80px] md:blur-[120px] pointer-events-none animate-pulse" style={{ animationDuration: "8s" }} />
-      <div className="absolute bottom-[10%] left-[5%] w-72 h-72 md:w-96 md:h-96 rounded-full bg-primary/10 blur-[80px] md:blur-[120px] pointer-events-none animate-pulse" style={{ animationDuration: "6s" }} />
+      <div
+        className="absolute top-[10%] right-[5%] w-72 h-72 md:w-96 md:h-96 rounded-full bg-emerald-500/10 blur-[80px] md:blur-[120px] pointer-events-none animate-pulse"
+        style={{ animationDuration: "8s" }}
+      />
+      <div
+        className="absolute bottom-[10%] left-[5%] w-72 h-72 md:w-96 md:h-96 rounded-full bg-primary/10 blur-[80px] md:blur-[120px] pointer-events-none animate-pulse"
+        style={{ animationDuration: "6s" }}
+      />
 
       {/* FLOAT WIDGETS (Gives the unique, premium sports-dashboard feel around the card) */}
       <motion.div
@@ -85,7 +89,9 @@ export function LoginPage() {
         </div>
         <div>
           <p className="text-xs ">100% Secured</p>
-          <p className="text-[0.62rem] text-muted-foreground">Verified hosts & slot guarantee</p>
+          <p className="text-[0.62rem] text-muted-foreground">
+            Verified hosts & slot guarantee
+          </p>
         </div>
       </motion.div>
 
@@ -100,7 +106,9 @@ export function LoginPage() {
         </div>
         <div>
           <p className="text-xs ">Smart Matching</p>
-          <p className="text-[0.62rem] text-muted-foreground">Find player match-ups near you</p>
+          <p className="text-[0.62rem] text-muted-foreground">
+            Find player match-ups near you
+          </p>
         </div>
       </motion.div>
 
@@ -130,7 +138,12 @@ export function LoginPage() {
               <motion.div
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
-                transition={{ type: "spring", stiffness: 300, damping: 15, delay: 0.2 }}
+                transition={{
+                  type: "spring",
+                  stiffness: 300,
+                  damping: 15,
+                  delay: 0.2,
+                }}
               >
                 <Check className="h-10 w-10 text-emerald-500" />
               </motion.div>
@@ -156,7 +169,7 @@ export function LoginPage() {
             <form onSubmit={handleSubmit} className="space-y-4">
               {/* Account Type Selector */}
               <div className="flex p-1 space-x-1 rounded-xl bg-muted/50 border border-border/50">
-                {(["player", "owner"] as const).map((type) => (
+                {["player", "owner"].map((type) => (
                   <button
                     key={type}
                     type="button"
@@ -165,7 +178,7 @@ export function LoginPage() {
                       "flex-1 rounded-lg py-2 text-xs transition-all duration-200",
                       loginType === type
                         ? "bg-background text-foreground shadow-sm ring-1 ring-border"
-                        : "text-muted-foreground hover:text-foreground hover:bg-background/50"
+                        : "text-muted-foreground hover:text-foreground hover:bg-background/50",
                     )}
                   >
                     {type === "player" ? "Player" : "Turf Owner"}
@@ -209,13 +222,20 @@ export function LoginPage() {
                     onChange={handleInputChange}
                     required
                   />
+
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
                     className="absolute right-3 top-2.5 text-muted-foreground hover:text-foreground transition"
-                    aria-label={showPassword ? "Hide password" : "Show password"}
+                    aria-label={
+                      showPassword ? "Hide password" : "Show password"
+                    }
                   >
-                    {showPassword ? <EyeOff className="h-4.5 w-4.5" /> : <Eye className="h-4.5 w-4.5" />}
+                    {showPassword ? (
+                      <EyeOff className="h-4.5 w-4.5" />
+                    ) : (
+                      <Eye className="h-4.5 w-4.5" />
+                    )}
                   </button>
                 </div>
               </div>
@@ -226,6 +246,7 @@ export function LoginPage() {
                   checked={formData.rememberMe}
                   onCheckedChange={handleCheckboxChange}
                 />
+
                 <label
                   htmlFor="rememberMe"
                   className="text-xs text-muted-foreground leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
@@ -313,4 +334,3 @@ export function LoginPage() {
     </div>
   );
 }
-

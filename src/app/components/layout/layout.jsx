@@ -1,9 +1,18 @@
 import { useMemo, useState, useEffect } from "react";
 import { Link, Outlet, useLocation } from "react-router";
 import { motion, AnimatePresence } from "motion/react";
-import { Home, MapPin, Trophy, Users, UserCircle, MessageSquare, ChevronDown, Check } from "lucide-react";
+import {
+  Home,
+  MapPin,
+  Trophy,
+  Users,
+  UserCircle,
+  MessageSquare,
+  ChevronDown,
+  Check,
+  Activity,
+} from "lucide-react";
 
-import { Container } from "../ui/container";
 import { Button } from "../ui/button";
 import { Logo } from "../brand/Logo";
 import { MobileAppBar, MobileBottomNav } from "../mobile/mobile-chrome";
@@ -11,38 +20,45 @@ import { ThemeToggleButton } from "../ui/theme-toggle-button";
 
 const navigation = [
   { name: "Dashboard", href: "/dashboard", icon: Home },
+  { name: "Player Dashboard", href: "/player-dashboard", icon: Activity },
   { name: "Turfs", href: "/venues", icon: MapPin },
   { name: "Tournaments", href: "/tournaments", icon: Trophy },
   { name: "Players", href: "/players", icon: Users },
   { name: "Community", href: "/community", icon: MessageSquare },
 ];
 
-function getMobileTab(pathname: string) {
+function getMobileTab(pathname) {
   if (pathname === "/" || pathname === "/dashboard") return "home";
   if (pathname.startsWith("/venues")) return "explore";
-  if (pathname.startsWith("/bookings") || pathname.startsWith("/payment")) return "bookings";
+  if (pathname.startsWith("/bookings") || pathname.startsWith("/payment"))
+    return "bookings";
   if (pathname.startsWith("/tournaments")) return "tournaments";
   return "profile";
 }
 
 function CitySelector() {
-  const [city, setCity] = useState(() => localStorage.getItem("preferred-city") || "All");
+  const [city, setCity] = useState(
+    () => localStorage.getItem("preferred-city") || "All",
+  );
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
-    const handleCityChange = (e: Event) => {
-      const customEvent = e as CustomEvent;
+    const handleCityChange = (e) => {
+      const customEvent = e;
       setCity(customEvent.detail);
     };
     window.addEventListener("preferredCityChanged", handleCityChange);
-    return () => window.removeEventListener("preferredCityChanged", handleCityChange);
+    return () =>
+      window.removeEventListener("preferredCityChanged", handleCityChange);
   }, []);
 
-  const handleCitySelect = (selected: string) => {
+  const handleCitySelect = (selected) => {
     localStorage.setItem("preferred-city", selected);
     setCity(selected);
     setIsOpen(false);
-    window.dispatchEvent(new CustomEvent("preferredCityChanged", { detail: selected }));
+    window.dispatchEvent(
+      new CustomEvent("preferredCityChanged", { detail: selected }),
+    );
   };
 
   const cities = ["All", "Mumbai", "Thane", "Navi Mumbai"];
@@ -55,13 +71,18 @@ function CitySelector() {
       >
         <MapPin className="h-4 w-4 text-primary shrink-0" />
         <span>{city === "All" ? "All Cities" : city}</span>
-        <ChevronDown className={`h-3.5 w-3.5 text-muted-foreground shrink-0 transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`} />
+        <ChevronDown
+          className={`h-3.5 w-3.5 text-muted-foreground shrink-0 transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`}
+        />
       </button>
 
       <AnimatePresence>
         {isOpen && (
           <>
-            <div className="fixed inset-0 z-40" onClick={() => setIsOpen(false)} />
+            <div
+              className="fixed inset-0 z-40"
+              onClick={() => setIsOpen(false)}
+            />
             <motion.div
               initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
@@ -69,7 +90,9 @@ function CitySelector() {
               transition={{ duration: 0.15 }}
               className="absolute left-0 mt-2 w-48 rounded-2xl border border-border bg-card p-2 shadow-xl z-50 backdrop-blur-xl"
             >
-              <p className="px-3 py-1.5 text-[0.68rem]  uppercase tracking-wider text-muted-foreground">Select Region</p>
+              <p className="px-3 py-1.5 text-[0.68rem]  uppercase tracking-wider text-muted-foreground">
+                Select Region
+              </p>
               <div className="space-y-0.5 mt-1">
                 {cities.map((c) => {
                   const isSelected = city === c;
@@ -78,11 +101,15 @@ function CitySelector() {
                       key={c}
                       onClick={() => handleCitySelect(c)}
                       className={`flex w-full items-center justify-between rounded-xl px-3 py-2 text-left text-xs  transition cursor-pointer ${
-                        isSelected ? "bg-primary/10 text-primary" : "text-foreground hover:bg-accent"
+                        isSelected
+                          ? "bg-primary/10 text-primary"
+                          : "text-foreground hover:bg-accent"
                       }`}
                     >
                       <span>{c === "All" ? "All Cities" : c}</span>
-                      {isSelected && <Check className="h-3.5 w-3.5 stroke-[3]" />}
+                      {isSelected && (
+                        <Check className="h-3.5 w-3.5 stroke-[3]" />
+                      )}
                     </button>
                   );
                 })}
@@ -97,59 +124,76 @@ function CitySelector() {
 
 export function Layout() {
   const location = useLocation();
-  const mobileTab = useMemo(() => getMobileTab(location.pathname), [location.pathname]);
+  const mobileTab = useMemo(
+    () => getMobileTab(location.pathname),
+    [location.pathname],
+  );
 
   return (
-    <div className="flex min-h-dvh bg-background text-foreground">
-      {/* Desktop Sidebar */}
-      <aside className="hidden w-64 flex-col border-r border-border/40 bg-card/30 md:flex fixed inset-y-0 z-50">
-        <div className="flex flex-col h-full">
-          <div className="flex h-16 shrink-0 items-center px-6">
-            <Link to="/" className="flex items-center gap-2">
-              <Logo />
-            </Link>
-          </div>
-          
-          <div className="px-6 mb-4">
-            <CitySelector />
-          </div>
+    <div className="flex flex-col min-h-dvh bg-background text-foreground">
+      {/* Desktop Top Navbar */}
+      <header className="hidden md:flex h-16 items-center justify-between border-b border-border/40 bg-background/80 backdrop-blur-xl px-6 sticky top-0 z-50 w-full">
+        <div className="flex items-center gap-8">
+          <Link to="/" className="flex items-center gap-2">
+            <Logo />
+          </Link>
+          <CitySelector />
+        </div>
 
-          <div className="flex flex-1 flex-col overflow-y-auto px-4 py-4 space-y-1">
-            {navigation.map((item) => {
+        <nav className="flex items-center gap-2">
+          {navigation
+            .filter((item) => {
+              if (
+                location.pathname === "/player-dashboard" &&
+                item.name === "Dashboard"
+              )
+                return false;
+              if (
+                location.pathname === "/dashboard" &&
+                item.name === "Player Dashboard"
+              )
+                return false;
+              return true;
+            })
+            .map((item) => {
               const Icon = item.icon;
-              const isActive = location.pathname === item.href || (item.href !== "/dashboard" && location.pathname.startsWith(item.href));
-              
+              const isActive =
+                location.pathname === item.href ||
+                (item.href !== "/dashboard" &&
+                  location.pathname.startsWith(item.href));
               return (
                 <Link
                   key={item.name}
                   to={item.href}
-                  className={`flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm transition-colors ${
+                  className={`flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium transition-colors ${
                     isActive
-                      ? "bg-primary/10 text-primary"
-                      : "text-muted-foreground hover:bg-accent/50 hover:text-foreground"
+                      ? "bg-primary text-primary-foreground shadow-sm"
+                      : "text-muted-foreground hover:bg-accent hover:text-foreground"
                   }`}
                 >
-                  <Icon className="h-5 w-5" />
+                  <Icon className="h-4 w-4" />
                   {item.name}
                 </Link>
               );
             })}
-          </div>
+        </nav>
 
-          <div className="p-4 mt-auto border-t border-border/40 flex flex-col gap-3">
-            <ThemeToggleButton className="h-10 w-10" />
-            <Link to="/profile">
-              <Button variant="ghost" className="w-full justify-start gap-3 text-muted-foreground hover:text-foreground">
-                <UserCircle className="h-5 w-5" />
-                <span>John Doe</span>
-              </Button>
-            </Link>
-          </div>
+        <div className="flex items-center gap-3">
+          <ThemeToggleButton className="h-10 w-10 rounded-full" />
+          <Link to="/profile">
+            <Button
+              variant="ghost"
+              className="rounded-full gap-2 text-muted-foreground hover:text-foreground px-4"
+            >
+              <UserCircle className="h-5 w-5" />
+              <span>John Doe</span>
+            </Button>
+          </Link>
         </div>
-      </aside>
+      </header>
 
       {/* Main Content Area */}
-      <div className="flex flex-col flex-1 md:pl-64">
+      <div className="flex flex-col flex-1 w-full">
         <MobileAppBar />
 
         <motion.main
@@ -160,14 +204,19 @@ export function Layout() {
           transition={{ duration: 0.22, ease: "easeOut" }}
           className="flex-1 pb-[calc(104px+env(safe-area-inset-bottom))] md:pb-0"
         >
-          <div className="px-4 py-5 md:mx-auto md:max-w-7xl md:px-6 md:py-6 lg:px-8">
+          <div
+            className={`px-4 py-5 md:px-6 md:py-6 lg:px-8 ${
+              location.pathname === "/player-dashboard"
+                ? "w-full"
+                : "md:mx-auto md:max-w-7xl"
+            }`}
+          >
             <Outlet />
           </div>
         </motion.main>
 
-        <MobileBottomNav activeTab={mobileTab as "home" | "explore" | "bookings" | "tournaments" | "profile"} />
+        <MobileBottomNav activeTab={mobileTab} />
       </div>
     </div>
   );
 }
-

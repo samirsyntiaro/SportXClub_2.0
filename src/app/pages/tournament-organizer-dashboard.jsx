@@ -1,9 +1,19 @@
-import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "../components/ui/card";
 import { Button } from "../components/ui/button";
 import { Badge } from "../components/ui/badge";
 import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "../components/ui/tabs";
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "../components/ui/tabs";
 import {
   Trophy,
   Users,
@@ -79,7 +89,9 @@ export function TournamentOrganizerDashboard() {
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <h1 className="text-3xl ">Tournament Organizer Dashboard</h1>
-          <p className="text-muted-foreground mt-1">Create and manage sports tournaments</p>
+          <p className="text-muted-foreground mt-1">
+            Create and manage sports tournaments
+          </p>
         </div>
         <Button className="gap-2">
           <Plus className="h-4 w-4" />
@@ -184,7 +196,8 @@ export function TournamentOrganizerDashboard() {
                   <div>
                     <h4 className=" mb-1">{team.teamName}</h4>
                     <p className="text-sm text-muted-foreground">
-                      Captain: {team.captain} • {team.members} members • Submitted {team.submitted}
+                      Captain: {team.captain} • {team.members} members •
+                      Submitted {team.submitted}
                     </p>
                   </div>
                   <div className="flex gap-2">
@@ -192,7 +205,10 @@ export function TournamentOrganizerDashboard() {
                       <X className="h-4 w-4" />
                       Reject
                     </Button>
-                    <Button size="sm" className="gap-2 bg-accent hover:bg-accent">
+                    <Button
+                      size="sm"
+                      className="gap-2 bg-accent hover:bg-accent"
+                    >
                       <Check className="h-4 w-4" />
                       Approve
                     </Button>
@@ -270,7 +286,10 @@ export function TournamentOrganizerDashboard() {
                 </div>
                 <div>
                   <Label>Match Status</Label>
-                  <Input placeholder="12.3 overs - Mumbai Warriors batting" className="mt-2" />
+                  <Input
+                    placeholder="12.3 overs - Mumbai Warriors batting"
+                    className="mt-2"
+                  />
                 </div>
                 <Button className="w-full">Update Score</Button>
               </div>
@@ -281,4 +300,3 @@ export function TournamentOrganizerDashboard() {
     </div>
   );
 }
-

@@ -3,9 +3,7 @@ import { Link } from "react-router";
 import { motion, AnimatePresence } from "motion/react";
 import {
   ArrowRight,
-  ChevronRight,
   Dumbbell,
-  Heart,
   MapPin,
   Mic,
   Search,
@@ -22,20 +20,55 @@ import { ImageWithFallback } from "../figma/ImageWithFallback";
 import { cn } from "../ui/utils";
 import { MobileAppBar, MobileBottomNav } from "./mobile-chrome";
 
-const asset = (path: string) => `/assets${path}`;
+const asset = (path) => `/assets${path}`;
 
 const sportsCategories = [
-  { name: "Football", image: asset("/sports/cat-football.webp"), accent: "from-emerald-500/20 to-emerald-500/5" },
-  { name: "Cricket", image: asset("/sports/cat-cricket.webp"), accent: "from-lime-500/20 to-lime-500/5" },
-  { name: "Badminton", image: asset("/sports/cat-badminton.webp"), accent: "from-primary/20 to-primary/5" },
-  { name: "Tennis", image: asset("/sports/cat-tennis.webp"), accent: "from-emerald-500/20 to-emerald-500/5" },
-  { name: "Basketball", image: asset("/sports/cat-basketball.webp"), accent: "from-primary/20 to-primary/5" },
-  { name: "Volleyball", image: asset("/sports/cat-boxmma.webp"), accent: "from-lime-500/20 to-lime-500/5" },
-  { name: "Swimming", image: asset("/sports/cat-swimming.webp"), accent: "from-cyan-500/20 to-cyan-500/5" },
-  { name: "Gym", image: asset("/sports/cat-padel.webp"), accent: "from-neutral-500/20 to-neutral-500/5" },
-  { name: "More", image: asset("/sports/cat-boxmma.webp"), accent: "from-primary/20 to-primary/5" },
+  {
+    name: "Football",
+    image: asset("/sports/cat-football.webp"),
+    accent: "from-emerald-500/20 to-emerald-500/5",
+  },
+  {
+    name: "Cricket",
+    image: asset("/sports/cat-cricket.webp"),
+    accent: "from-lime-500/20 to-lime-500/5",
+  },
+  {
+    name: "Badminton",
+    image: asset("/sports/cat-badminton.webp"),
+    accent: "from-primary/20 to-primary/5",
+  },
+  {
+    name: "Tennis",
+    image: asset("/sports/cat-tennis.webp"),
+    accent: "from-emerald-500/20 to-emerald-500/5",
+  },
+  {
+    name: "Basketball",
+    image: asset("/sports/cat-basketball.webp"),
+    accent: "from-primary/20 to-primary/5",
+  },
+  {
+    name: "Volleyball",
+    image: asset("/sports/cat-boxmma.webp"),
+    accent: "from-lime-500/20 to-lime-500/5",
+  },
+  {
+    name: "Swimming",
+    image: asset("/sports/cat-swimming.webp"),
+    accent: "from-cyan-500/20 to-cyan-500/5",
+  },
+  {
+    name: "Gym",
+    image: asset("/sports/cat-padel.webp"),
+    accent: "from-neutral-500/20 to-neutral-500/5",
+  },
+  {
+    name: "More",
+    image: asset("/sports/cat-boxmma.webp"),
+    accent: "from-primary/20 to-primary/5",
+  },
 ];
-
 
 const nearbyTurfs = [
   {
@@ -154,16 +187,12 @@ const trending = [
   },
 ];
 
-function SectionHeader({
-  title,
-  action = "View all",
-}: {
-  title: string;
-  action?: string;
-}) {
+function SectionHeader({ title, action = "View all" }) {
   return (
     <div className="flex items-center justify-between gap-3">
-      <h2 className="text-[1.05rem]  tracking-tight text-foreground">{title}</h2>
+      <h2 className="text-[1.05rem]  tracking-tight text-foreground">
+        {title}
+      </h2>
       <button
         type="button"
         className="inline-flex items-center gap-1 text-sm  text-primary"
@@ -206,16 +235,7 @@ function SearchBar() {
   );
 }
 
-
-function CarouselCard({
-  title,
-  copy,
-  tint,
-}: {
-  title: string;
-  copy: string;
-  tint: string;
-}) {
+function CarouselCard({ title, copy, tint }) {
   return (
     <motion.article
       whileTap={{ scale: 0.985 }}
@@ -365,7 +385,9 @@ export function MobileHomePage() {
                           <h3 className="truncate text-base  text-foreground">
                             {venue.name}
                           </h3>
-                          <p className="mt-1 text-sm text-muted-foreground">{venue.sport}</p>
+                          <p className="mt-1 text-sm text-muted-foreground">
+                            {venue.sport}
+                          </p>
                         </div>
                         <div className="inline-flex items-center gap-1 rounded-full border border-amber-500/15 bg-amber-500/10 px-2.5 py-1 text-xs  text-amber-700">
                           <Star className="h-3.5 w-3.5 fill-amber-500 text-amber-500" />
@@ -407,6 +429,7 @@ export function MobileHomePage() {
                       decoding="async"
                       className="h-full w-full object-cover"
                     />
+
                     <div className="absolute inset-0 image-overlay bg-[linear-gradient(180deg,rgba(5,5,5,0.04),rgba(5,5,5,0.68))]" />
                     <Badge className="absolute left-3 top-3 rounded-full border border-white/20 bg-black/35 px-3 py-1 text-[0.65rem]  uppercase tracking-[0.18em] text-white backdrop-blur-md">
                       Upcoming
@@ -414,12 +437,19 @@ export function MobileHomePage() {
                   </div>
                   <div className="space-y-3 p-4">
                     <div>
-                      <h3 className="text-base  text-foreground">{item.title}</h3>
-                      <p className="mt-1 text-sm text-muted-foreground">{item.date}</p>
+                      <h3 className="text-base  text-foreground">
+                        {item.title}
+                      </h3>
+                      <p className="mt-1 text-sm text-muted-foreground">
+                        {item.date}
+                      </p>
                     </div>
                     <div className="flex items-center justify-between">
                       <p className="text-sm  text-primary">{item.prize}</p>
-                      <Button variant="ghost" className="h-10 rounded-full px-4 text-sm  text-foreground">
+                      <Button
+                        variant="ghost"
+                        className="h-10 rounded-full px-4 text-sm  text-foreground"
+                      >
                         Join
                       </Button>
                     </div>
@@ -455,11 +485,14 @@ export function MobileHomePage() {
                       decoding="async"
                       className="h-full w-full object-cover"
                     />
+
                     <div className="absolute inset-0 image-overlay bg-[linear-gradient(180deg,rgba(5,5,5,0.02),rgba(5,5,5,0.56))]" />
                   </div>
                   <div className="p-3">
                     <h3 className="text-sm  text-foreground">{item.name}</h3>
-                    <p className="mt-1 text-xs text-muted-foreground">{item.detail}</p>
+                    <p className="mt-1 text-xs text-muted-foreground">
+                      {item.detail}
+                    </p>
                   </div>
                 </motion.article>
               ))}
@@ -487,7 +520,9 @@ export function MobileHomePage() {
                     </div>
                     <div>
                       <h3 className="text-sm  text-foreground">{item.name}</h3>
-                      <p className="mt-1 text-xs text-muted-foreground">{item.sport}</p>
+                      <p className="mt-1 text-xs text-muted-foreground">
+                        {item.sport}
+                      </p>
                     </div>
                   </div>
                 </motion.article>
@@ -510,8 +545,12 @@ export function MobileHomePage() {
                     <div className="flex h-12 w-12 items-center justify-center rounded-2xl border border-primary/15 bg-primary/10 text-primary">
                       <Icon className="h-5 w-5" />
                     </div>
-                    <h3 className="mt-4 text-sm  text-foreground">{item.name}</h3>
-                    <p className="mt-1 text-xs leading-5 text-muted-foreground">{item.note}</p>
+                    <h3 className="mt-4 text-sm  text-foreground">
+                      {item.name}
+                    </h3>
+                    <p className="mt-1 text-xs leading-5 text-muted-foreground">
+                      {item.note}
+                    </p>
                   </motion.article>
                 );
               })}
@@ -524,4 +563,3 @@ export function MobileHomePage() {
     </div>
   );
 }
-

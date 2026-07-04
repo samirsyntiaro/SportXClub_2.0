@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Link, type To } from "react-router";
+import { Link } from "react-router";
 import { motion, AnimatePresence } from "motion/react";
 import { useTheme } from "next-themes";
 import {
@@ -16,45 +16,48 @@ import {
   X,
   ChevronRight,
   ShoppingCart,
-  Moon,
-  Sun,
 } from "lucide-react";
 
-import { Avatar, AvatarFallback } from "../ui/avatar";
 import { Button } from "../ui/button";
 import { cn } from "../ui/utils";
 import { ThemeToggleButton } from "../ui/theme-toggle-button";
 import { Logo } from "../brand/Logo";
 
-type MobileTabKey = "home" | "explore" | "bookings" | "tournaments" | "profile";
-
-export const mobileNavigation: Array<{
-  key: MobileTabKey;
-  label: string;
-  href: To;
-  icon: typeof Home;
-}> = [
+export const mobileNavigation = [
   { key: "home", label: "Home", href: "/", icon: Home },
   { key: "explore", label: "Turfs", href: "/venues", icon: Compass },
-  { key: "bookings", label: "Bookings", href: "/bookings", icon: CalendarCheck2 },
-  { key: "tournaments", label: "Tournaments", href: "/tournaments", icon: Trophy },
+  {
+    key: "bookings",
+    label: "Bookings",
+    href: "/bookings",
+    icon: CalendarCheck2,
+  },
+  {
+    key: "tournaments",
+    label: "Tournaments",
+    href: "/tournaments",
+    icon: Trophy,
+  },
   { key: "profile", label: "Profile", href: "/profile", icon: UserCircle2 },
 ];
 
 export function MobileAppBar() {
-  const [city, setCity] = useState(() => localStorage.getItem("preferred-city") || "Mumbai");
+  const [city, setCity] = useState(
+    () => localStorage.getItem("preferred-city") || "Mumbai",
+  );
   const [isOpen, setIsOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const { theme, setTheme, resolvedTheme } = useTheme();
   const isDark = resolvedTheme !== "light";
 
   useEffect(() => {
-    const handleCityChange = (e: Event) => {
-      const customEvent = e as CustomEvent;
+    const handleCityChange = (e) => {
+      const customEvent = e;
       setCity(customEvent.detail);
     };
     window.addEventListener("preferredCityChanged", handleCityChange);
-    return () => window.removeEventListener("preferredCityChanged", handleCityChange);
+    return () =>
+      window.removeEventListener("preferredCityChanged", handleCityChange);
   }, []);
 
   useEffect(() => {
@@ -68,11 +71,13 @@ export function MobileAppBar() {
     };
   }, [menuOpen]);
 
-  const handleCitySelect = (selected: string) => {
+  const handleCitySelect = (selected) => {
     localStorage.setItem("preferred-city", selected);
     setCity(selected);
     setIsOpen(false);
-    window.dispatchEvent(new CustomEvent("preferredCityChanged", { detail: selected }));
+    window.dispatchEvent(
+      new CustomEvent("preferredCityChanged", { detail: selected }),
+    );
   };
 
   const cities = [
@@ -92,8 +97,20 @@ export function MobileAppBar() {
     { label: "Events", to: "/community", hasChevron: true, isGreen: true },
     { label: "Tournaments", to: "/tournaments", hasChevron: true },
     { label: "Membership", to: "/profile", hasChevron: true },
-    { label: "Notifications", to: "/dashboard", hasChevron: true, isNotification: true, badge: 3 },
-    { label: "Cart", to: "/bookings", hasChevron: true, isCart: true, badge: 2 },
+    {
+      label: "Notifications",
+      to: "/dashboard",
+      hasChevron: true,
+      isNotification: true,
+      badge: 3,
+    },
+    {
+      label: "Cart",
+      to: "/bookings",
+      hasChevron: true,
+      isCart: true,
+      badge: 2,
+    },
   ];
 
   return (
@@ -111,7 +128,9 @@ export function MobileAppBar() {
               className="flex items-center gap-0.5 mt-1 text-xs  text-primary active:opacity-70 text-left leading-none cursor-pointer"
             >
               <MapPin className="h-3 w-3 shrink-0" />
-              <span className="truncate max-w-[80px]">{city === "All" ? "All Areas" : city}</span>
+              <span className="truncate max-w-[80px]">
+                {city === "All" ? "All Areas" : city}
+              </span>
               <ChevronDown className="h-3 w-3 shrink-0 text-primary/80" />
             </button>
           </div>
@@ -126,11 +145,13 @@ export function MobileAppBar() {
             className="h-10.5 w-10.5 rounded-full border border-border/60 bg-background/60 text-foreground shadow-xs backdrop-blur-md cursor-pointer"
             aria-label="Toggle Menu"
           >
-            {menuOpen ? <X className="h-4.5 w-4.5" /> : <Menu className="h-4.5 w-4.5" />}
+            {menuOpen ? (
+              <X className="h-4.5 w-4.5" />
+            ) : (
+              <Menu className="h-4.5 w-4.5" />
+            )}
           </Button>
-          <ThemeToggleButton
-            className="h-10.5 w-10.5 rounded-full border border-border/60 bg-background/60 text-foreground shadow-xs backdrop-blur-md cursor-pointer"
-          />
+          <ThemeToggleButton className="h-10.5 w-10.5 rounded-full border border-border/60 bg-background/60 text-foreground shadow-xs backdrop-blur-md cursor-pointer" />
         </div>
       </div>
 
@@ -139,7 +160,10 @@ export function MobileAppBar() {
         {menuOpen && (
           <>
             {/* Backdrop */}
-            <div className="fixed inset-x-0 bottom-0 top-[calc(64px+env(safe-area-inset-top))] z-40 bg-black/25 backdrop-blur-xs" onClick={() => setMenuOpen(false)} />
+            <div
+              className="fixed inset-x-0 bottom-0 top-[calc(64px+env(safe-area-inset-top))] z-40 bg-black/25 backdrop-blur-xs"
+              onClick={() => setMenuOpen(false)}
+            />
 
             {/* Menu container */}
             <motion.div
@@ -163,7 +187,7 @@ export function MobileAppBar() {
                         "px-4 py-1.5 rounded-full text-xs whitespace-nowrap transition cursor-pointer border",
                         city === c
                           ? "bg-primary/10 border-primary text-primary"
-                          : "bg-muted/40 border-border text-muted-foreground hover:bg-muted"
+                          : "bg-muted/40 border-border text-muted-foreground hover:bg-muted",
                       )}
                     >
                       {c}
@@ -184,14 +208,16 @@ export function MobileAppBar() {
                         {item.isNotification && (
                           <Bell className="h-5 w-5 text-primary" />
                         )}
-                        <span className={cn(
-                          "text-sm tracking-wide text-left",
-                          item.isGreen ? "text-primary" : "text-foreground"
-                        )}>
+                        <span
+                          className={cn(
+                            "text-sm tracking-wide text-left",
+                            item.isGreen ? "text-primary" : "text-foreground",
+                          )}
+                        >
                           {item.label}
                         </span>
                       </div>
-                      
+
                       <div className="flex items-center gap-2">
                         {item.badge !== undefined && (
                           <span className="flex h-5 w-5 items-center justify-center rounded-full text-[10px] bg-primary text-primary-foreground">
@@ -216,7 +242,6 @@ export function MobileAppBar() {
                     </Link>
                   );
                 })}
-
               </div>
             </motion.div>
           </>
@@ -235,6 +260,7 @@ export function MobileAppBar() {
               onClick={() => setIsOpen(false)}
               className="fixed inset-0 bg-black/60 z-50 backdrop-blur-xs"
             />
+
             {/* Native-style bottom sheet */}
             <motion.div
               initial={{ y: "100%" }}
@@ -244,9 +270,13 @@ export function MobileAppBar() {
               className="fixed bottom-0 inset-x-0 rounded-t-[32px] border-t border-border bg-card p-6 shadow-[0_-10px_40px_rgba(0,0,0,0.3)] z-50 max-h-[85vh] overflow-y-auto"
             >
               <div className="mx-auto w-12 h-1 bg-muted rounded-full mb-4" />
-              <h3 className="text-lg  text-foreground">Select Playing Region</h3>
-              <p className="text-xs text-muted-foreground mt-1 mb-4">Choose your city to view verified sports turfs near you.</p>
-              
+              <h3 className="text-lg  text-foreground">
+                Select Playing Region
+              </h3>
+              <p className="text-xs text-muted-foreground mt-1 mb-4">
+                Choose your city to view verified sports turfs near you.
+              </p>
+
               <div className="space-y-2">
                 {cities.map((c) => {
                   const isSelected = city === c;
@@ -261,7 +291,9 @@ export function MobileAppBar() {
                       }`}
                     >
                       <div className="flex items-center gap-2">
-                        <MapPin className={`h-4.5 w-4.5 ${isSelected ? "text-primary" : "text-muted-foreground"}`} />
+                        <MapPin
+                          className={`h-4.5 w-4.5 ${isSelected ? "text-primary" : "text-muted-foreground"}`}
+                        />
                         <span>{c === "All" ? "All Cities" : c}</span>
                       </div>
                       {isSelected && (
@@ -289,11 +321,7 @@ export function MobileAppBar() {
   );
 }
 
-export function MobileBottomNav({
-  activeTab,
-}: {
-  activeTab: MobileTabKey;
-}) {
+export function MobileBottomNav({ activeTab }) {
   return (
     <nav className="fixed inset-x-0 bottom-0 z-50 md:hidden">
       <div className="mx-auto max-w-screen-xl px-3 pb-[calc(env(safe-area-inset-bottom)+0.5rem)]">
@@ -323,7 +351,11 @@ export function MobileBottomNav({
                       <motion.div
                         layoutId="mobile-nav-active"
                         className="absolute inset-0 rounded-[20px] bg-primary/10"
-                        transition={{ type: "spring", stiffness: 520, damping: 36 }}
+                        transition={{
+                          type: "spring",
+                          stiffness: 520,
+                          damping: 36,
+                        }}
                       />
                     )}
                     <span
@@ -336,7 +368,9 @@ export function MobileBottomNav({
                     >
                       <Icon className="h-5 w-5" />
                     </span>
-                    <span className="relative z-10 leading-none">{item.label}</span>
+                    <span className="relative z-10 leading-none">
+                      {item.label}
+                    </span>
                   </Link>
                 </motion.div>
               );
@@ -347,4 +381,3 @@ export function MobileBottomNav({
     </nav>
   );
 }
-

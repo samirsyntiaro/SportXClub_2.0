@@ -1,4 +1,3 @@
-import { type ComponentProps } from "react";
 import { Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
 
@@ -9,10 +8,6 @@ export function ThemeToggleButton({
   className,
   variant = "ghost",
   size = "icon",
-}: {
-  className?: string;
-  variant?: ComponentProps<typeof Button>["variant"];
-  size?: ComponentProps<typeof Button>["size"];
 }) {
   const { resolvedTheme, setTheme } = useTheme();
   const isDark = resolvedTheme === "dark";
@@ -29,4 +24,3 @@ export function ThemeToggleButton({
     </Button>
   );
 }
-

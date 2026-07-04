@@ -1,5 +1,10 @@
 import { useState, useEffect } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "../../components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "../../components/ui/card";
 import { Button } from "../../components/ui/button";
 import { Loader2, AlertCircle } from "lucide-react";
 import { bookingService } from "../../services/booking.service";
@@ -8,9 +13,9 @@ import { bookingService } from "../../services/booking.service";
 const OWNER_ID = "owner-123";
 
 export function CalendarView() {
-  const [data, setData] = useState<any>(null);
+  const [data, setData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -19,7 +24,7 @@ export function CalendarView() {
         // Replace with actual method when implemented
         const result = await bookingService.getAll(OWNER_ID);
         setData(result);
-      } catch (err: any) {
+      } catch (err) {
         setError(err.message || "Failed to load data");
       } finally {
         setIsLoading(false);
@@ -42,7 +47,9 @@ export function CalendarView() {
       <div className="flex h-[400px] flex-col items-center justify-center text-destructive space-y-4">
         <AlertCircle className="h-12 w-12" />
         <p className="text-lg">{error}</p>
-        <Button variant="outline" onClick={() => window.location.reload()}>Retry</Button>
+        <Button variant="outline" onClick={() => window.location.reload()}>
+          Retry
+        </Button>
       </div>
     );
   }
@@ -65,10 +72,10 @@ export function CalendarView() {
             </div>
           ) : (
             <div className="text-sm">
-               {/* Replace with actual data rendering */}
-               <pre className="p-4 bg-muted/50 rounded-lg overflow-auto max-h-96">
-                 {JSON.stringify(data, null, 2)}
-               </pre>
+              {/* Replace with actual data rendering */}
+              <pre className="p-4 bg-muted/50 rounded-lg overflow-auto max-h-96">
+                {JSON.stringify(data, null, 2)}
+              </pre>
             </div>
           )}
         </CardContent>

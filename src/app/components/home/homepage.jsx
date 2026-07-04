@@ -5,10 +5,8 @@ import { useTheme } from "next-themes";
 import {
   ArrowRight,
   CalendarDays,
-  Clock3,
   ChevronDown,
   ChevronRight,
-  Heart,
   Locate,
   MapPin,
   PlayCircle,
@@ -16,7 +14,6 @@ import {
   Star,
   ShieldCheck,
   SlidersHorizontal,
-  Trophy,
   Zap,
   Instagram,
   Facebook,
@@ -27,8 +24,6 @@ import {
   X,
   User,
   LogOut,
-  Moon,
-  Sun,
 } from "lucide-react";
 
 import { useIsMobile } from "../ui/use-mobile";
@@ -49,16 +44,44 @@ import { Logo } from "../brand/Logo";
 import { ThemeToggleButton } from "../ui/theme-toggle-button";
 import { ImageWithFallback } from "../figma/ImageWithFallback";
 
-const asset = (path: string) => `/assets${path}`;
+const asset = (path) => `/assets${path}`;
 
 const sports = [
-  { name: "Football", count: "1,248 venues", image: asset("/sports/cat-football.webp") },
-  { name: "Cricket", count: "892 venues", image: asset("/sports/cat-cricket.webp") },
-  { name: "Badminton", count: "734 venues", image: asset("/sports/cat-badminton.webp") },
-  { name: "Basketball", count: "641 venues", image: asset("/sports/cat-basketball.webp") },
-  { name: "Volleyball", count: "418 venues", image: asset("/sports/cat-boxmma.webp") },
-  { name: "Tennis", count: "518 venues", image: asset("/sports/cat-tennis.webp") },
-  { name: "Swimming", count: "302 venues", image: asset("/sports/cat-swimming.webp") },
+  {
+    name: "Football",
+    count: "1,248 venues",
+    image: asset("/sports/cat-football.webp"),
+  },
+  {
+    name: "Cricket",
+    count: "892 venues",
+    image: asset("/sports/cat-cricket.webp"),
+  },
+  {
+    name: "Badminton",
+    count: "734 venues",
+    image: asset("/sports/cat-badminton.webp"),
+  },
+  {
+    name: "Basketball",
+    count: "641 venues",
+    image: asset("/sports/cat-basketball.webp"),
+  },
+  {
+    name: "Volleyball",
+    count: "418 venues",
+    image: asset("/sports/cat-boxmma.webp"),
+  },
+  {
+    name: "Tennis",
+    count: "518 venues",
+    image: asset("/sports/cat-tennis.webp"),
+  },
+  {
+    name: "Swimming",
+    count: "302 venues",
+    image: asset("/sports/cat-swimming.webp"),
+  },
 ];
 
 const moreSports = [
@@ -77,13 +100,15 @@ const offers = [
   {
     title: "Tournament starter pack",
     value: "Free listing",
-    description: "Launch your first event with verified venue discovery and bracket tools.",
+    description:
+      "Launch your first event with verified venue discovery and bracket tools.",
     tag: "Organizer offer",
   },
   {
     title: "Refund-safe booking",
     value: "Easy cancellation",
-    description: "Clear refund rules, visible before payment, with trusted support.",
+    description:
+      "Clear refund rules, visible before payment, with trusted support.",
     tag: "Trusted",
   },
 ];
@@ -109,7 +134,6 @@ const events = [
   },
 ];
 
-
 const tournaments = [
   {
     title: "City Five-A-Side Cup",
@@ -133,8 +157,6 @@ const tournaments = [
     image: asset("/tournaments/tournament-3-cover.webp"),
   },
 ];
-
-
 
 const whyCards = [
   {
@@ -164,7 +186,12 @@ const whyCards = [
 ];
 
 const stats = [
-  { value: 42000, suffix: "+", label: "Players connected", icon: asset("/icons/users.svg") },
+  {
+    value: 42000,
+    suffix: "+",
+    label: "Players connected",
+    icon: asset("/icons/users.svg"),
+  },
 ];
 
 function HeroParticles() {
@@ -178,7 +205,9 @@ function HeroParticles() {
           key={index}
           className={cn(
             "absolute rounded-full blur-[1px]",
-            isDark ? "h-1 w-1 bg-[#6DFF3B]/60" : "h-0.5 w-0.5 bg-emerald-400/20",
+            isDark
+              ? "h-1 w-1 bg-[#6DFF3B]/60"
+              : "h-0.5 w-0.5 bg-emerald-400/20",
           )}
           style={{
             left: `${10 + ((index * 7) % 80)}%`,
@@ -186,8 +215,16 @@ function HeroParticles() {
           }}
           animate={
             isDark
-              ? { y: [0, -14, 0], opacity: [0.12, 0.7, 0.12], scale: [1, 1.35, 1] }
-              : { y: [0, -10, 0], opacity: [0.03, 0.12, 0.03], scale: [1, 1.12, 1] }
+              ? {
+                  y: [0, -14, 0],
+                  opacity: [0.12, 0.7, 0.12],
+                  scale: [1, 1.35, 1],
+                }
+              : {
+                  y: [0, -10, 0],
+                  opacity: [0.03, 0.12, 0.03],
+                  scale: [1, 1.12, 1],
+                }
           }
           transition={{
             duration: isDark ? 5 + (index % 4) : 8 + (index % 4),
@@ -201,8 +238,8 @@ function HeroParticles() {
   );
 }
 
-function AnimatedNumber({ value, suffix = "" }: { value: number; suffix?: string }) {
-  const ref = useRef<HTMLSpanElement>(null);
+function AnimatedNumber({ value, suffix = "" }) {
+  const ref = useRef(null);
   const inView = useInView(ref, { once: true, amount: 0.7 });
   const [count, setCount] = useState(0);
 
@@ -213,7 +250,7 @@ function AnimatedNumber({ value, suffix = "" }: { value: number; suffix?: string
     const start = performance.now();
     const duration = 1400;
 
-    const tick = (now: number) => {
+    const tick = (now) => {
       const progress = Math.min((now - start) / duration, 1);
       const eased = 1 - (1 - progress) * (1 - progress);
       setCount(Math.round(value * eased));
@@ -235,17 +272,7 @@ function AnimatedNumber({ value, suffix = "" }: { value: number; suffix?: string
   );
 }
 
-function SectionHeading({
-  eyebrow,
-  title,
-  description,
-  centered = false,
-}: {
-  eyebrow: string;
-  title: string;
-  description: string;
-  centered?: boolean;
-}) {
+function SectionHeading({ eyebrow, title, description, centered = false }) {
   return (
     <div className={cn("max-w-3xl", centered && "mx-auto text-center")}>
       <p className="text-[0.72rem]  uppercase tracking-[0.36em] text-[#6DFF3B]/85">
@@ -254,7 +281,9 @@ function SectionHeading({
       <h2 className="mt-4 text-3xl  tracking-tight text-white md:text-4xl lg:text-[2.8rem] lg:leading-[1.04]">
         {title}
       </h2>
-      <p className="mt-4 text-base leading-8 text-white/66 md:text-lg">{description}</p>
+      <p className="mt-4 text-base leading-8 text-white/66 md:text-lg">
+        {description}
+      </p>
     </div>
   );
 }
@@ -262,9 +291,28 @@ function SectionHeading({
 export function Navbar() {
   const { resolvedTheme } = useTheme();
   const isDark = resolvedTheme !== "light";
-  const [activeCity, setActiveCity] = useState(() => localStorage.getItem("preferred-city") || "Mumbai");
+  const [activeCity, setActiveCity] = useState(
+    () => localStorage.getItem("preferred-city") || "Mumbai",
+  );
   const [menuOpen, setMenuOpen] = useState(false);
   const [searchValue, setSearchValue] = useState("");
+  const drawerRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (menuOpen && drawerRef.current && !drawerRef.current.contains(event.target)) {
+        const toggleButton = document.getElementById("hamburger-menu-toggle-btn");
+        if (toggleButton && toggleButton.contains(event.target)) {
+          return;
+        }
+        setMenuOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [menuOpen]);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
   const [userName, setUserName] = useState("");
@@ -277,29 +325,23 @@ export function Navbar() {
   }, []);
 
   useEffect(() => {
-    const handleCityChange = (e: Event) => {
-      const customEvent = e as CustomEvent;
+    const handleCityChange = (e) => {
+      const customEvent = e;
       setActiveCity(customEvent.detail);
     };
     window.addEventListener("preferredCityChanged", handleCityChange);
-    return () => window.removeEventListener("preferredCityChanged", handleCityChange);
+    return () =>
+      window.removeEventListener("preferredCityChanged", handleCityChange);
   }, []);
 
-  useEffect(() => {
-    if (menuOpen) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "";
-    }
-    return () => {
-      document.body.style.overflow = "";
-    };
-  }, [menuOpen]);
 
-  const handleCitySelect = (selected: string) => {
+
+  const handleCitySelect = (selected) => {
     localStorage.setItem("preferred-city", selected);
     setActiveCity(selected);
-    window.dispatchEvent(new CustomEvent("preferredCityChanged", { detail: selected }));
+    window.dispatchEvent(
+      new CustomEvent("preferredCityChanged", { detail: selected }),
+    );
   };
 
   const cities = [
@@ -320,67 +362,351 @@ export function Navbar() {
     { label: "Coaching", to: "/ai-assistant", hasChevron: true },
     { label: "Tournaments", to: "/tournaments", hasChevron: true },
     { label: "Membership", to: "/profile", hasChevron: true },
-    { label: "Cart", to: "/bookings", hasChevron: true, isCart: true, badge: 2 },
+    {
+      label: "Cart",
+      to: "/bookings",
+      hasChevron: true,
+      isCart: true,
+      badge: 2,
+    },
   ];
 
   return (
     <>
-    <header
-      className={cn(
-        "sticky top-0 z-50 border-b backdrop-blur-2xl transition-colors duration-200 shadow-sm dark:shadow-[0_4px_30px_rgba(0,0,0,0.6)]",
-        isDark
-          ? "border-white/[0.08] bg-[#050505]/95 text-white"
-          : "border-slate-200/80 bg-white/95 text-slate-900"
-      )}
-    >
-      <div className="mx-auto flex h-[76px] max-w-[1440px] items-center justify-between gap-4 px-6 lg:px-8">
-        {/* Left Section: Logo */}
-        <div className="flex flex-1 items-center justify-start">
-          <Link to="/" className="flex items-center">
-            <Logo />
-          </Link>
+      <header
+        className={cn(
+          "sticky top-0 z-50 border-b backdrop-blur-2xl transition-colors duration-200 shadow-sm dark:shadow-[0_4px_30px_rgba(0,0,0,0.6)]",
+          isDark
+            ? "border-white/[0.08] bg-[#050505]/95 text-white"
+            : "border-slate-200/80 bg-white/95 text-slate-900",
+        )}
+      >
+        <div className="mx-auto flex h-[76px] max-w-[1440px] items-center justify-between gap-4 px-6 lg:px-8">
+          {/* Left Section: Logo */}
+          <div className="flex flex-1 items-center justify-start">
+            <Link to="/" className="flex items-center">
+              <Logo />
+            </Link>
+          </div>
+
+          {/* Center Section: Sleek Search Bar */}
+          <div className="hidden md:flex items-center justify-center shrink-0 w-full max-w-[400px] lg:max-w-[460px] mx-4 relative">
+            <div
+              className={cn(
+                "flex items-center w-full rounded-full border px-4 py-2 shadow-sm transition-all duration-200 focus-within:ring-2",
+                isDark
+                  ? "border-white/[0.08] bg-white/[0.03] focus-within:border-[#6DFF3B]/30 focus-within:ring-[#6DFF3B]/10"
+                  : "border-slate-200 bg-[#F1F3F6]/60 hover:bg-[#F1F3F6]/80 focus-within:bg-white focus-within:border-emerald-500/30 focus-within:ring-emerald-500/10",
+              )}
+            >
+              {/* Search Icon */}
+              <Search
+                className={cn(
+                  "h-4 w-4 shrink-0 mr-2.5",
+                  isDark ? "text-[#6DFF3B]" : "text-emerald-600",
+                )}
+              />
+
+              {/* Real Search Input */}
+              <input
+                type="text"
+                value={searchValue}
+                onChange={(e) => setSearchValue(e.target.value)}
+                placeholder="Search venues, areas, sports..."
+                className={cn(
+                  "w-full bg-transparent border-0 p-0 text-[0.825rem] lg:text-[0.875rem] font-normal outline-none focus:ring-0 focus:outline-none",
+                  isDark
+                    ? "placeholder:text-white/40 text-white"
+                    : "placeholder:text-slate-400 text-slate-800",
+                )}
+              />
+
+              {/* Divider Line */}
+              <div
+                className={cn(
+                  "h-4 w-[1px] shrink-0 mx-3",
+                  isDark ? "bg-white/[0.12]" : "bg-slate-300",
+                )}
+              />
+
+              {/* Location Selector (with Dialog Trigger) */}
+              <Dialog>
+                <DialogTrigger asChild>
+                  <button className="flex items-center gap-1.5 shrink-0 text-[0.825rem] lg:text-[0.875rem] transition hover:opacity-80 cursor-pointer">
+                    <MapPin
+                      className={cn(
+                        "h-3.5 w-3.5 shrink-0",
+                        isDark ? "text-[#6DFF3B]" : "text-emerald-600",
+                      )}
+                    />
+                    <span className={isDark ? "text-white" : "text-slate-700"}>
+                      {activeCity === "All" ? "All Cities" : activeCity}
+                    </span>
+                    <ChevronDown
+                      className={cn(
+                        "h-3 w-3 shrink-0 transition-transform",
+                        isDark ? "text-white/40" : "text-slate-400",
+                      )}
+                    />
+                  </button>
+                </DialogTrigger>
+                <DialogContent
+                  className={cn(
+                    "sm:max-w-[425px]",
+                    isDark
+                      ? "bg-[#101216] border-white/[0.08]"
+                      : "bg-white border-slate-200",
+                  )}
+                >
+                  <DialogHeader>
+                    <DialogTitle
+                      className={cn(isDark ? "text-white" : "text-slate-900")}
+                    >
+                      Select your city
+                    </DialogTitle>
+                  </DialogHeader>
+                  <div className="flex flex-col gap-4 mt-2">
+                    <button
+                      type="button"
+                      onClick={() => handleCitySelect("All")}
+                      className={cn(
+                        "flex items-center gap-3 w-full p-3 rounded-xl transition text-left",
+                        isDark
+                          ? "bg-[#6DFF3B]/10 text-[#6DFF3B] hover:bg-[#6DFF3B]/20"
+                          : "bg-emerald-50 text-emerald-700 hover:bg-emerald-100",
+                      )}
+                    >
+                      <Locate className="h-5 w-5" />
+                      <div className="flex flex-col">
+                        <span className=" text-sm">All Cities</span>
+                        <span
+                          className={cn(
+                            "text-xs",
+                            isDark
+                              ? "text-[#6DFF3B]/70"
+                              : "text-emerald-600/70",
+                          )}
+                        >
+                          Detect my location
+                        </span>
+                      </div>
+                    </button>
+                    <div className="grid grid-cols-3 gap-3 mt-2">
+                      {cities.map((city) => (
+                        <button
+                          key={city}
+                          type="button"
+                          onClick={() => handleCitySelect(city)}
+                          className={cn(
+                            "flex flex-col items-center justify-center p-3 rounded-xl transition text-center gap-2 border",
+                            activeCity === city
+                              ? isDark
+                                ? "border-[#6DFF3B] bg-[#6DFF3B]/5 text-[#6DFF3B]"
+                                : "border-emerald-500 bg-emerald-50 text-emerald-700"
+                              : isDark
+                                ? "border-transparent hover:bg-white/[0.04] text-white/80 hover:text-white"
+                                : "border-transparent hover:bg-slate-50 text-slate-700 hover:text-slate-900",
+                          )}
+                        >
+                          <MapPin
+                            className={cn(
+                              "h-5 w-5",
+                              activeCity === city
+                                ? isDark
+                                  ? "text-[#6DFF3B]"
+                                  : "text-emerald-600"
+                                : "opacity-50",
+                            )}
+                          />
+                          <span className="text-xs">{city}</span>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                </DialogContent>
+              </Dialog>
+            </div>
+          </div>
+
+          {/* Right Section: Sign In + Hamburger Menu Toggle */}
+          <div className="flex flex-1 items-center justify-end gap-4">
+            {/* Auth Section: Login or Profile */}
+            {isLoggedIn ? (
+              <div className="relative">
+                <button
+                  onClick={() => setProfileOpen(!profileOpen)}
+                  className={cn(
+                    "flex h-10 items-center justify-center gap-2 rounded-full border shadow-sm transition px-4",
+                    isDark
+                      ? "border-white/[0.08] bg-white/[0.03] text-[#6DFF3B] hover:bg-white/[0.06]"
+                      : "border-slate-200 bg-slate-50 text-emerald-600 hover:bg-slate-100",
+                  )}
+                >
+                  <User className="h-5 w-5" />
+                  <span className="text-sm font-medium">{userName}</span>
+                </button>
+
+                {/* Profile Dropdown */}
+                {profileOpen && (
+                  <div
+                    className={cn(
+                      "absolute right-0 mt-2 w-48 rounded-xl border shadow-lg overflow-hidden z-50",
+                      isDark
+                        ? "bg-[#101216] border-white/[0.08]"
+                        : "bg-white border-slate-200",
+                    )}
+                  >
+                    <div className="p-2 space-y-1">
+                      <Link
+                        to="/profile"
+                        onClick={() => setProfileOpen(false)}
+                      >
+                        <button
+                          className={cn(
+                            "w-full flex items-center gap-2 px-3 py-2 text-sm rounded-md transition",
+                            isDark
+                              ? "hover:bg-white/5 text-white"
+                              : "hover:bg-slate-100 text-slate-800",
+                          )}
+                        >
+                          <User className="h-4 w-4" />
+                          Profile
+                        </button>
+                      </Link>
+                      <div
+                        className={cn(
+                          "h-[1px] w-full my-1",
+                          isDark ? "bg-white/10" : "bg-slate-100",
+                        )}
+                      />
+                      <button
+                        onClick={() => {
+                          localStorage.removeItem("isLoggedIn");
+                          setIsLoggedIn(false);
+                          setProfileOpen(false);
+                        }}
+                        className={cn(
+                          "w-full flex items-center gap-2 px-3 py-2 text-sm rounded-md transition",
+                          isDark
+                            ? "hover:bg-white/5 text-red-400"
+                            : "hover:bg-slate-100 text-red-600",
+                        )}
+                      >
+                        <LogOut className="h-4 w-4" />
+                        Logout
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <Link to="/login">
+                <button
+                  className={cn(
+                    "flex h-10 items-center justify-center rounded-full border px-5 text-sm tracking-wide transition cursor-pointer hover:bg-opacity-10",
+                    isDark
+                      ? "border-[#6DFF3B] text-[#6DFF3B] hover:bg-[#6DFF3B]/10"
+                      : "border-emerald-500 text-emerald-600 hover:bg-emerald-50",
+                  )}
+                >
+                  Login
+                </button>
+              </Link>
+            )}
+
+            {/* Hamburger Menu Toggle Button */}
+            <button
+              id="hamburger-menu-toggle-btn"
+              onClick={() => setMenuOpen(!menuOpen)}
+              className={cn(
+                "flex h-10 w-10 items-center justify-center rounded-full transition duration-200 cursor-pointer",
+                isDark
+                  ? "text-white/80 hover:bg-white/[0.08] hover:text-white"
+                  : "text-slate-700 hover:bg-slate-100 hover:text-slate-900",
+              )}
+              aria-label="Toggle menu"
+            >
+              {menuOpen ? (
+                <X className="h-5 w-5" />
+              ) : (
+                <Menu className="h-5 w-5" />
+              )}
+            </button>
+
+            {/* Theme Toggle Button */}
+            <ThemeToggleButton
+              className={cn(
+                "flex h-10 w-10 items-center justify-center rounded-full border shadow-sm transition",
+                isDark
+                  ? "border-white/[0.08] bg-white/[0.03] text-white/80 hover:bg-white/[0.06] hover:text-white"
+                  : "border-slate-200 bg-slate-50 text-slate-700 hover:bg-slate-100 hover:text-slate-900",
+              )}
+              variant="ghost"
+            />
+          </div>
         </div>
 
-        {/* Center Section: Sleek Search Bar */}
-        <div className="hidden md:flex items-center justify-center shrink-0 w-full max-w-[400px] lg:max-w-[460px] mx-4 relative">
+        {/* Mobile/Tablet Search pill (shown only below 'md' screen size) */}
+        <div className="md:hidden px-4 pb-3">
           <div
             className={cn(
-              "flex items-center w-full rounded-full border px-4 py-2 shadow-sm transition-all duration-200 focus-within:ring-2",
+              "flex items-center w-full rounded-full border px-4 py-2 shadow-sm transition-all duration-200",
               isDark
-                ? "border-white/[0.08] bg-white/[0.03] focus-within:border-[#6DFF3B]/30 focus-within:ring-[#6DFF3B]/10"
-                : "border-slate-200 bg-[#F1F3F6]/60 hover:bg-[#F1F3F6]/80 focus-within:bg-white focus-within:border-emerald-500/30 focus-within:ring-emerald-500/10"
+                ? "border-white/[0.08] bg-white/[0.03] focus-within:border-[#6DFF3B]/30 focus-within:ring-2 focus-within:ring-[#6DFF3B]/10"
+                : "border-slate-200 bg-[#F1F3F6]/60 focus-within:bg-white focus-within:border-emerald-500/30 focus-within:ring-2 focus-within:ring-emerald-500/10",
             )}
           >
-            {/* Search Icon */}
-            <Search className={cn("h-4 w-4 shrink-0 mr-2.5", isDark ? "text-[#6DFF3B]" : "text-emerald-600")} />
-
-            {/* Real Search Input */}
+            <Search
+              className={cn(
+                "h-4 w-4 shrink-0 mr-2.5",
+                isDark ? "text-[#6DFF3B]" : "text-emerald-600",
+              )}
+            />
             <input
               type="text"
               value={searchValue}
               onChange={(e) => setSearchValue(e.target.value)}
-              placeholder="Search venues, areas, sports..."
+              placeholder="Search venues, sports..."
               className={cn(
-                "w-full bg-transparent border-0 p-0 text-[0.825rem] lg:text-[0.875rem] font-normal outline-none focus:ring-0 focus:outline-none",
-                isDark ? "placeholder:text-white/40 text-white" : "placeholder:text-slate-400 text-slate-800"
+                "w-full bg-transparent border-0 p-0 text-sm font-normal outline-none focus:ring-0",
+                isDark
+                  ? "placeholder:text-white/40 text-white"
+                  : "placeholder:text-slate-400 text-slate-800",
               )}
             />
 
-            {/* Divider Line */}
-            <div className={cn("h-4 w-[1px] shrink-0 mx-3", isDark ? "bg-white/[0.12]" : "bg-slate-300")} />
-
-            {/* Location Selector (with Dialog Trigger) */}
+            <div
+              className={cn(
+                "h-4 w-[1px] shrink-0 mx-2",
+                isDark ? "bg-white/[0.12]" : "bg-slate-300",
+              )}
+            />
             <Dialog>
               <DialogTrigger asChild>
-                <button className="flex items-center gap-1.5 shrink-0 text-[0.825rem] lg:text-[0.875rem] transition hover:opacity-80 cursor-pointer">
-                  <MapPin className={cn("h-3.5 w-3.5 shrink-0", isDark ? "text-[#6DFF3B]" : "text-emerald-600")} />
-                  <span className={isDark ? "text-white" : "text-slate-700"}>{activeCity === "All" ? "All Cities" : activeCity}</span>
-                  <ChevronDown className={cn("h-3 w-3 shrink-0 transition-transform", isDark ? "text-white/40" : "text-slate-400")} />
+                <button className="flex items-center gap-1 shrink-0 text-xs cursor-pointer">
+                  <MapPin
+                    className={cn(
+                      "h-3.5 w-3.5 shrink-0",
+                      isDark ? "text-[#6DFF3B]" : "text-emerald-600",
+                    )}
+                  />
+                  <span>{activeCity === "All" ? "Cities" : activeCity}</span>
                 </button>
               </DialogTrigger>
-              <DialogContent className={cn("sm:max-w-[425px]", isDark ? "bg-[#101216] border-white/[0.08]" : "bg-white border-slate-200")}>
+              <DialogContent
+                className={cn(
+                  "sm:max-w-[425px]",
+                  isDark
+                    ? "bg-[#101216] border-white/[0.08]"
+                    : "bg-white border-slate-200",
+                )}
+              >
                 <DialogHeader>
-                  <DialogTitle className={cn(isDark ? "text-white" : "text-slate-900")}>Select your city</DialogTitle>
+                  <DialogTitle
+                    className={cn(isDark ? "text-white" : "text-slate-900")}
+                  >
+                    Select your city
+                  </DialogTitle>
                 </DialogHeader>
                 <div className="flex flex-col gap-4 mt-2">
                   <button
@@ -390,13 +716,20 @@ export function Navbar() {
                       "flex items-center gap-3 w-full p-3 rounded-xl transition text-left",
                       isDark
                         ? "bg-[#6DFF3B]/10 text-[#6DFF3B] hover:bg-[#6DFF3B]/20"
-                        : "bg-emerald-50 text-emerald-700 hover:bg-emerald-100"
+                        : "bg-emerald-50 text-emerald-700 hover:bg-emerald-100",
                     )}
                   >
                     <Locate className="h-5 w-5" />
                     <div className="flex flex-col">
                       <span className=" text-sm">All Cities</span>
-                      <span className={cn("text-xs", isDark ? "text-[#6DFF3B]/70" : "text-emerald-600/70")}>Detect my location</span>
+                      <span
+                        className={cn(
+                          "text-xs",
+                          isDark ? "text-[#6DFF3B]/70" : "text-emerald-600/70",
+                        )}
+                      >
+                        Detect my location
+                      </span>
                     </div>
                   </button>
                   <div className="grid grid-cols-3 gap-3 mt-2">
@@ -408,11 +741,24 @@ export function Navbar() {
                         className={cn(
                           "flex flex-col items-center justify-center p-3 rounded-xl transition text-center gap-2 border",
                           activeCity === city
-                            ? (isDark ? "border-[#6DFF3B] bg-[#6DFF3B]/5 text-[#6DFF3B]" : "border-emerald-500 bg-emerald-50 text-emerald-700")
-                            : (isDark ? "border-transparent hover:bg-white/[0.04] text-white/80 hover:text-white" : "border-transparent hover:bg-slate-50 text-slate-700 hover:text-slate-900")
+                            ? isDark
+                              ? "border-[#6DFF3B] bg-[#6DFF3B]/5 text-[#6DFF3B]"
+                              : "border-emerald-500 bg-emerald-50 text-emerald-700"
+                            : isDark
+                              ? "border-transparent hover:bg-white/[0.04] text-white/80 hover:text-white"
+                              : "border-transparent hover:bg-slate-50 text-slate-700 hover:text-slate-900",
                         )}
                       >
-                        <MapPin className={cn("h-5 w-5", activeCity === city ? (isDark ? "text-[#6DFF3B]" : "text-emerald-600") : "opacity-50")} />
+                        <MapPin
+                          className={cn(
+                            "h-5 w-5",
+                            activeCity === city
+                              ? isDark
+                                ? "text-[#6DFF3B]"
+                                : "text-emerald-600"
+                              : "opacity-50",
+                          )}
+                        />
                         <span className="text-xs">{city}</span>
                       </button>
                     ))}
@@ -422,315 +768,201 @@ export function Navbar() {
             </Dialog>
           </div>
         </div>
+      </header>
 
-        {/* Right Section: Sign In + Hamburger Menu Toggle */}
-        <div className="flex flex-1 items-center justify-end gap-4">
-          {/* Auth Section: Login or Profile */}
-          {isLoggedIn ? (
-            <div className="relative">
-              <button
-                onClick={() => setProfileOpen(!profileOpen)}
-                className={cn(
-                  "flex h-10 items-center justify-center gap-2 rounded-full border shadow-sm transition px-4",
-                  isDark
-                    ? "border-white/[0.08] bg-white/[0.03] text-[#6DFF3B] hover:bg-white/[0.06]"
-                    : "border-slate-200 bg-slate-50 text-emerald-600 hover:bg-slate-100"
-                )}
-              >
-                <User className="h-5 w-5" />
-                <span className="text-sm font-medium">{userName}</span>
-              </button>
-              
-              {/* Profile Dropdown */}
-              {profileOpen && (
-                <div
-                  className={cn(
-                    "absolute right-0 mt-2 w-48 rounded-xl border shadow-lg overflow-hidden z-50",
-                    isDark ? "bg-[#101216] border-white/[0.08]" : "bg-white border-slate-200"
-                  )}
-                >
-                  <div className="p-2 space-y-1">
-                    <Link to="/dashboard" onClick={() => setProfileOpen(false)}>
-                      <button className={cn("w-full flex items-center gap-2 px-3 py-2 text-sm rounded-md transition", isDark ? "hover:bg-white/5 text-white" : "hover:bg-slate-100 text-slate-800")}>
-                        <User className="h-4 w-4" />
-                        Dashboard
-                      </button>
-                    </Link>
-                    <div className={cn("h-[1px] w-full my-1", isDark ? "bg-white/10" : "bg-slate-100")} />
-                    <button
-                      onClick={() => {
-                        localStorage.removeItem("isLoggedIn");
-                        setIsLoggedIn(false);
-                        setProfileOpen(false);
-                      }}
-                      className={cn("w-full flex items-center gap-2 px-3 py-2 text-sm rounded-md transition", isDark ? "hover:bg-white/5 text-red-400" : "hover:bg-slate-100 text-red-600")}
-                    >
-                      <LogOut className="h-4 w-4" />
-                      Logout
-                    </button>
-                  </div>
-                </div>
-              )}
-            </div>
-          ) : (
-            <Link to="/login">
-              <button
-                className={cn(
-                  "flex h-10 items-center justify-center rounded-full border px-5 text-sm tracking-wide transition cursor-pointer hover:bg-opacity-10",
-                  isDark
-                    ? "border-[#6DFF3B] text-[#6DFF3B] hover:bg-[#6DFF3B]/10"
-                    : "border-emerald-500 text-emerald-600 hover:bg-emerald-50"
-                )}
-              >
-                Login
-              </button>
-            </Link>
-          )}
 
-          {/* Hamburger Menu Toggle Button */}
-          <button
-            onClick={() => setMenuOpen(!menuOpen)}
-            className={cn(
-              "flex h-10 w-10 items-center justify-center rounded-full transition duration-200 cursor-pointer",
-              isDark
-                ? "text-white/80 hover:bg-white/[0.08] hover:text-white"
-                : "text-slate-700 hover:bg-slate-100 hover:text-slate-900"
-            )}
-            aria-label="Toggle menu"
-          >
-            {menuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-          </button>
-
-          {/* Theme Toggle Button */}
-          <ThemeToggleButton
-            className={cn(
-              "flex h-10 w-10 items-center justify-center rounded-full border shadow-sm transition",
-              isDark
-                ? "border-white/[0.08] bg-white/[0.03] text-white/80 hover:bg-white/[0.06] hover:text-white"
-                : "border-slate-200 bg-slate-50 text-slate-700 hover:bg-slate-100 hover:text-slate-900"
-            )}
-            variant="ghost"
-          />
-        </div>
-      </div>
-
-      {/* Mobile/Tablet Search pill (shown only below 'md' screen size) */}
-      <div className="md:hidden px-4 pb-3">
-        <div
-          className={cn(
-            "flex items-center w-full rounded-full border px-4 py-2 shadow-sm transition-all duration-200",
-            isDark
-              ? "border-white/[0.08] bg-white/[0.03] focus-within:border-[#6DFF3B]/30 focus-within:ring-2 focus-within:ring-[#6DFF3B]/10"
-              : "border-slate-200 bg-[#F1F3F6]/60 focus-within:bg-white focus-within:border-emerald-500/30 focus-within:ring-2 focus-within:ring-emerald-500/10"
-          )}
-        >
-          <Search className={cn("h-4 w-4 shrink-0 mr-2.5", isDark ? "text-[#6DFF3B]" : "text-emerald-600")} />
-          <input
-            type="text"
-            value={searchValue}
-            onChange={(e) => setSearchValue(e.target.value)}
-            placeholder="Search venues, sports..."
-            className={cn(
-              "w-full bg-transparent border-0 p-0 text-sm font-normal outline-none focus:ring-0",
-              isDark ? "placeholder:text-white/40 text-white" : "placeholder:text-slate-400 text-slate-800"
-            )}
-          />
-          <div className={cn("h-4 w-[1px] shrink-0 mx-2", isDark ? "bg-white/[0.12]" : "bg-slate-300")} />
-          <Dialog>
-            <DialogTrigger asChild>
-              <button className="flex items-center gap-1 shrink-0 text-xs cursor-pointer">
-                <MapPin className={cn("h-3.5 w-3.5 shrink-0", isDark ? "text-[#6DFF3B]" : "text-emerald-600")} />
-                <span>{activeCity === "All" ? "Cities" : activeCity}</span>
-              </button>
-            </DialogTrigger>
-            <DialogContent className={cn("sm:max-w-[425px]", isDark ? "bg-[#101216] border-white/[0.08]" : "bg-white border-slate-200")}>
-              <DialogHeader>
-                <DialogTitle className={cn(isDark ? "text-white" : "text-slate-900")}>Select your city</DialogTitle>
-              </DialogHeader>
-              <div className="flex flex-col gap-4 mt-2">
-                <button
-                  type="button"
-                  onClick={() => handleCitySelect("All")}
-                  className={cn(
-                    "flex items-center gap-3 w-full p-3 rounded-xl transition text-left",
-                    isDark
-                      ? "bg-[#6DFF3B]/10 text-[#6DFF3B] hover:bg-[#6DFF3B]/20"
-                      : "bg-emerald-50 text-emerald-700 hover:bg-emerald-100"
-                  )}
-                >
-                  <Locate className="h-5 w-5" />
-                  <div className="flex flex-col">
-                    <span className=" text-sm">All Cities</span>
-                    <span className={cn("text-xs", isDark ? "text-[#6DFF3B]/70" : "text-emerald-600/70")}>Detect my location</span>
-                  </div>
-                </button>
-                <div className="grid grid-cols-3 gap-3 mt-2">
-                  {cities.map((city) => (
-                    <button
-                      key={city}
-                      type="button"
-                      onClick={() => handleCitySelect(city)}
-                      className={cn(
-                        "flex flex-col items-center justify-center p-3 rounded-xl transition text-center gap-2 border",
-                        activeCity === city
-                          ? (isDark ? "border-[#6DFF3B] bg-[#6DFF3B]/5 text-[#6DFF3B]" : "border-emerald-500 bg-emerald-50 text-emerald-700")
-                          : (isDark ? "border-transparent hover:bg-white/[0.04] text-white/80 hover:text-white" : "border-transparent hover:bg-slate-50 text-slate-700 hover:text-slate-900")
-                      )}
-                    >
-                      <MapPin className={cn("h-5 w-5", activeCity === city ? (isDark ? "text-[#6DFF3B]" : "text-emerald-600") : "opacity-50")} />
-                      <span className="text-xs">{city}</span>
-                    </button>
-                  ))}
-                </div>
-              </div>
-            </DialogContent>
-          </Dialog>
-        </div>
-      </div>
-    </header>
-
-      {/* Hamburger Dropdown Drawer with AnimatePresence */}
       <AnimatePresence>
         {menuOpen && (
           <motion.div
-            key="backdrop"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[60] bg-black/40 backdrop-blur-sm"
-            onClick={() => setMenuOpen(false)}
-          />
-        )}
-      </AnimatePresence>
-      <AnimatePresence>
-        {menuOpen && (
-          <motion.div
+            ref={drawerRef}
             key="drawer"
-            initial={{ x: "-100%" }}
+            initial={{ x: "100%" }}
             animate={{ x: 0 }}
-            exit={{ x: "-100%" }}
+            exit={{ x: "100%" }}
             transition={{ type: "spring", damping: 25, stiffness: 200 }}
             className={cn(
-              "fixed top-0 left-0 bottom-0 w-80 max-w-[85vw] z-[70] shadow-2xl px-6 py-6 flex flex-col gap-4 overflow-y-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden border-r",
-                isDark
-                  ? "bg-[#0b0c0e] border-white/[0.08]"
-                  : "bg-white border-slate-200"
-              )}
-            >
-              <div className="flex items-center justify-between mb-2">
-                <span className={cn("text-lg font-semibold", isDark ? "text-white" : "text-slate-900")}>Menu</span>
-                <button onClick={() => setMenuOpen(false)} className={cn("p-2 rounded-full transition cursor-pointer", isDark ? "hover:bg-white/10" : "hover:bg-slate-100")}>
-                  <X className={cn("h-5 w-5", isDark ? "text-white/80" : "text-slate-700")} />
-                </button>
+              "fixed top-0 right-0 bottom-0 w-80 max-w-[85vw] z-[70] shadow-2xl px-6 py-6 flex flex-col gap-4 overflow-y-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden border-l",
+              isDark
+                ? "bg-[#0b0c0e] border-white/[0.08]"
+                : "bg-white border-slate-200",
+            )}
+          >
+            <div className="flex items-center justify-between mb-2">
+              <span
+                className={cn(
+                  "text-lg font-semibold",
+                  isDark ? "text-white" : "text-slate-900",
+                )}
+              >
+                Menu
+              </span>
+              <button
+                onClick={() => setMenuOpen(false)}
+                className={cn(
+                  "p-2 rounded-full transition cursor-pointer",
+                  isDark ? "hover:bg-white/10" : "hover:bg-slate-100",
+                )}
+              >
+                <X
+                  className={cn(
+                    "h-5 w-5",
+                    isDark ? "text-white/80" : "text-slate-700",
+                  )}
+                />
+              </button>
+            </div>
+            {/* SELECT LOCATION section */}
+            <div className="flex flex-col gap-2 px-3 pt-2">
+              <span
+                className={cn(
+                  "text-[0.68rem] uppercase tracking-wider text-left",
+                  isDark ? "text-white/40" : "text-slate-400",
+                )}
+              >
+                Select Location
+              </span>
+              <div className="flex gap-2 overflow-x-auto pb-2 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+                {cities.map((city) => (
+                  <button
+                    key={city}
+                    onClick={() => handleCitySelect(city)}
+                    className={cn(
+                      "px-4 py-1.5 rounded-full text-xs whitespace-nowrap transition cursor-pointer border",
+                      activeCity === city
+                        ? isDark
+                          ? "bg-[#6DFF3B]/10 border-[#6DFF3B] text-[#6DFF3B]"
+                          : "bg-emerald-50 border-emerald-500 text-emerald-700"
+                        : isDark
+                          ? "bg-white/[0.03] border-white/[0.08] text-white/70 hover:text-white"
+                          : "bg-slate-50 border-slate-200 text-slate-600 hover:bg-slate-100",
+                    )}
+                  >
+                    {city}
+                  </button>
+                ))}
               </div>
-              {/* SELECT LOCATION section */}
-              <div className="flex flex-col gap-2 px-3 pt-2">
-                <span className={cn("text-[0.68rem] uppercase tracking-wider text-left", isDark ? "text-white/40" : "text-slate-400")}>
-                  Select Location
-                </span>
-                <div className="flex gap-2 overflow-x-auto pb-2 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
-                  {cities.map((city) => (
-                    <button
-                      key={city}
-                      onClick={() => handleCitySelect(city)}
-                      className={cn(
-                        "px-4 py-1.5 rounded-full text-xs whitespace-nowrap transition cursor-pointer border",
-                        activeCity === city
-                          ? (isDark ? "bg-[#6DFF3B]/10 border-[#6DFF3B] text-[#6DFF3B]" : "bg-emerald-50 border-emerald-500 text-emerald-700")
-                          : (isDark ? "bg-white/[0.03] border-white/[0.08] text-white/70 hover:text-white" : "bg-slate-50 border-slate-200 text-slate-600 hover:bg-slate-100")
-                      )}
-                    >
-                      {city}
-                    </button>
-                  ))}
-                </div>
-              </div>
+            </div>
 
-              {/* Menu list items */}
-              <div className="flex flex-col">
-                {menuItems.map((item) => {
-                  const itemContent = (
-                    <div className="flex items-center justify-between w-full py-4 px-3 border-b border-slate-100 dark:border-white/[0.05] transition-colors duration-150 hover:bg-slate-50/50 dark:hover:bg-white/[0.02]">
-                      <div className="flex items-center gap-3">
-                        {item.isCart && (
-                          <ShoppingCart className={cn("h-5 w-5", isDark ? "text-[#6DFF3B]" : "text-emerald-600")} />
-                        )}
-                        <span className={cn(
+            {/* Menu list items */}
+            <div className="flex flex-col">
+              {menuItems.map((item) => {
+                const itemContent = (
+                  <div className="flex items-center justify-between w-full py-4 px-3 border-b border-slate-100 dark:border-white/[0.05] transition-colors duration-150 hover:bg-slate-50/50 dark:hover:bg-white/[0.02]">
+                    <div className="flex items-center gap-3">
+                      {item.isCart && (
+                        <ShoppingCart
+                          className={cn(
+                            "h-5 w-5",
+                            isDark ? "text-[#6DFF3B]" : "text-emerald-600",
+                          )}
+                        />
+                      )}
+                      <span
+                        className={cn(
                           "text-sm tracking-wide",
                           item.isGreen
-                            ? (isDark ? "text-[#6DFF3B]" : "text-emerald-600")
-                            : (isDark ? "text-white/90" : "text-slate-800")
-                        )}>
-                          {item.label}
+                            ? isDark
+                              ? "text-[#6DFF3B]"
+                              : "text-emerald-600"
+                            : isDark
+                              ? "text-white/90"
+                              : "text-slate-800",
+                        )}
+                      >
+                        {item.label}
+                      </span>
+                    </div>
+
+                    <div className="flex items-center gap-2">
+                      {item.badge !== undefined && (
+                        <span
+                          className={cn(
+                            "flex h-5 w-5 items-center justify-center rounded-full text-[10px] text-white",
+                            isDark
+                              ? "bg-[#6DFF3B] text-black"
+                              : "bg-emerald-600",
+                          )}
+                        >
+                          {item.badge}
+                        </span>
+                      )}
+                      {item.hasChevron && (
+                        <ChevronRight
+                          className={cn(
+                            "h-4 w-4",
+                            isDark ? "text-white/20" : "text-slate-300",
+                          )}
+                        />
+                      )}
+                    </div>
+                  </div>
+                );
+
+                return (
+                  <Link
+                    key={item.label}
+                    to={item.to}
+                    onClick={() => setMenuOpen(false)}
+                    className="block text-left"
+                  >
+                    {itemContent}
+                  </Link>
+                );
+              })}
+
+              {isLoggedIn && (
+                <>
+                  <div
+                    className={cn(
+                      "h-[1px] w-full my-2",
+                      isDark ? "bg-white/10" : "bg-slate-200",
+                    )}
+                  />
+                  <Link
+                    to="/profile"
+                    onClick={() => setMenuOpen(false)}
+                    className="block text-left"
+                  >
+                    <div className="flex items-center justify-between w-full py-4 px-3 border-b border-slate-100 dark:border-white/[0.05] transition-colors duration-150 hover:bg-slate-50/50 dark:hover:bg-white/[0.02]">
+                      <div className="flex items-center gap-3">
+                        <User
+                          className={cn(
+                            "h-5 w-5",
+                            isDark ? "text-[#6DFF3B]" : "text-emerald-600",
+                          )}
+                        />
+                        <span
+                          className={cn(
+                            "text-sm tracking-wide",
+                            isDark ? "text-white/90" : "text-slate-800",
+                          )}
+                        >
+                          Profile
                         </span>
                       </div>
-
-                      <div className="flex items-center gap-2">
-                        {item.badge !== undefined && (
-                          <span className={cn(
-                            "flex h-5 w-5 items-center justify-center rounded-full text-[10px] text-white",
-                            isDark ? "bg-[#6DFF3B] text-black" : "bg-emerald-600"
-                          )}>
-                            {item.badge}
-                          </span>
-                        )}
-                        {item.hasChevron && (
-                          <ChevronRight className={cn("h-4 w-4", isDark ? "text-white/20" : "text-slate-300")} />
-                        )}
+                    </div>
+                  </Link>
+                  <button
+                    onClick={() => {
+                      localStorage.removeItem("isLoggedIn");
+                      setIsLoggedIn(false);
+                      setMenuOpen(false);
+                    }}
+                    className="block text-left w-full cursor-pointer"
+                  >
+                    <div className="flex items-center justify-between w-full py-4 px-3 border-b border-slate-100 dark:border-white/[0.05] transition-colors duration-150 hover:bg-slate-50/50 dark:hover:bg-white/[0.02]">
+                      <div className="flex items-center gap-3">
+                        <LogOut className="h-5 w-5 text-red-500" />
+                        <span className="text-sm tracking-wide text-red-500">
+                          Logout
+                        </span>
                       </div>
                     </div>
-                  );
-
-                  return (
-                    <Link
-                      key={item.label}
-                      to={item.to}
-                      onClick={() => setMenuOpen(false)}
-                      className="block text-left"
-                    >
-                      {itemContent}
-                    </Link>
-                  );
-                })}
-
-                {isLoggedIn && (
-                  <>
-                    <div className={cn("h-[1px] w-full my-2", isDark ? "bg-white/10" : "bg-slate-200")} />
-                    <Link
-                      to="/dashboard"
-                      onClick={() => setMenuOpen(false)}
-                      className="block text-left"
-                    >
-                      <div className="flex items-center justify-between w-full py-4 px-3 border-b border-slate-100 dark:border-white/[0.05] transition-colors duration-150 hover:bg-slate-50/50 dark:hover:bg-white/[0.02]">
-                        <div className="flex items-center gap-3">
-                          <User className={cn("h-5 w-5", isDark ? "text-[#6DFF3B]" : "text-emerald-600")} />
-                          <span className={cn("text-sm tracking-wide", isDark ? "text-white/90" : "text-slate-800")}>
-                            Dashboard
-                          </span>
-                        </div>
-                      </div>
-                    </Link>
-                    <button
-                      onClick={() => {
-                        localStorage.removeItem("isLoggedIn");
-                        setIsLoggedIn(false);
-                        setMenuOpen(false);
-                      }}
-                      className="block text-left w-full cursor-pointer"
-                    >
-                      <div className="flex items-center justify-between w-full py-4 px-3 border-b border-slate-100 dark:border-white/[0.05] transition-colors duration-150 hover:bg-slate-50/50 dark:hover:bg-white/[0.02]">
-                        <div className="flex items-center gap-3">
-                          <LogOut className="h-5 w-5 text-red-500" />
-                          <span className="text-sm tracking-wide text-red-500">
-                            Logout
-                          </span>
-                        </div>
-                      </div>
-                    </button>
-                  </>
-                )}
-              </div>
-            </motion.div>
+                  </button>
+                </>
+              )}
+            </div>
+          </motion.div>
         )}
       </AnimatePresence>
     </>
@@ -753,7 +985,9 @@ function SearchBar() {
       <div
         className={cn(
           "flex flex-col gap-4 pb-4 lg:flex-row lg:items-center lg:justify-between",
-          isDark ? "border-b border-white/[0.06]" : "border-b border-transparent",
+          isDark
+            ? "border-b border-white/[0.06]"
+            : "border-b border-transparent",
         )}
       >
         <div className="flex flex-wrap items-center gap-3">
@@ -768,14 +1002,35 @@ function SearchBar() {
                     : "border border-slate-200 bg-white text-slate-700 hover:border-emerald-500/25 hover:bg-emerald-500/10 hover:text-slate-900",
                 )}
               >
-                <MapPin className={cn("h-4 w-4", isDark ? "text-[#6DFF3B]" : "text-emerald-600")} />
+                <MapPin
+                  className={cn(
+                    "h-4 w-4",
+                    isDark ? "text-[#6DFF3B]" : "text-emerald-600",
+                  )}
+                />
                 Mumbai
-                <ChevronDown className={cn("h-4 w-4", isDark ? "text-white/40" : "text-slate-400")} />
+                <ChevronDown
+                  className={cn(
+                    "h-4 w-4",
+                    isDark ? "text-white/40" : "text-slate-400",
+                  )}
+                />
               </button>
             </DialogTrigger>
-            <DialogContent className={cn("sm:max-w-[425px]", isDark ? "bg-[#101216] border-white/[0.08]" : "bg-white border-slate-200")}>
+            <DialogContent
+              className={cn(
+                "sm:max-w-[425px]",
+                isDark
+                  ? "bg-[#101216] border-white/[0.08]"
+                  : "bg-white border-slate-200",
+              )}
+            >
               <DialogHeader>
-                <DialogTitle className={cn(isDark ? "text-white" : "text-slate-900")}>Select your city</DialogTitle>
+                <DialogTitle
+                  className={cn(isDark ? "text-white" : "text-slate-900")}
+                >
+                  Select your city
+                </DialogTitle>
               </DialogHeader>
               <div className="flex flex-col gap-4 mt-2">
                 <button
@@ -784,13 +1039,20 @@ function SearchBar() {
                     "flex items-center gap-3 w-full p-3 rounded-xl transition text-left",
                     isDark
                       ? "bg-[#6DFF3B]/10 text-[#6DFF3B] hover:bg-[#6DFF3B]/20"
-                      : "bg-emerald-50 text-emerald-700 hover:bg-emerald-100"
+                      : "bg-emerald-50 text-emerald-700 hover:bg-emerald-100",
                   )}
                 >
                   <Locate className="h-5 w-5" />
                   <div className="flex flex-col">
                     <span className=" text-sm">Detect my location</span>
-                    <span className={cn("text-xs", isDark ? "text-[#6DFF3B]/70" : "text-emerald-600/70")}>Using GPS</span>
+                    <span
+                      className={cn(
+                        "text-xs",
+                        isDark ? "text-[#6DFF3B]/70" : "text-emerald-600/70",
+                      )}
+                    >
+                      Using GPS
+                    </span>
                   </div>
                 </button>
                 <div className="grid grid-cols-3 gap-3 mt-2">
@@ -812,7 +1074,7 @@ function SearchBar() {
                         "flex flex-col items-center justify-center p-3 rounded-xl transition text-center gap-2",
                         isDark
                           ? "hover:bg-white/[0.04] text-white/80 hover:text-white"
-                          : "hover:bg-slate-50 text-slate-700 hover:text-slate-900"
+                          : "hover:bg-slate-50 text-slate-700 hover:text-slate-900",
                       )}
                     >
                       <MapPin className="h-5 w-5 opacity-50" />
@@ -832,11 +1094,18 @@ function SearchBar() {
                 : "border border-slate-200 bg-white text-slate-600",
             )}
           >
-            <ShieldCheck className={cn("h-4 w-4", isDark ? "text-[#6DFF3B]" : "text-emerald-600")} />
+            <ShieldCheck
+              className={cn(
+                "h-4 w-4",
+                isDark ? "text-[#6DFF3B]" : "text-emerald-600",
+              )}
+            />
             Verified venues, secure payments, easy refunds
           </div>
         </div>
-        <p className={cn("text-sm", isDark ? "text-white/48" : "text-slate-500")}>
+        <p
+          className={cn("text-sm", isDark ? "text-white/48" : "text-slate-500")}
+        >
           Discover sports, venues, and tournaments near your location.
         </p>
       </div>
@@ -855,6 +1124,7 @@ function SearchBar() {
                   isDark ? "text-white/55" : "text-slate-400",
                 )}
               />
+
               <Input
                 placeholder={field.placeholder}
                 className={cn(
@@ -880,7 +1150,14 @@ function SearchBar() {
       </div>
 
       <div className="mt-4 flex flex-nowrap overflow-x-auto gap-2 pb-2 [-webkit-overflow-scrolling:touch] snap-x snap-mandatory">
-        {["Sport", "Location", "Price", "Rating", "Distance", "Availability"].map((chip) => (
+        {[
+          "Sport",
+          "Location",
+          "Price",
+          "Rating",
+          "Distance",
+          "Availability",
+        ].map((chip) => (
           <span
             key={chip}
             className={cn(
@@ -890,7 +1167,12 @@ function SearchBar() {
                 : "border border-slate-200 bg-white text-slate-600",
             )}
           >
-            <SlidersHorizontal className={cn("h-3.5 w-3.5", isDark ? "text-[#6DFF3B]" : "text-emerald-600")} />
+            <SlidersHorizontal
+              className={cn(
+                "h-3.5 w-3.5",
+                isDark ? "text-[#6DFF3B]" : "text-emerald-600",
+              )}
+            />
             {chip}
           </span>
         ))}
@@ -920,6 +1202,7 @@ function StatsRow() {
           backgroundPosition: "center",
         }}
       />
+
       <div className="relative flex flex-wrap gap-3">
         {stats.map((stat, index) => (
           <motion.div
@@ -932,22 +1215,43 @@ function StatsRow() {
             <div
               className={cn(
                 "flex h-full items-center gap-4 rounded-[20px] p-4",
-                isDark ? "border border-white/[0.08] bg-[#050505]/40" : "border border-slate-200/80 bg-white/75",
+                isDark
+                  ? "border border-white/[0.08] bg-[#050505]/40"
+                  : "border border-slate-200/80 bg-white/75",
               )}
             >
               <div
                 className={cn(
                   "flex h-12 w-12 items-center justify-center rounded-full",
-                  isDark ? "border border-[#6DFF3B]/18 bg-[#6DFF3B]/10" : "border border-emerald-500/20 bg-emerald-500/10",
+                  isDark
+                    ? "border border-[#6DFF3B]/18 bg-[#6DFF3B]/10"
+                    : "border border-emerald-500/20 bg-emerald-500/10",
                 )}
               >
-                <img src={stat.icon} alt="" aria-hidden="true" className="h-5 w-5 object-contain" />
+                <img
+                  src={stat.icon}
+                  alt=""
+                  aria-hidden="true"
+                  className="h-5 w-5 object-contain"
+                />
               </div>
               <div>
-                <p className={cn("text-2xl  tracking-tight", isDark ? "text-white" : "text-slate-900")}>
+                <p
+                  className={cn(
+                    "text-2xl  tracking-tight",
+                    isDark ? "text-white" : "text-slate-900",
+                  )}
+                >
                   <AnimatedNumber value={stat.value} suffix={stat.suffix} />
                 </p>
-                <p className={cn("text-sm", isDark ? "text-white/58" : "text-slate-600")}>{stat.label}</p>
+                <p
+                  className={cn(
+                    "text-sm",
+                    isDark ? "text-white/58" : "text-slate-600",
+                  )}
+                >
+                  {stat.label}
+                </p>
               </div>
             </div>
           </motion.div>
@@ -957,7 +1261,6 @@ function StatsRow() {
   );
 }
 
-
 export function HeroSection() {
   const { resolvedTheme } = useTheme();
   const isDark = resolvedTheme !== "light";
@@ -966,17 +1269,17 @@ export function HeroSection() {
 
   const bgImages = isDark
     ? [
-      "/assets/hero/stadium-bg.png",
-      "/assets/venues/turf-1.webp",
-      "/assets/venues/turf-2.webp",
-      "/assets/venues/turf-3.webp",
-    ]
+        "/assets/hero/stadium-bg.png",
+        "/assets/venues/turf-1.webp",
+        "/assets/venues/turf-2.webp",
+        "/assets/venues/turf-3.webp",
+      ]
     : [
-      "/assets/hero/stadium-light.png",
-      "/assets/venues/turf-1.webp",
-      "/assets/venues/turf-2.webp",
-      "/assets/venues/turf-3.webp",
-    ];
+        "/assets/hero/stadium-light.png",
+        "/assets/venues/turf-1.webp",
+        "/assets/venues/turf-2.webp",
+        "/assets/venues/turf-3.webp",
+      ];
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -986,9 +1289,7 @@ export function HeroSection() {
   }, [bgImages.length]);
 
   return (
-    <section
-      className="relative isolate overflow-hidden bg-white dark:bg-[#050505]"
-    >
+    <section className="relative isolate overflow-hidden bg-white dark:bg-[#050505]">
       <div className="absolute inset-0 -z-20 overflow-hidden">
         <AnimatePresence mode="popLayout">
           <motion.div
@@ -1006,7 +1307,8 @@ export function HeroSection() {
         <div
           className="absolute inset-0 dark:hidden"
           style={{
-            backgroundImage: "linear-gradient(90deg, rgba(255,255,255,0.75) 0%, rgba(255,255,255,0.28) 45%, transparent 85%)",
+            backgroundImage:
+              "linear-gradient(90deg, rgba(255,255,255,0.75) 0%, rgba(255,255,255,0.28) 45%, transparent 85%)",
           }}
         />
 
@@ -1014,19 +1316,24 @@ export function HeroSection() {
         <div
           className="absolute inset-0 hidden dark:block"
           style={{
-            backgroundImage: "linear-gradient(90deg, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.4) 45%, transparent 85%)",
+            backgroundImage:
+              "linear-gradient(90deg, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.4) 45%, transparent 85%)",
           }}
         />
+
         <div
           className="absolute inset-0 hidden dark:block"
           style={{
-            backgroundImage: "linear-gradient(180deg,rgba(0,0,0,0.2)_0%,rgba(0,0,0,0.4)_56%,rgba(0,0,0,0.75)_100%)",
+            backgroundImage:
+              "linear-gradient(180deg,rgba(0,0,0,0.2)_0%,rgba(0,0,0,0.4)_56%,rgba(0,0,0,0.75)_100%)",
           }}
         />
+
         <div
           className="absolute inset-0 hidden dark:block"
           style={{
-            backgroundImage: "radial-gradient(circle at 88% 88%, rgba(109,255,59,0.12), transparent 35%)",
+            backgroundImage:
+              "radial-gradient(circle at 88% 88%, rgba(109,255,59,0.12), transparent 35%)",
           }}
         />
       </div>
@@ -1048,7 +1355,9 @@ export function HeroSection() {
               <Badge
                 className={cn(
                   "rounded-full px-4 py-2 text-xs  uppercase tracking-[0.26em]",
-                  isDark ? "border border-[#6DFF3B]/20 bg-[#6DFF3B]/10 text-[#6DFF3B]" : "border border-emerald-500/30 bg-emerald-500/10 text-emerald-700"
+                  isDark
+                    ? "border border-[#6DFF3B]/20 bg-[#6DFF3B]/10 text-[#6DFF3B]"
+                    : "border border-emerald-500/30 bg-emerald-500/10 text-emerald-700",
                 )}
               >
                 Premium sports booking
@@ -1058,10 +1367,17 @@ export function HeroSection() {
             <h1
               className={cn(
                 "mt-6 font-normal max-w-2xl text-left text-4xl sm:text-6xl tracking-tight lg:text-[4.8rem] lg:leading-[1.05]",
-                isDark ? "text-white" : "text-slate-900"
+                isDark ? "text-white" : "text-slate-900",
               )}
             >
-              Play. Book. <span className={cn(isDark ? "text-[#6DFF3B] drop-shadow-[0_0_20px_rgba(109,255,59,0.18)]" : "text-[#16A34A]")}>
+              Play. Book.{" "}
+              <span
+                className={cn(
+                  isDark
+                    ? "text-[#6DFF3B] drop-shadow-[0_0_20px_rgba(109,255,59,0.18)]"
+                    : "text-[#16A34A]",
+                )}
+              >
                 Compete.
               </span>
             </h1>
@@ -1069,22 +1385,48 @@ export function HeroSection() {
             <p
               className={cn(
                 "mt-6 max-w-2xl text-left text-base sm:text-lg",
-                isDark ? "leading-8 text-white/68" : "leading-[1.7] text-slate-700"
+                isDark
+                  ? "leading-8 text-white/68"
+                  : "leading-[1.7] text-slate-700",
               )}
             >
-              Discover elite turf venues, tournaments, and community sessions on a booking flow
-              designed to feel premium from the first tap to the final confirmation.
+              Discover elite turf venues, tournaments, and community sessions on
+              a booking flow designed to feel premium from the first tap to the
+              final confirmation.
             </p>
 
             {/* Social Links Row */}
             <div className="mt-6 flex flex-wrap items-center justify-start gap-4">
-              <span className={cn("text-xs  uppercase tracking-widest", isDark ? "text-white/60" : "text-slate-600")}>Connect with us:</span>
+              <span
+                className={cn(
+                  "text-xs  uppercase tracking-widest",
+                  isDark ? "text-white/60" : "text-slate-600",
+                )}
+              >
+                Connect with us:
+              </span>
               <div className="flex items-center gap-2.5">
                 {[
-                  { name: "Instagram", icon: Instagram, href: "https://instagram.com" },
-                  { name: "Facebook", icon: Facebook, href: "https://facebook.com" },
-                  { name: "LinkedIn", icon: Linkedin, href: "https://linkedin.com" },
-                  { name: "Twitter", icon: Twitter, href: "https://twitter.com" },
+                  {
+                    name: "Instagram",
+                    icon: Instagram,
+                    href: "https://instagram.com",
+                  },
+                  {
+                    name: "Facebook",
+                    icon: Facebook,
+                    href: "https://facebook.com",
+                  },
+                  {
+                    name: "LinkedIn",
+                    icon: Linkedin,
+                    href: "https://linkedin.com",
+                  },
+                  {
+                    name: "Twitter",
+                    icon: Twitter,
+                    href: "https://twitter.com",
+                  },
                 ].map((social) => {
                   const Icon = social.icon;
                   return (
@@ -1097,7 +1439,7 @@ export function HeroSection() {
                         "flex h-9.5 w-9.5 items-center justify-center rounded-xl border transition-all duration-300 shadow-xs",
                         isDark
                           ? "border-white/[0.08] bg-white/[0.03] text-white/60 hover:bg-[#6DFF3B]/10 hover:text-[#6DFF3B] hover:border-[#6DFF3B]/30 hover:shadow-[0_0_15px_rgba(109,255,59,0.15)]"
-                          : "border-slate-200 bg-slate-50 text-slate-500 hover:bg-emerald-50 hover:text-emerald-600 hover:border-emerald-200 hover:shadow-[0_0_15px_rgba(16,185,129,0.15)]"
+                          : "border-slate-200 bg-slate-50 text-slate-500 hover:bg-emerald-50 hover:text-emerald-600 hover:border-emerald-200 hover:shadow-[0_0_15px_rgba(16,185,129,0.15)]",
                       )}
                       aria-label={social.name}
                     >
@@ -1114,23 +1456,11 @@ export function HeroSection() {
           </div>
         </div>
       </div>
-
-
     </section>
   );
 }
 
-function SportCard({
-  name,
-  count,
-  image,
-  index,
-}: {
-  name: string;
-  count: string;
-  image: string;
-  index: number;
-}) {
+function SportCard({ name, count, image, index }) {
   const { resolvedTheme } = useTheme();
   const isDark = resolvedTheme !== "light";
 
@@ -1144,44 +1474,58 @@ function SportCard({
       className="group shrink-0 snap-center w-[85vw] sm:w-auto"
     >
       <Link to="/venues" className="block">
-        <div className={cn(
-          "relative aspect-[4/5] overflow-hidden rounded-3xl border transition-all duration-300 ease-out",
-          isDark
-            ? "border-white/[0.08] bg-[#101216]"
-            : "border-slate-300 bg-white shadow-sm hover:shadow-2xl hover:border-emerald-500/20"
-        )}>
+        <div
+          className={cn(
+            "relative aspect-[4/5] overflow-hidden rounded-3xl border transition-all duration-300 ease-out",
+            isDark
+              ? "border-white/[0.08] bg-[#101216]"
+              : "border-slate-300 bg-white shadow-sm hover:shadow-2xl hover:border-emerald-500/20",
+          )}
+        >
           <ImageWithFallback
             src={image}
             alt={name}
             className={cn(
               "h-full w-full object-cover transition duration-500 ease-out group-hover:scale-[1.06]",
-              !isDark && "brightness-[1.05] contrast-[1.08] saturate-[1.08]"
+              !isDark && "brightness-[1.05] contrast-[1.08] saturate-[1.08]",
             )}
           />
+
           <div
             className="absolute inset-0 transition-all duration-300 ease-out opacity-100 group-hover:opacity-95"
             style={{
               background: isDark
                 ? "linear-gradient(180deg, rgba(5,5,5,0.08) 0%, rgba(5,5,5,0.88) 100%)"
-                : "linear-gradient(to top, rgba(255,255,255,0.92) 0%, rgba(255,255,255,0.65) 25%, rgba(255,255,255,0.20) 55%, transparent 100%)"
+                : "linear-gradient(to top, rgba(255,255,255,0.92) 0%, rgba(255,255,255,0.65) 25%, rgba(255,255,255,0.20) 55%, transparent 100%)",
             }}
           />
+
           <div className="absolute inset-x-0 bottom-0 p-6 sm:p-7">
-            <p className={cn(
-              "text-lg sm:text-xl  transition-colors duration-300",
-              isDark ? "text-white" : "text-slate-900"
-            )}>{name}</p>
+            <p
+              className={cn(
+                "text-lg sm:text-xl  transition-colors duration-300",
+                isDark ? "text-white" : "text-slate-900",
+              )}
+            >
+              {name}
+            </p>
             <div className="mt-3 flex items-center justify-between gap-3">
-              <p className={cn(
-                "text-sm  transition-colors duration-300",
-                isDark ? "text-white/60" : "text-slate-600"
-              )}>{count}</p>
-              <div className={cn(
-                "flex h-10 w-10 items-center justify-center rounded-full border transition-all duration-300 ease-out",
-                isDark
-                  ? "border-white/[0.08] bg-white/[0.08] text-[#6DFF3B] group-hover:bg-[#6DFF3B] group-hover:text-[#050505]"
-                  : "border-emerald-600/30 bg-white text-emerald-600 shadow-sm hover:scale-110 hover:bg-emerald-600 hover:text-white hover:border-emerald-600 hover:shadow-md hover:shadow-emerald-500/20"
-              )}>
+              <p
+                className={cn(
+                  "text-sm  transition-colors duration-300",
+                  isDark ? "text-white/60" : "text-slate-600",
+                )}
+              >
+                {count}
+              </p>
+              <div
+                className={cn(
+                  "flex h-10 w-10 items-center justify-center rounded-full border transition-all duration-300 ease-out",
+                  isDark
+                    ? "border-white/[0.08] bg-white/[0.08] text-[#6DFF3B] group-hover:bg-[#6DFF3B] group-hover:text-[#050505]"
+                    : "border-emerald-600/30 bg-white text-emerald-600 shadow-sm hover:scale-110 hover:bg-emerald-600 hover:text-white hover:border-emerald-600 hover:shadow-md hover:shadow-emerald-500/20",
+                )}
+              >
                 <ArrowRight className="h-4 w-4" />
               </div>
             </div>
@@ -1206,12 +1550,14 @@ function MoreSportsCard() {
       className="group shrink-0 snap-center w-[85vw] sm:w-auto"
     >
       <Link to="/venues" className="block h-full">
-        <div className={cn(
-          "relative flex h-full min-h-[280px] overflow-hidden rounded-3xl border transition-all duration-300 ease-out",
-          isDark
-            ? "border-white/[0.08] bg-[#101216]"
-            : "border-slate-300 bg-white shadow-sm hover:shadow-2xl hover:border-emerald-500/20"
-        )}>
+        <div
+          className={cn(
+            "relative flex h-full min-h-[280px] overflow-hidden rounded-3xl border transition-all duration-300 ease-out",
+            isDark
+              ? "border-white/[0.08] bg-[#101216]"
+              : "border-slate-300 bg-white shadow-sm hover:shadow-2xl hover:border-emerald-500/20",
+          )}
+        >
           <div className="absolute inset-0 grid grid-cols-2 gap-[1px] opacity-80 transition duration-500 ease-out group-hover:scale-[1.06]">
             {moreSports.map((sport) => (
               <ImageWithFallback
@@ -1220,7 +1566,8 @@ function MoreSportsCard() {
                 alt={sport.label}
                 className={cn(
                   "h-full w-full object-cover",
-                  !isDark && "brightness-[1.05] contrast-[1.08] saturate-[1.08]"
+                  !isDark &&
+                    "brightness-[1.05] contrast-[1.08] saturate-[1.08]",
                 )}
               />
             ))}
@@ -1230,40 +1577,49 @@ function MoreSportsCard() {
             style={{
               background: isDark
                 ? "linear-gradient(180deg, rgba(5,5,5,0.1) 0%, rgba(5,5,5,0.88) 100%)"
-                : "linear-gradient(to top, rgba(255,255,255,0.92) 0%, rgba(255,255,255,0.65) 25%, rgba(255,255,255,0.20) 55%, transparent 100%)"
+                : "linear-gradient(to top, rgba(255,255,255,0.92) 0%, rgba(255,255,255,0.65) 25%, rgba(255,255,255,0.20) 55%, transparent 100%)",
             }}
           />
+
           <div className="relative z-10 flex flex-1 flex-col justify-between p-6 sm:p-7">
             <div className="flex items-center justify-between">
-              <Badge className={cn(
-                "rounded-full border px-3 py-1 text-[0.7rem]  uppercase tracking-[0.2em] transition-all duration-300",
-                isDark
-                  ? "border-white/[0.08] bg-white/[0.06] text-white/80"
-                  : "border-emerald-200 bg-emerald-50 text-emerald-700"
-              )}>
+              <Badge
+                className={cn(
+                  "rounded-full border px-3 py-1 text-[0.7rem]  uppercase tracking-[0.2em] transition-all duration-300",
+                  isDark
+                    ? "border-white/[0.08] bg-white/[0.06] text-white/80"
+                    : "border-emerald-200 bg-emerald-50 text-emerald-700",
+                )}
+              >
                 More
               </Badge>
-              <div className={cn(
-                "flex h-10 w-10 items-center justify-center rounded-full border transition-all duration-300 ease-out",
-                isDark
-                  ? "border-white/[0.08] bg-[#050505]/70 text-[#6DFF3B]"
-                  : "border-emerald-600/30 bg-white text-emerald-600 shadow-sm hover:scale-110 hover:bg-emerald-600 hover:text-white hover:border-emerald-600 hover:shadow-md hover:shadow-emerald-500/20"
-              )}>
+              <div
+                className={cn(
+                  "flex h-10 w-10 items-center justify-center rounded-full border transition-all duration-300 ease-out",
+                  isDark
+                    ? "border-white/[0.08] bg-[#050505]/70 text-[#6DFF3B]"
+                    : "border-emerald-600/30 bg-white text-emerald-600 shadow-sm hover:scale-110 hover:bg-emerald-600 hover:text-white hover:border-emerald-600 hover:shadow-md hover:shadow-emerald-500/20",
+                )}
+              >
                 <ArrowRight className="h-4 w-4" />
               </div>
             </div>
 
             <div className="mt-5 max-w-[18rem]">
-              <p className={cn(
-                "text-xl  transition-colors duration-300",
-                isDark ? "text-white" : "text-slate-900"
-              )}>
+              <p
+                className={cn(
+                  "text-xl  transition-colors duration-300",
+                  isDark ? "text-white" : "text-slate-900",
+                )}
+              >
                 More courts, more formats.
               </p>
-              <p className={cn(
-                "mt-3 text-sm leading-relaxed transition-colors duration-300",
-                isDark ? "text-white/60" : "text-slate-600"
-              )}>
+              <p
+                className={cn(
+                  "mt-3 text-sm leading-relaxed transition-colors duration-300",
+                  isDark ? "text-white/60" : "text-slate-600",
+                )}
+              >
                 Padel, Box MMA, volleyball, and more formats stay one tap away.
               </p>
               <div className="mt-4 flex flex-wrap gap-2">
@@ -1274,7 +1630,7 @@ function MoreSportsCard() {
                       "rounded-full border px-3 py-1 text-xs  transition-all duration-300",
                       isDark
                         ? "border-white/[0.08] bg-white/[0.05] text-white/72"
-                        : "border-slate-200 bg-slate-50/80 text-slate-700"
+                        : "border-slate-200 bg-slate-50/80 text-slate-700",
                     )}
                   >
                     {label}
@@ -1290,7 +1646,7 @@ function MoreSportsCard() {
 }
 
 export function SportsBackgroundAnimation() {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const canvasRef = useRef(null);
   const { resolvedTheme } = useTheme();
   const isDark = resolvedTheme !== "light";
 
@@ -1301,7 +1657,7 @@ export function SportsBackgroundAnimation() {
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
-    let animationFrameId: number;
+    let animationFrameId;
     let width = (canvas.width = canvas.offsetWidth);
     let height = (canvas.height = canvas.offsetHeight);
 
@@ -1314,7 +1670,7 @@ export function SportsBackgroundAnimation() {
     window.addEventListener("resize", handleResize);
 
     const mouse = { x: -1000, y: -1000, radius: 140 };
-    const handleMouseMove = (e: MouseEvent) => {
+    const handleMouseMove = (e) => {
       const rect = canvas.getBoundingClientRect();
       mouse.x = e.clientX - rect.left;
       mouse.y = e.clientY - rect.top;
@@ -1330,19 +1686,7 @@ export function SportsBackgroundAnimation() {
       parent.addEventListener("mouseleave", handleMouseLeave);
     }
 
-    interface Particle {
-      x: number;
-      y: number;
-      vx: number;
-      vy: number;
-      size: number;
-      type: number;
-      rotation: number;
-      rotationSpeed: number;
-      baseOpacity: number;
-    }
-
-    const particles: Particle[] = [];
+    const particles = [];
     const count = 15;
 
     for (let i = 0; i < count; i++) {
@@ -1359,19 +1703,13 @@ export function SportsBackgroundAnimation() {
       });
     }
 
-    const drawSportsSymbol = (
-      ctx: CanvasRenderingContext2D,
-      x: number,
-      y: number,
-      size: number,
-      type: number,
-      rotation: number,
-      opacity: number
-    ) => {
+    const drawSportsSymbol = (ctx, x, y, size, type, rotation, opacity) => {
       ctx.save();
       ctx.translate(x, y);
       ctx.rotate(rotation);
-      ctx.strokeStyle = isDark ? `rgba(109, 255, 59, ${opacity})` : `rgba(34, 197, 94, ${opacity * 1.6})`;
+      ctx.strokeStyle = isDark
+        ? `rgba(109, 255, 59, ${opacity})`
+        : `rgba(34, 197, 94, ${opacity * 1.6})`;
       ctx.lineWidth = 1.5;
 
       ctx.beginPath();
@@ -1393,7 +1731,10 @@ export function SportsBackgroundAnimation() {
           const angle = (i * 2 * Math.PI) / 5 - Math.PI / 2;
           ctx.beginPath();
           ctx.moveTo(Math.cos(angle) * r, Math.sin(angle) * r);
-          ctx.lineTo(Math.cos(angle) * (size / 2), Math.sin(angle) * (size / 2));
+          ctx.lineTo(
+            Math.cos(angle) * (size / 2),
+            Math.sin(angle) * (size / 2),
+          );
           ctx.stroke();
         }
       } else if (type === 1) {
@@ -1409,7 +1750,13 @@ export function SportsBackgroundAnimation() {
         ctx.arc(-size * 0.4, 0, size * 0.3, -Math.PI / 3, Math.PI / 3);
         ctx.stroke();
         ctx.beginPath();
-        ctx.arc(size * 0.4, 0, size * 0.3, Math.PI - Math.PI / 3, Math.PI + Math.PI / 3);
+        ctx.arc(
+          size * 0.4,
+          0,
+          size * 0.3,
+          Math.PI - Math.PI / 3,
+          Math.PI + Math.PI / 3,
+        );
         ctx.stroke();
       } else if (type === 2) {
         ctx.arc(0, 0, size / 2, 0, Math.PI * 2);
@@ -1475,10 +1822,20 @@ export function SportsBackgroundAnimation() {
           currentOpacity = p.baseOpacity * (1 + force * 2.0);
         }
 
-        drawSportsSymbol(ctx, p.x, p.y, p.size, p.type, p.rotation, currentOpacity);
+        drawSportsSymbol(
+          ctx,
+          p.x,
+          p.y,
+          p.size,
+          p.type,
+          p.rotation,
+          currentOpacity,
+        );
       });
 
-      ctx.strokeStyle = isDark ? "rgba(109, 255, 59, 0.04)" : "rgba(34, 197, 94, 0.03)";
+      ctx.strokeStyle = isDark
+        ? "rgba(109, 255, 59, 0.04)"
+        : "rgba(34, 197, 94, 0.03)";
       ctx.lineWidth = 1;
       for (let i = 0; i < count; i++) {
         for (let j = i + 1; j < count; j++) {
@@ -1570,8 +1927,12 @@ export function DiscoveryRails() {
                       {offer.tag}
                     </Badge>
                     <p className="mt-4 text-lg  text-white">{offer.title}</p>
-                    <p className="mt-2 text-sm  text-[#6DFF3B]">{offer.value}</p>
-                    <p className="mt-2 text-sm leading-7 text-white/60">{offer.description}</p>
+                    <p className="mt-2 text-sm  text-[#6DFF3B]">
+                      {offer.value}
+                    </p>
+                    <p className="mt-2 text-sm leading-7 text-white/60">
+                      {offer.description}
+                    </p>
                   </div>
                 ))}
               </div>
@@ -1585,6 +1946,7 @@ export function DiscoveryRails() {
                 alt="Tournament events"
                 className="h-full w-full object-cover"
               />
+
               <div className="absolute inset-0 image-overlay bg-[linear-gradient(180deg,rgba(5,5,5,0.06),rgba(5,5,5,0.88))]" />
               <div className="absolute left-5 top-5 rounded-full border border-[#6DFF3B]/20 bg-[#6DFF3B]/10 px-3 py-1 text-xs  uppercase tracking-[0.22em] text-[#6DFF3B]">
                 Tournaments & events
@@ -1596,13 +1958,19 @@ export function DiscoveryRails() {
                 <Link key={event.title} to="/tournaments" className="block">
                   <div className="flex gap-4 rounded-[22px] border border-white/[0.08] bg-white/[0.03] p-3 transition hover:border-[#6DFF3B]/20 hover:bg-white/[0.05]">
                     <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-[18px]">
-                      <ImageWithFallback src={event.image} alt={event.title} className="h-full w-full object-cover" />
+                      <ImageWithFallback
+                        src={event.image}
+                        alt={event.title}
+                        className="h-full w-full object-cover"
+                      />
                     </div>
                     <div className="min-w-0 flex-1">
                       <div className="flex items-start justify-between gap-3">
                         <div>
                           <p className="text-sm  text-white">{event.title}</p>
-                          <p className="mt-1 text-xs text-white/52">{event.location}</p>
+                          <p className="mt-1 text-xs text-white/52">
+                            {event.location}
+                          </p>
                         </div>
                         <ArrowRight className="mt-0.5 h-4 w-4 shrink-0 text-white/35" />
                       </div>
@@ -1621,9 +1989,6 @@ export function DiscoveryRails() {
     </section>
   );
 }
-
-
-
 
 export function WhySportXClub() {
   return (
@@ -1648,11 +2013,18 @@ export function WhySportXClub() {
               <Card className="h-full rounded-[22px] border-white/[0.08] bg-[#101216] shadow-[0_18px_56px_-30px_rgba(0,0,0,0.85)]">
                 <CardContent className="flex h-full flex-col gap-5 p-6">
                   <div className="flex h-14 w-14 items-center justify-center rounded-[18px] border border-[#6DFF3B]/18 bg-[#6DFF3B]/10">
-                    <img src={card.icon} alt="" aria-hidden="true" className="h-7 w-7 object-contain" />
+                    <img
+                      src={card.icon}
+                      alt=""
+                      aria-hidden="true"
+                      className="h-7 w-7 object-contain"
+                    />
                   </div>
                   <div className="flex-1">
                     <h3 className="text-lg  text-white">{card.title}</h3>
-                    <p className="mt-3 text-sm leading-7 text-white/64">{card.description}</p>
+                    <p className="mt-3 text-sm leading-7 text-white/64">
+                      {card.description}
+                    </p>
                   </div>
                 </CardContent>
               </Card>
@@ -1671,41 +2043,87 @@ export function TournamentCTA() {
   return (
     <section className="py-[100px]">
       <div className="mx-auto max-w-[1400px] px-4 sm:px-6 lg:px-8">
-        <div className={cn("relative overflow-hidden rounded-[28px] border", isDark ? "border-white/[0.08] bg-[#101216]" : "border-slate-200 bg-[#F5F5F5]")}>
+        <div
+          className={cn(
+            "relative overflow-hidden rounded-[28px] border",
+            isDark
+              ? "border-white/[0.08] bg-[#101216]"
+              : "border-slate-200 bg-[#F5F5F5]",
+          )}
+        >
           <div className="absolute inset-0">
             <img
               src={asset("/tournaments/tournament-launchpad-bg.png")}
               alt=""
               aria-hidden="true"
-              className={cn("h-full w-full object-cover", isDark ? "opacity-90" : "opacity-100")}
+              className={cn(
+                "h-full w-full object-cover",
+                isDark ? "opacity-90" : "opacity-100",
+              )}
             />
-            <div className={cn("absolute inset-0", isDark ? "bg-[linear-gradient(90deg,rgba(5,5,5,0.96)_0%,rgba(5,5,5,0.85)_45%,rgba(5,5,5,0.25)_100%)]" : "bg-[linear-gradient(90deg,rgba(245,245,245,0.96)_0%,rgba(245,245,245,0.85)_45%,rgba(245,245,245,0.25)_100%)]")} />
+
+            <div
+              className={cn(
+                "absolute inset-0",
+                isDark
+                  ? "bg-[linear-gradient(90deg,rgba(5,5,5,0.96)_0%,rgba(5,5,5,0.85)_45%,rgba(5,5,5,0.25)_100%)]"
+                  : "bg-[linear-gradient(90deg,rgba(245,245,245,0.96)_0%,rgba(245,245,245,0.85)_45%,rgba(245,245,245,0.25)_100%)]",
+              )}
+            />
           </div>
 
           <div className="relative grid gap-10 px-6 py-10 md:px-10 md:py-12 lg:grid-cols-[1.12fr_0.88fr] lg:items-center lg:px-12">
             <div className="max-w-2xl">
-              <Badge className={cn("rounded-full border px-4 py-2 text-xs  uppercase tracking-[0.26em]", isDark ? "border-[#6DFF3B]/20 bg-[#6DFF3B]/10 text-[#6DFF3B]" : "border-[#6DFF3B]/30 bg-[#6DFF3B]/15 text-[#3eb315]")}>
+              <Badge
+                className={cn(
+                  "rounded-full border px-4 py-2 text-xs  uppercase tracking-[0.26em]",
+                  isDark
+                    ? "border-[#6DFF3B]/20 bg-[#6DFF3B]/10 text-[#6DFF3B]"
+                    : "border-[#6DFF3B]/30 bg-[#6DFF3B]/15 text-[#3eb315]",
+                )}
+              >
                 Tournament launchpad
               </Badge>
-              <h2 className={cn("mt-6 text-3xl  tracking-tight md:text-5xl md:leading-[1.04]", isDark ? "text-white" : "text-slate-900")}>
-                Host your tournament with the same polish players expect from the app.
+              <h2
+                className={cn(
+                  "mt-6 text-3xl  tracking-tight md:text-5xl md:leading-[1.04]",
+                  isDark ? "text-white" : "text-slate-900",
+                )}
+              >
+                Host your tournament with the same polish players expect from
+                the app.
               </h2>
-              <p className={cn("mt-5 max-w-xl text-base leading-8 md:text-lg", isDark ? "text-white/70" : "text-slate-600")}>
-                Promote brackets, prize pools, and registration with a premium call-to-action
-                section that feels credible and production-ready.
+              <p
+                className={cn(
+                  "mt-5 max-w-xl text-base leading-8 md:text-lg",
+                  isDark ? "text-white/70" : "text-slate-600",
+                )}
+              >
+                Promote brackets, prize pools, and registration with a premium
+                call-to-action section that feels credible and production-ready.
               </p>
 
               <div className="mt-8 flex flex-col gap-3 sm:flex-row">
                 <Button
                   asChild
-                  className={cn("h-12 rounded-full px-6", isDark ? "bg-[#6DFF3B] text-[#050505] hover:bg-[#86ff60]" : "bg-[#6DFF3B] text-[#050505] hover:bg-[#5fe032] shadow-sm")}
+                  className={cn(
+                    "h-12 rounded-full px-6",
+                    isDark
+                      ? "bg-[#6DFF3B] text-[#050505] hover:bg-[#86ff60]"
+                      : "bg-[#6DFF3B] text-[#050505] hover:bg-[#5fe032] shadow-sm",
+                  )}
                 >
                   <Link to="/organizer-dashboard">Host Your Tournament</Link>
                 </Button>
                 <Button
                   asChild
                   variant="ghost"
-                  className={cn("h-12 rounded-full border px-6", isDark ? "border-white/[0.08] bg-white/[0.04] text-white hover:bg-white/[0.08]" : "border-slate-200 bg-white/50 text-slate-700 hover:bg-white")}
+                  className={cn(
+                    "h-12 rounded-full border px-6",
+                    isDark
+                      ? "border-white/[0.08] bg-white/[0.04] text-white hover:bg-white/[0.08]"
+                      : "border-slate-200 bg-white/50 text-slate-700 hover:bg-white",
+                  )}
                 >
                   <Link to="/tournaments">
                     <PlayCircle className="h-4 w-4" />
@@ -1716,11 +2134,35 @@ export function TournamentCTA() {
             </div>
 
             <div className="relative mx-auto w-full max-w-[440px]">
-              <div className={cn("absolute -left-6 top-8 h-48 w-48 rounded-full blur-3xl", isDark ? "bg-[#6DFF3B]/14" : "bg-[#6DFF3B]/10")} />
-              <div className={cn("absolute -right-6 bottom-0 h-52 w-52 rounded-full blur-3xl", isDark ? "bg-white/[0.1]" : "bg-white/[0.4]")} />
-              <div className={cn("relative overflow-hidden rounded-[26px] border p-5 backdrop-blur-md", isDark ? "border-white/[0.08] bg-[#050505]/72" : "border-slate-200 bg-white/95 shadow-xl shadow-slate-200/50")}>
+              <div
+                className={cn(
+                  "absolute -left-6 top-8 h-48 w-48 rounded-full blur-3xl",
+                  isDark ? "bg-[#6DFF3B]/14" : "bg-[#6DFF3B]/10",
+                )}
+              />
+              <div
+                className={cn(
+                  "absolute -right-6 bottom-0 h-52 w-52 rounded-full blur-3xl",
+                  isDark ? "bg-white/[0.1]" : "bg-white/[0.4]",
+                )}
+              />
+              <div
+                className={cn(
+                  "relative overflow-hidden rounded-[26px] border p-5 backdrop-blur-md",
+                  isDark
+                    ? "border-white/[0.08] bg-[#050505]/72"
+                    : "border-slate-200 bg-white/95 shadow-xl shadow-slate-200/50",
+                )}
+              >
                 <div className="flex items-center gap-4">
-                  <div className={cn("h-24 w-24 shrink-0 overflow-hidden rounded-[22px] border", isDark ? "border-white/[0.08] bg-[#101216]" : "border-slate-100 bg-slate-50")}>
+                  <div
+                    className={cn(
+                      "h-24 w-24 shrink-0 overflow-hidden rounded-[22px] border",
+                      isDark
+                        ? "border-white/[0.08] bg-[#101216]"
+                        : "border-slate-100 bg-slate-50",
+                    )}
+                  >
                     <ImageWithFallback
                       src={asset("/tournaments/tournament-1-cover.webp")}
                       alt="Tournament cover"
@@ -1728,35 +2170,118 @@ export function TournamentCTA() {
                     />
                   </div>
                   <div className="min-w-0">
-                    <p className={cn("text-xs  uppercase tracking-[0.24em]", isDark ? "text-[#6DFF3B]/80" : "text-[#5fe032]")}>
+                    <p
+                      className={cn(
+                        "text-xs  uppercase tracking-[0.24em]",
+                        isDark ? "text-[#6DFF3B]/80" : "text-[#5fe032]",
+                      )}
+                    >
                       Featured event
                     </p>
-                    <h3 className={cn("mt-2 text-lg ", isDark ? "text-white" : "text-slate-900")}>City Five-A-Side Cup</h3>
-                    <p className={cn("mt-2 text-sm", isDark ? "text-white/60" : "text-slate-500")}>24 teams. 4 venues. 1 knockout weekend.</p>
+                    <h3
+                      className={cn(
+                        "mt-2 text-lg ",
+                        isDark ? "text-white" : "text-slate-900",
+                      )}
+                    >
+                      City Five-A-Side Cup
+                    </h3>
+                    <p
+                      className={cn(
+                        "mt-2 text-sm",
+                        isDark ? "text-white/60" : "text-slate-500",
+                      )}
+                    >
+                      24 teams. 4 venues. 1 knockout weekend.
+                    </p>
                   </div>
                 </div>
 
                 <div className="mt-6 grid grid-cols-2 gap-3">
-                  <div className={cn("rounded-[18px] border p-4", isDark ? "border-white/[0.08] bg-white/[0.03]" : "border-slate-100 bg-white")}>
-                    <p className={cn("text-xs uppercase tracking-[0.22em]", isDark ? "text-white/45" : "text-slate-500")}>Prize pool</p>
-                    <p className={cn("mt-2 text-xl ", isDark ? "text-white" : "text-slate-900")}>₹2.5L</p>
+                  <div
+                    className={cn(
+                      "rounded-[18px] border p-4",
+                      isDark
+                        ? "border-white/[0.08] bg-white/[0.03]"
+                        : "border-slate-100 bg-white",
+                    )}
+                  >
+                    <p
+                      className={cn(
+                        "text-xs uppercase tracking-[0.22em]",
+                        isDark ? "text-white/45" : "text-slate-500",
+                      )}
+                    >
+                      Prize pool
+                    </p>
+                    <p
+                      className={cn(
+                        "mt-2 text-xl ",
+                        isDark ? "text-white" : "text-slate-900",
+                      )}
+                    >
+                      ₹2.5L
+                    </p>
                   </div>
-                  <div className={cn("rounded-[18px] border p-4", isDark ? "border-white/[0.08] bg-white/[0.03]" : "border-slate-100 bg-white")}>
-                    <p className={cn("text-xs uppercase tracking-[0.22em]", isDark ? "text-white/45" : "text-slate-500")}>Registrations</p>
-                    <p className={cn("mt-2 text-xl ", isDark ? "text-white" : "text-slate-900")}>72%</p>
+                  <div
+                    className={cn(
+                      "rounded-[18px] border p-4",
+                      isDark
+                        ? "border-white/[0.08] bg-white/[0.03]"
+                        : "border-slate-100 bg-white",
+                    )}
+                  >
+                    <p
+                      className={cn(
+                        "text-xs uppercase tracking-[0.22em]",
+                        isDark ? "text-white/45" : "text-slate-500",
+                      )}
+                    >
+                      Registrations
+                    </p>
+                    <p
+                      className={cn(
+                        "mt-2 text-xl ",
+                        isDark ? "text-white" : "text-slate-900",
+                      )}
+                    >
+                      72%
+                    </p>
                   </div>
                 </div>
 
-                <div className={cn("mt-5 flex items-center gap-4 rounded-[20px] border p-4", isDark ? "border-[#6DFF3B]/16 bg-[#6DFF3B]/10" : "border-[#6DFF3B]/20 bg-[#6DFF3B]/10")}>
+                <div
+                  className={cn(
+                    "mt-5 flex items-center gap-4 rounded-[20px] border p-4",
+                    isDark
+                      ? "border-[#6DFF3B]/16 bg-[#6DFF3B]/10"
+                      : "border-[#6DFF3B]/20 bg-[#6DFF3B]/10",
+                  )}
+                >
                   <img
                     src={asset("/tournaments/trophy-3d.png")}
                     alt=""
                     aria-hidden="true"
                     className="h-16 w-16 object-contain"
                   />
+
                   <div>
-                    <p className={cn("text-sm ", isDark ? "text-white" : "text-slate-900")}>Tournament-ready templates</p>
-                    <p className={cn("mt-1 text-sm", isDark ? "text-white/60" : "text-slate-600")}>Landing pages, bracket pages, and updates in one flow.</p>
+                    <p
+                      className={cn(
+                        "text-sm ",
+                        isDark ? "text-white" : "text-slate-900",
+                      )}
+                    >
+                      Tournament-ready templates
+                    </p>
+                    <p
+                      className={cn(
+                        "mt-1 text-sm",
+                        isDark ? "text-white/60" : "text-slate-600",
+                      )}
+                    >
+                      Landing pages, bracket pages, and updates in one flow.
+                    </p>
                   </div>
                 </div>
               </div>
@@ -1768,10 +2293,12 @@ export function TournamentCTA() {
   );
 }
 
-
 export function Footer() {
   return (
-    <footer id="contact" className="relative overflow-hidden border-t border-white/[0.08] bg-[#050505] pb-10 pt-16">
+    <footer
+      id="contact"
+      className="relative overflow-hidden border-t border-white/[0.08] bg-[#050505] pb-10 pt-16"
+    >
       <div className="absolute inset-0">
         <img
           src={asset("/footer/footer-pattern.svg")}
@@ -1779,6 +2306,7 @@ export function Footer() {
           aria-hidden="true"
           className="h-full w-full object-cover opacity-25"
         />
+
         <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(5,5,5,0.72),#050505)]" />
       </div>
 
@@ -1789,8 +2317,8 @@ export function Footer() {
               <Logo />
             </div>
             <p className="mt-5 text-sm leading-7 text-white/64">
-              SportXClub is the premium way to discover, book, and compete across the best
-              sports venues and tournaments.
+              SportXClub is the premium way to discover, book, and compete
+              across the best sports venues and tournaments.
             </p>
             <div className="mt-6 flex flex-wrap gap-3">
               <a href="#" className="inline-flex">
@@ -1831,20 +2359,31 @@ export function Footer() {
             {
               title: "Social",
               links: [
-                { label: "Instagram", icon: asset("/icons/social-instagram.svg") },
-                { label: "Facebook", icon: asset("/icons/social-facebook.svg") },
+                {
+                  label: "Instagram",
+                  icon: asset("/icons/social-instagram.svg"),
+                },
+                {
+                  label: "Facebook",
+                  icon: asset("/icons/social-facebook.svg"),
+                },
                 { label: "Twitter", icon: asset("/icons/social-twitter.svg") },
                 { label: "YouTube", icon: asset("/icons/social-youtube.svg") },
               ],
             },
           ].map((column) => (
             <div key={column.title}>
-              <p className="text-sm  uppercase tracking-[0.24em] text-white/55">{column.title}</p>
+              <p className="text-sm  uppercase tracking-[0.24em] text-white/55">
+                {column.title}
+              </p>
               {column.title !== "Social" ? (
                 <ul className="mt-5 space-y-3">
                   {column.links.map((link) => (
                     <li key={link.label}>
-                      <Link to={link.to ?? "#"} className="text-sm text-white/68 transition hover:text-white">
+                      <Link
+                        to={link.to ?? "#"}
+                        className="text-sm text-white/68 transition hover:text-white"
+                      >
                         {link.label}
                       </Link>
                     </li>
@@ -1859,8 +2398,13 @@ export function Footer() {
                       className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/[0.08] bg-white/[0.04] transition hover:border-[#6DFF3B]/30 hover:bg-[#6DFF3B]/10"
                       aria-label={link.label}
                     >
-                      {'icon' in link && (
-                        <img src={link.icon} alt="" aria-hidden="true" className="h-5 w-5" />
+                      {"icon" in link && (
+                        <img
+                          src={link.icon}
+                          alt=""
+                          aria-hidden="true"
+                          className="h-5 w-5"
+                        />
                       )}
                     </a>
                   ))}
@@ -1896,7 +2440,8 @@ const storeProducts = [
     category: "Equipment",
     price: "₹1,499",
     rating: "4.8",
-    image: "https://images.unsplash.com/photo-1614632537190-23e4146777db?w=500&q=80",
+    image:
+      "https://images.unsplash.com/photo-1614632537190-23e4146777db?w=500&q=80",
   },
   {
     id: 2,
@@ -1904,7 +2449,8 @@ const storeProducts = [
     category: "Equipment",
     price: "₹3,499",
     rating: "4.9",
-    image: "https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?w=500&q=80",
+    image:
+      "https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?w=500&q=80",
   },
   {
     id: 3,
@@ -1912,7 +2458,8 @@ const storeProducts = [
     category: "Equipment",
     price: "₹8,500",
     rating: "4.7",
-    image: "https://images.unsplash.com/photo-1593341646782-e0b495cff86d?w=500&q=80",
+    image:
+      "https://images.unsplash.com/photo-1593341646782-e0b495cff86d?w=500&q=80",
   },
   {
     id: 4,
@@ -1920,7 +2467,8 @@ const storeProducts = [
     category: "Accessories",
     price: "₹599",
     rating: "4.6",
-    image: "https://images.unsplash.com/photo-1579952363873-27f3bade9f55?w=500&q=80",
+    image:
+      "https://images.unsplash.com/photo-1579952363873-27f3bade9f55?w=500&q=80",
   },
 ];
 
@@ -1948,23 +2496,30 @@ export function StoreSection() {
               whileHover={{ y: -5 }}
               className="group"
             >
-              <div className={cn(
-                "relative flex flex-col h-full overflow-hidden rounded-3xl border transition-all duration-300",
-                isDark
-                  ? "border-white/[0.08] bg-[#101216] hover:border-[#6DFF3B]/30 hover:shadow-[0_0_20px_rgba(109,255,59,0.05)]"
-                  : "border-slate-200 bg-white shadow-sm hover:shadow-xl hover:border-emerald-500/30"
-              )}>
+              <div
+                className={cn(
+                  "relative flex flex-col h-full overflow-hidden rounded-3xl border transition-all duration-300",
+                  isDark
+                    ? "border-white/[0.08] bg-[#101216] hover:border-[#6DFF3B]/30 hover:shadow-[0_0_20px_rgba(109,255,59,0.05)]"
+                    : "border-slate-200 bg-white shadow-sm hover:shadow-xl hover:border-emerald-500/30",
+                )}
+              >
                 <div className="aspect-[4/3] w-full overflow-hidden bg-slate-100">
                   <ImageWithFallback
                     src={product.image}
                     alt={product.name}
                     className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
                   />
+
                   <div className="absolute top-4 right-4">
-                    <Badge className={cn(
-                      "rounded-full px-2 py-1 flex items-center gap-1",
-                      isDark ? "bg-[#050505]/80 text-[#6DFF3B] border border-[#6DFF3B]/30" : "bg-white/90 text-emerald-700 border border-emerald-200"
-                    )}>
+                    <Badge
+                      className={cn(
+                        "rounded-full px-2 py-1 flex items-center gap-1",
+                        isDark
+                          ? "bg-[#050505]/80 text-[#6DFF3B] border border-[#6DFF3B]/30"
+                          : "bg-white/90 text-emerald-700 border border-emerald-200",
+                      )}
+                    >
                       <Star className="h-3 w-3 fill-current" />
                       <span className="text-xs">{product.rating}</span>
                     </Badge>
@@ -1972,15 +2527,30 @@ export function StoreSection() {
                 </div>
 
                 <div className="flex flex-col flex-1 p-5">
-                  <span className={cn("text-xs uppercase tracking-wider mb-2", isDark ? "text-white/50" : "text-slate-500")}>
+                  <span
+                    className={cn(
+                      "text-xs uppercase tracking-wider mb-2",
+                      isDark ? "text-white/50" : "text-slate-500",
+                    )}
+                  >
                     {product.category}
                   </span>
-                  <h3 className={cn("text-lg leading-tight mb-3 line-clamp-2", isDark ? "text-white" : "text-slate-900")}>
+                  <h3
+                    className={cn(
+                      "text-lg leading-tight mb-3 line-clamp-2",
+                      isDark ? "text-white" : "text-slate-900",
+                    )}
+                  >
                     {product.name}
                   </h3>
 
                   <div className="mt-auto flex items-center justify-between pt-4 border-t border-dashed border-white/10">
-                    <span className={cn("text-xl", isDark ? "text-[#6DFF3B]" : "text-emerald-600")}>
+                    <span
+                      className={cn(
+                        "text-xl",
+                        isDark ? "text-[#6DFF3B]" : "text-emerald-600",
+                      )}
+                    >
                       {product.price}
                     </span>
                     <Button
@@ -1989,7 +2559,7 @@ export function StoreSection() {
                         "rounded-full px-4 text-xs tracking-wide transition-all",
                         isDark
                           ? "bg-white/[0.08] text-white hover:bg-[#6DFF3B] hover:text-[#050505]"
-                          : "bg-emerald-50 text-emerald-700 hover:bg-emerald-600 hover:text-white"
+                          : "bg-emerald-50 text-emerald-700 hover:bg-emerald-600 hover:text-white",
                       )}
                     >
                       <ShoppingCart className="h-3.5 w-3.5 mr-1.5" />
@@ -2009,7 +2579,7 @@ export function StoreSection() {
               "rounded-full border-dashed px-8 h-12 transition-all",
               isDark
                 ? "border-white/20 text-white hover:border-[#6DFF3B]/50 hover:bg-[#6DFF3B]/10 hover:text-[#6DFF3B]"
-                : "border-slate-300 text-slate-700 hover:border-emerald-500 hover:bg-emerald-50 hover:text-emerald-700"
+                : "border-slate-300 text-slate-700 hover:border-emerald-500 hover:bg-emerald-50 hover:text-emerald-700",
             )}
           >
             View All Products
@@ -2027,7 +2597,8 @@ const galleryTurfs = [
     location: "Mumbai Central",
     rating: "4.9",
     reviews: 124,
-    image: "https://images.unsplash.com/photo-1459865264687-595d652de67e?w=800&q=80",
+    image:
+      "https://images.unsplash.com/photo-1459865264687-595d652de67e?w=800&q=80",
     className: "md:col-span-2 md:row-span-2",
   },
   {
@@ -2036,7 +2607,8 @@ const galleryTurfs = [
     location: "Andheri West",
     rating: "4.8",
     reviews: 89,
-    image: "https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?w=800&q=80",
+    image:
+      "https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?w=800&q=80",
     className: "md:col-span-1 md:row-span-1",
   },
   {
@@ -2045,7 +2617,8 @@ const galleryTurfs = [
     location: "Bandra",
     rating: "4.7",
     reviews: 56,
-    image: "https://images.unsplash.com/photo-1595435934249-5df7ed86e1c0?w=800&q=80",
+    image:
+      "https://images.unsplash.com/photo-1595435934249-5df7ed86e1c0?w=800&q=80",
     className: "md:col-span-1 md:row-span-1",
   },
   {
@@ -2054,7 +2627,8 @@ const galleryTurfs = [
     location: "South Mumbai",
     rating: "5.0",
     reviews: 210,
-    image: "https://images.unsplash.com/photo-1505666287802-931dc83948e9?w=800&q=80",
+    image:
+      "https://images.unsplash.com/photo-1505666287802-931dc83948e9?w=800&q=80",
     className: "md:col-span-2 md:row-span-1",
   },
 ];
@@ -2080,7 +2654,10 @@ export function TurfGallery() {
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5 }}
-              className={cn("group relative overflow-hidden rounded-3xl", turf.className)}
+              className={cn(
+                "group relative overflow-hidden rounded-3xl",
+                turf.className,
+              )}
             >
               <ImageWithFallback
                 src={turf.image}
@@ -2092,12 +2669,14 @@ export function TurfGallery() {
 
               <div className="absolute top-4 right-4 z-10">
                 <div className="flex flex-col items-end">
-                  <Badge className={cn(
-                    "rounded-full px-3 py-1.5 flex items-center gap-1.5 shadow-lg backdrop-blur-md border",
-                    isDark
-                      ? "bg-[#050505]/60 text-[#6DFF3B] border-[#6DFF3B]/30"
-                      : "bg-white/80 text-emerald-700 border-emerald-200"
-                  )}>
+                  <Badge
+                    className={cn(
+                      "rounded-full px-3 py-1.5 flex items-center gap-1.5 shadow-lg backdrop-blur-md border",
+                      isDark
+                        ? "bg-[#050505]/60 text-[#6DFF3B] border-[#6DFF3B]/30"
+                        : "bg-white/80 text-emerald-700 border-emerald-200",
+                    )}
+                  >
                     <Star className="h-3.5 w-3.5 fill-current" />
                     <span className="text-sm">{turf.rating}</span>
                   </Badge>
@@ -2110,9 +2689,13 @@ export function TurfGallery() {
               <div className="absolute bottom-0 left-0 w-full p-6 z-10 translate-y-2 transition-transform duration-300 group-hover:translate-y-0">
                 <div className="flex items-center gap-2 mb-2">
                   <MapPin className="h-4 w-4 text-[#6DFF3B]" />
-                  <span className="text-sm text-white/90 drop-shadow-md">{turf.location}</span>
+                  <span className="text-sm text-white/90 drop-shadow-md">
+                    {turf.location}
+                  </span>
                 </div>
-                <h3 className="text-2xl text-white drop-shadow-lg">{turf.name}</h3>
+                <h3 className="text-2xl text-white drop-shadow-lg">
+                  {turf.name}
+                </h3>
 
                 <div className="mt-4 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
                   <Button
@@ -2136,7 +2719,12 @@ export function HomePage() {
   const isDark = resolvedTheme !== "light";
 
   return (
-    <div className={cn("theme-adaptive min-h-screen", isDark ? "bg-[#050505] text-white" : "bg-white text-slate-900")}>
+    <div
+      className={cn(
+        "theme-adaptive min-h-screen",
+        isDark ? "bg-[#050505] text-white" : "bg-white text-slate-900",
+      )}
+    >
       <Navbar />
       <HeroSection />
       <StoreSection />
@@ -2150,4 +2738,3 @@ export function HomePage() {
     </div>
   );
 }
-

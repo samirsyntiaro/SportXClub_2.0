@@ -1,7 +1,15 @@
 import { Link } from "react-router";
 import { Button } from "../components/ui/button";
 import { Card, CardContent } from "../components/ui/card";
-import { CheckCircle2, Calendar, Clock, MapPin, Share2, Download, ArrowRight } from "lucide-react";
+import {
+  CheckCircle2,
+  Calendar,
+  Clock,
+  MapPin,
+  Share2,
+  Download,
+  ArrowRight,
+} from "lucide-react";
 import { motion } from "motion/react";
 import { Container } from "../components/ui/container";
 
@@ -23,7 +31,9 @@ export function BookingSuccess() {
         <div className="space-y-2">
           <h1 className="text-4xl  tracking-tight">Booking Confirmed!</h1>
           <p className="text-muted-foreground text-lg">
-            Your slot at <span className="text-foreground ">Elite Sports Arena</span> has been reserved.
+            Your slot at{" "}
+            <span className="text-foreground ">Elite Sports Arena</span> has
+            been reserved.
           </p>
         </div>
 
@@ -31,24 +41,32 @@ export function BookingSuccess() {
           <CardContent className="p-6 space-y-6">
             <div className="grid grid-cols-2 gap-6 text-left">
               <div className="space-y-1">
-                <p className="text-[10px] uppercase  text-muted-foreground tracking-widest">Date</p>
+                <p className="text-[10px] uppercase  text-muted-foreground tracking-widest">
+                  Date
+                </p>
                 <div className="flex items-center gap-2 ">
                   <Calendar className="h-4 w-4 text-primary" />
                   <span>June 18, 2026</span>
                 </div>
               </div>
               <div className="space-y-1">
-                <p className="text-[10px] uppercase  text-muted-foreground tracking-widest">Time Slot</p>
+                <p className="text-[10px] uppercase  text-muted-foreground tracking-widest">
+                  Time Slot
+                </p>
                 <div className="flex items-center gap-2 ">
                   <Clock className="h-4 w-4 text-primary" />
                   <span>6:00 PM - 7:00 PM</span>
                 </div>
               </div>
               <div className="col-span-2 space-y-1 pt-2 border-t border-border/20">
-                <p className="text-[10px] uppercase  text-muted-foreground tracking-widest">Venue Address</p>
+                <p className="text-[10px] uppercase  text-muted-foreground tracking-widest">
+                  Venue Address
+                </p>
                 <div className="flex items-start gap-2 ">
                   <MapPin className="h-4 w-4 text-primary mt-0.5" />
-                  <span className="text-sm">123 Sports Complex, MG Road, Mumbai</span>
+                  <span className="text-sm">
+                    123 Sports Complex, MG Road, Mumbai
+                  </span>
                 </div>
               </div>
             </div>
@@ -79,8 +97,11 @@ export function BookingSuccess() {
               </Button>
             </Link>
           </div>
-          
-          <Button variant="link" className="text-muted-foreground hover:text-primary group">
+
+          <Button
+            variant="link"
+            className="text-muted-foreground hover:text-primary group"
+          >
             Need help with your booking?
             <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
           </Button>
@@ -89,4 +110,3 @@ export function BookingSuccess() {
     </Container>
   );
 }
-

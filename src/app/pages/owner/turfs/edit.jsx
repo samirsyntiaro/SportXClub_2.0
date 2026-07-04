@@ -1,26 +1,52 @@
 import { useState, useEffect } from "react";
 import { useNavigate, Link, useParams } from "react-router";
 import { useForm } from "react-hook-form";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "../../../components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "../../../components/ui/card";
 import { Button } from "../../../components/ui/button";
 import { Input } from "../../../components/ui/input";
 import { Label } from "../../../components/ui/label";
-import { Textarea } from "../../../components/ui/textarea";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../../../components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../../../components/ui/select";
 import { Checkbox } from "../../../components/ui/checkbox";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../../components/ui/tabs";
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "../../../components/ui/tabs";
 import { ArrowLeft, Save, Loader2, AlertCircle } from "lucide-react";
 import { turfService } from "../../../services/turf.service";
 
 const OWNER_ID = "owner-123";
 
 const AMENITIES = [
-  "Parking", "Washroom", "Changing Room", "Drinking Water", 
-  "Floodlights", "Equipment Rent", "First Aid", "Cafe"
+  "Parking",
+  "Washroom",
+  "Changing Room",
+  "Drinking Water",
+  "Floodlights",
+  "Equipment Rent",
+  "First Aid",
+  "Cafe",
 ];
 
 const SPORTS = [
-  "Cricket", "Football", "Badminton", "Tennis", "Basketball", "Swimming"
+  "Cricket",
+  "Football",
+  "Badminton",
+  "Tennis",
+  "Basketball",
+  "Swimming",
 ];
 
 export function EditTurf() {
@@ -28,10 +54,17 @@ export function EditTurf() {
   const navigate = useNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState(null);
   const [activeTab, setActiveTab] = useState("basic");
 
-  const { register, handleSubmit, setValue, watch, reset, formState: { errors } } = useForm({
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    watch,
+    reset,
+    formState: { errors },
+  } = useForm({
     defaultValues: {
       name: "",
       description: "",
@@ -41,10 +74,10 @@ export function EditTurf() {
       coordinates: "",
       contactNumber: "",
       email: "",
-      amenities: [] as string[],
+      amenities: [],
       rules: "",
-      status: "Published"
-    }
+      status: "Published",
+    },
   });
 
   const selectedAmenities = watch("amenities") || [];
@@ -56,8 +89,10 @@ export function EditTurf() {
         if (!id) throw new Error("No turf ID provided");
         const result = await turfService.getById(OWNER_ID, id);
         reset(result);
-      } catch (err: any) {
-        setError("Backend API is not yet available. Could not load turf details.");
+      } catch (err) {
+        setError(
+          "Backend API is not yet available. Could not load turf details.",
+        );
       } finally {
         setIsLoading(false);
       }
@@ -65,7 +100,7 @@ export function EditTurf() {
     fetchTurf();
   }, [id, reset]);
 
-  const onSubmit = async (data: any) => {
+  const onSubmit = async (data) => {
     try {
       setIsSubmitting(true);
       setError(null);
@@ -73,18 +108,23 @@ export function EditTurf() {
       // Update only changed fields in a real app, passing whole data here
       await turfService.update(OWNER_ID, id, data);
       navigate("/owner-dashboard/turfs");
-    } catch (err: any) {
-      setError(err.message || "Failed to update turf. Backend API not available.");
+    } catch (err) {
+      setError(
+        err.message || "Failed to update turf. Backend API not available.",
+      );
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  const handleAmenityChange = (amenity: string, checked: boolean) => {
+  const handleAmenityChange = (amenity, checked) => {
     if (checked) {
       setValue("amenities", [...selectedAmenities, amenity]);
     } else {
-      setValue("amenities", selectedAmenities.filter((a) => a !== amenity));
+      setValue(
+        "amenities",
+        selectedAmenities.filter((a) => a !== amenity),
+      );
     }
   };
 
@@ -120,7 +160,9 @@ export function EditTurf() {
           </Link>
           <div>
             <h1 className="text-3xl tracking-tight">Edit Turf</h1>
-            <p className="text-muted-foreground mt-1">Update details for your turf</p>
+            <p className="text-muted-foreground mt-1">
+              Update details for your turf
+            </p>
           </div>
         </div>
       </div>
@@ -134,9 +176,15 @@ export function EditTurf() {
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
           <TabsList className="grid w-full grid-cols-3 h-auto p-1 bg-muted/50">
-            <TabsTrigger value="basic" className="py-2.5">Basic Info</TabsTrigger>
-            <TabsTrigger value="details" className="py-2.5">Details</TabsTrigger>
-            <TabsTrigger value="pricing" className="py-2.5">Pricing</TabsTrigger>
+            <TabsTrigger value="basic" className="py-2.5">
+              Basic Info
+            </TabsTrigger>
+            <TabsTrigger value="details" className="py-2.5">
+              Details
+            </TabsTrigger>
+            <TabsTrigger value="pricing" className="py-2.5">
+              Pricing
+            </TabsTrigger>
           </TabsList>
 
           <TabsContent value="basic" className="mt-6 space-y-6">
@@ -149,16 +197,21 @@ export function EditTurf() {
                   <Label htmlFor="name">Turf Name</Label>
                   <Input id="name" {...register("name", { required: true })} />
                 </div>
-                
+
                 <div className="space-y-2">
                   <Label htmlFor="sportType">Primary Sport</Label>
-                  <Select value={watch("sportType")} onValueChange={(val) => setValue("sportType", val)}>
+                  <Select
+                    value={watch("sportType")}
+                    onValueChange={(val) => setValue("sportType", val)}
+                  >
                     <SelectTrigger>
                       <SelectValue placeholder="Select a sport" />
                     </SelectTrigger>
                     <SelectContent>
-                      {SPORTS.map(sport => (
-                        <SelectItem key={sport} value={sport}>{sport}</SelectItem>
+                      {SPORTS.map((sport) => (
+                        <SelectItem key={sport} value={sport}>
+                          {sport}
+                        </SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
@@ -168,7 +221,7 @@ export function EditTurf() {
           </TabsContent>
 
           <TabsContent value="details" className="mt-6 space-y-6">
-             <Card className="border-border/50">
+            <Card className="border-border/50">
               <CardHeader>
                 <CardTitle>Amenities</CardTitle>
               </CardHeader>
@@ -176,12 +229,18 @@ export function EditTurf() {
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
                   {AMENITIES.map((amenity) => (
                     <div key={amenity} className="flex items-center space-x-2">
-                      <Checkbox 
-                        id={`amenity-${amenity}`} 
+                      <Checkbox
+                        id={`amenity-${amenity}`}
                         checked={selectedAmenities.includes(amenity)}
-                        onCheckedChange={(checked) => handleAmenityChange(amenity, checked as boolean)}
+                        onCheckedChange={(checked) =>
+                          handleAmenityChange(amenity, checked)
+                        }
                       />
-                      <label htmlFor={`amenity-${amenity}`} className="text-sm leading-none">
+
+                      <label
+                        htmlFor={`amenity-${amenity}`}
+                        className="text-sm leading-none"
+                      >
                         {amenity}
                       </label>
                     </div>
@@ -199,20 +258,24 @@ export function EditTurf() {
               <CardContent>
                 <div className="space-y-2 max-w-xs">
                   <Label htmlFor="price">Price per Hour (₹)</Label>
-                  <Input id="price" type="number" {...register("price", { required: true })} />
+                  <Input
+                    id="price"
+                    type="number"
+                    {...register("price", { required: true })}
+                  />
                 </div>
               </CardContent>
             </Card>
           </TabsContent>
         </Tabs>
-        
+
         <div className="flex justify-end border-t border-border/50 pt-6">
-          <Button 
-            type="submit" 
-            disabled={isSubmitting}
-            className="gap-2 px-8"
-          >
-            {isSubmitting ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
+          <Button type="submit" disabled={isSubmitting} className="gap-2 px-8">
+            {isSubmitting ? (
+              <Loader2 className="h-4 w-4 animate-spin" />
+            ) : (
+              <Save className="h-4 w-4" />
+            )}
             Save Changes
           </Button>
         </div>

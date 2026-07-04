@@ -1,15 +1,5 @@
-import { LucideIcon } from "lucide-react";
 import { Button } from "./button";
 import { motion } from "motion/react";
-
-interface EmptyStateProps {
-  icon: LucideIcon;
-  title: string;
-  description: string;
-  actionText?: string;
-  onAction?: () => void;
-  className?: string;
-}
 
 export function EmptyState({
   icon: Icon,
@@ -18,7 +8,7 @@ export function EmptyState({
   actionText,
   onAction,
   className = "",
-}: EmptyStateProps) {
+}) {
   return (
     <motion.div
       initial={{ opacity: 0, scale: 0.95 }}
@@ -38,4 +28,3 @@ export function EmptyState({
     </motion.div>
   );
 }
-

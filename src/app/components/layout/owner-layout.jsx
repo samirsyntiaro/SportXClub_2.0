@@ -1,18 +1,18 @@
-import { useState, useMemo } from "react";
+import { useState } from "react";
 import { Link, Outlet, useLocation, useNavigate } from "react-router";
 import { motion, AnimatePresence } from "motion/react";
-import { 
-  LayoutDashboard, 
-  MapPin, 
-  CalendarDays, 
-  Calendar, 
-  IndianRupee, 
-  Users, 
-  Star, 
+import {
+  LayoutDashboard,
+  MapPin,
+  CalendarDays,
+  Calendar,
+  IndianRupee,
+  Users,
+  Star,
   Tag,
   Menu,
   X,
-  LogOut
+  LogOut,
 } from "lucide-react";
 import { Logo } from "../brand/Logo";
 import { ThemeToggleButton } from "../ui/theme-toggle-button";
@@ -49,8 +49,10 @@ export function OwnerLayout() {
       <div className="flex flex-1 flex-col overflow-y-auto px-4 py-4 space-y-1">
         {ownerNavigation.map((item) => {
           const Icon = item.icon;
-          const isActive = location.pathname === item.href || (item.href !== "/owner-dashboard" && location.pathname.startsWith(item.href));
-          
+          const isActive =
+            location.pathname === item.href ||
+            (item.href !== "/owner-dashboard" &&
+              location.pathname.startsWith(item.href));
           return (
             <Link
               key={item.name}
@@ -69,7 +71,11 @@ export function OwnerLayout() {
         })}
       </div>
       <div className="p-4 mt-auto border-t border-border/40">
-        <Button variant="ghost" className="w-full justify-start gap-3 text-muted-foreground hover:text-foreground" onClick={handleLogout}>
+        <Button
+          variant="ghost"
+          className="w-full justify-start gap-3 text-muted-foreground hover:text-foreground"
+          onClick={handleLogout}
+        >
           <LogOut className="h-5 w-5" />
           Sign Out
         </Button>
@@ -99,7 +105,12 @@ export function OwnerLayout() {
           <div className="flex flex-1 gap-x-4 self-stretch lg:gap-x-6">
             <div className="flex flex-1 items-center">
               <h1 className="text-lg capitalize">
-                {ownerNavigation.find(n => location.pathname === n.href || (n.href !== "/owner-dashboard" && location.pathname.startsWith(n.href)))?.name || "Admin Panel"}
+                {ownerNavigation.find(
+                  (n) =>
+                    location.pathname === n.href ||
+                    (n.href !== "/owner-dashboard" &&
+                      location.pathname.startsWith(n.href)),
+                )?.name || "Admin Panel"}
               </h1>
             </div>
             <div className="flex items-center gap-x-4 lg:gap-x-6">
@@ -112,7 +123,6 @@ export function OwnerLayout() {
         <AnimatePresence>
           {isMobileMenuOpen && (
             <>
-
               <motion.div
                 initial={{ x: "-100%" }}
                 animate={{ x: 0 }}
@@ -121,7 +131,11 @@ export function OwnerLayout() {
                 className="fixed inset-y-0 left-0 z-50 w-full max-w-xs bg-background shadow-xl md:hidden"
               >
                 <div className="absolute right-4 top-4">
-                  <Button variant="ghost" size="icon" onClick={() => setIsMobileMenuOpen(false)}>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
                     <X className="h-6 w-6" />
                   </Button>
                 </div>

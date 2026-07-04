@@ -19,12 +19,18 @@ import { Badge } from "../components/ui/badge";
 import { Button } from "../components/ui/button";
 import { Card, CardContent } from "../components/ui/card";
 import { Input } from "../components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../components/ui/select";
 import { Slider } from "../components/ui/slider";
 import { ImageWithFallback } from "../components/figma/ImageWithFallback";
 import { cn } from "../components/ui/utils";
 
-const asset = (path: string) => `/assets${path}`;
+const asset = (path) => `/assets${path}`;
 
 const venueData = [
   {
@@ -125,7 +131,14 @@ const venueData = [
   },
 ];
 
-const sports = ["All", "Football", "Cricket", "Badminton", "Basketball", "Tennis"];
+const sports = [
+  "All",
+  "Football",
+  "Cricket",
+  "Badminton",
+  "Basketball",
+  "Tennis",
+];
 const locations = ["All", "Mumbai", "Thane", "Navi Mumbai"];
 const sorts = ["Recommended", "Rating", "Price: Low to High", "Distance"];
 const bookingFlow = [
@@ -140,21 +153,26 @@ export function VenueBooking() {
   const isDark = resolvedTheme !== "light";
   const [query, setQuery] = useState("");
   const [sport, setSport] = useState("All");
-  const [location, setLocation] = useState(() => localStorage.getItem("preferred-city") || "All");
+  const [location, setLocation] = useState(
+    () => localStorage.getItem("preferred-city") || "All",
+  );
 
   useEffect(() => {
-    const handleCityChange = (e: Event) => {
-      const customEvent = e as CustomEvent;
+    const handleCityChange = (e) => {
+      const customEvent = e;
       setLocation(customEvent.detail);
     };
     window.addEventListener("preferredCityChanged", handleCityChange);
-    return () => window.removeEventListener("preferredCityChanged", handleCityChange);
+    return () =>
+      window.removeEventListener("preferredCityChanged", handleCityChange);
   }, []);
 
-  const handleLocationChange = (newVal: string) => {
+  const handleLocationChange = (newVal) => {
     setLocation(newVal);
     localStorage.setItem("preferred-city", newVal);
-    window.dispatchEvent(new CustomEvent("preferredCityChanged", { detail: newVal }));
+    window.dispatchEvent(
+      new CustomEvent("preferredCityChanged", { detail: newVal }),
+    );
   };
 
   const [sortBy, setSortBy] = useState("Recommended");
@@ -171,7 +189,8 @@ export function VenueBooking() {
         venue.sport.toLowerCase().includes(query.toLowerCase());
       const matchesSport = sport === "All" || venue.sport === sport;
       const matchesLocation = location === "All" || venue.city === location;
-      const matchesPrice = venue.price >= priceRange[0] && venue.price <= priceRange[1];
+      const matchesPrice =
+        venue.price >= priceRange[0] && venue.price <= priceRange[1];
       const matchesAvailability = !availabilityOnly || venue.availableToday;
       const matchesRating = !ratingOnly || venue.rating >= 4.8;
 
@@ -194,10 +213,23 @@ export function VenueBooking() {
     });
 
     return sorted;
-  }, [availabilityOnly, location, priceRange, query, ratingOnly, sortBy, sport]);
+  }, [
+    availabilityOnly,
+    location,
+    priceRange,
+    query,
+    ratingOnly,
+    sortBy,
+    sport,
+  ]);
 
   return (
-    <div className={cn("theme-adaptive", isDark ? "bg-[#050505] text-white" : "bg-white text-slate-900")}>
+    <div
+      className={cn(
+        "theme-adaptive",
+        isDark ? "bg-[#050505] text-white" : "bg-white text-slate-900",
+      )}
+    >
       <section
         className="border-b border-white/[0.08]"
         style={{
@@ -217,8 +249,8 @@ export function VenueBooking() {
                   Discover venues the BookMyShow way.
                 </h1>
                 <p className="mt-4 max-w-2xl text-sm leading-7 text-white/64 md:text-base">
-                  Search by sport, choose your city, compare venue trust signals, and book the right slot
-                  without confusion.
+                  Search by sport, choose your city, compare venue trust
+                  signals, and book the right slot without confusion.
                 </p>
               </div>
 
@@ -311,7 +343,9 @@ export function VenueBooking() {
                     </div>
                     <div>
                       <p className="text-sm  text-white">{step.label}</p>
-                      <p className="mt-1 text-xs text-white/52">{step.detail}</p>
+                      <p className="mt-1 text-xs text-white/52">
+                        {step.detail}
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -327,8 +361,12 @@ export function VenueBooking() {
             <CardContent className="space-y-6 p-5">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-xs  uppercase tracking-[0.28em] text-white/45">Filters</p>
-                  <h2 className="mt-2 text-lg  text-white">Refine your search</h2>
+                  <p className="text-xs  uppercase tracking-[0.28em] text-white/45">
+                    Filters
+                  </p>
+                  <h2 className="mt-2 text-lg  text-white">
+                    Refine your search
+                  </h2>
                 </div>
                 <Filter className="h-5 w-5 text-[#6DFF3B]" />
               </div>
@@ -365,6 +403,7 @@ export function VenueBooking() {
                     onValueChange={setPriceRange}
                     className="py-3"
                   />
+
                   <div className="mt-2 flex items-center justify-between text-xs text-white/48">
                     <span>₹{priceRange[0]}</span>
                     <span>₹{priceRange[1]}+</span>
@@ -386,7 +425,9 @@ export function VenueBooking() {
                 >
                   <div>
                     <p className="text-sm ">Available today</p>
-                    <p className="mt-1 text-xs text-white/52">Hide sold-out venues</p>
+                    <p className="mt-1 text-xs text-white/52">
+                      Hide sold-out venues
+                    </p>
                   </div>
                   <TimerReset className="h-4 w-4 text-[#6DFF3B]" />
                 </button>
@@ -402,7 +443,9 @@ export function VenueBooking() {
                 >
                   <div>
                     <p className="text-sm ">4.8+ only</p>
-                    <p className="mt-1 text-xs text-white/52">Prioritize better-rated venues</p>
+                    <p className="mt-1 text-xs text-white/52">
+                      Prioritize better-rated venues
+                    </p>
                   </div>
                   <Star className="h-4 w-4 text-[#6DFF3B]" />
                 </button>
@@ -424,10 +467,18 @@ export function VenueBooking() {
         <div className="space-y-4">
           <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
             <p className="text-sm text-white/52">
-              Showing <span className="text-white">{filteredVenues.length}</span> venues in your area
+              Showing{" "}
+              <span className="text-white">{filteredVenues.length}</span> venues
+              in your area
             </p>
             <div className="flex flex-wrap gap-2">
-              {["Sort: Recommended", "Sport", "Location", "Price", "Rating"].map((chip) => (
+              {[
+                "Sort: Recommended",
+                "Sport",
+                "Location",
+                "Price",
+                "Rating",
+              ].map((chip) => (
                 <span
                   key={chip}
                   className="inline-flex items-center gap-2 rounded-full border border-white/[0.08] bg-white/[0.03] px-3 py-1.5 text-xs text-white/64"
@@ -457,10 +508,17 @@ export function VenueBooking() {
                           alt={venue.name}
                           className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
                         />
+
                         <div className="absolute inset-0 image-overlay bg-[linear-gradient(180deg,rgba(5,5,5,0.02),rgba(5,5,5,0.7))]" />
                         <div className="absolute left-4 top-4 flex gap-2">
                           {venue.badges.map((badge) => (
-                            <img key={badge} src={badge} alt="" aria-hidden="true" className="h-6 w-6" />
+                            <img
+                              key={badge}
+                              src={badge}
+                              alt=""
+                              aria-hidden="true"
+                              className="h-6 w-6"
+                            />
                           ))}
                         </div>
                         <button
@@ -478,8 +536,12 @@ export function VenueBooking() {
                       <CardContent className="space-y-4 p-5">
                         <div className="flex items-start justify-between gap-3">
                           <div>
-                            <h3 className="text-lg  text-white">{venue.name}</h3>
-                            <p className="mt-1 text-sm text-white/58">{venue.location}</p>
+                            <h3 className="text-lg  text-white">
+                              {venue.name}
+                            </h3>
+                            <p className="mt-1 text-sm text-white/58">
+                              {venue.location}
+                            </p>
                           </div>
                           <div className="rounded-full border border-white/[0.08] bg-white/[0.04] px-3 py-1.5 text-sm text-white">
                             <Star className="inline-block h-4 w-4 fill-[#6DFF3B] text-[#6DFF3B]" />{" "}
@@ -492,7 +554,9 @@ export function VenueBooking() {
                             {venue.sport}
                           </Badge>
                           <Badge className="rounded-full border border-[#6DFF3B]/20 bg-[#6DFF3B]/10 px-3 py-1 text-[0.68rem] uppercase tracking-[0.16em] text-[#6DFF3B]">
-                            {venue.availableToday ? "Available today" : "Limited slots"}
+                            {venue.availableToday
+                              ? "Available today"
+                              : "Limited slots"}
                           </Badge>
                         </div>
 
@@ -510,8 +574,12 @@ export function VenueBooking() {
 
                         <div className="flex items-center justify-between gap-3 pt-1">
                           <div>
-                            <p className="text-xs uppercase tracking-[0.22em] text-white/45">From</p>
-                            <p className="mt-1 text-xl  text-white">₹{venue.price}/hr</p>
+                            <p className="text-xs uppercase tracking-[0.22em] text-white/45">
+                              From
+                            </p>
+                            <p className="mt-1 text-xl  text-white">
+                              ₹{venue.price}/hr
+                            </p>
                           </div>
                           <Button className="h-11 rounded-[16px] bg-[#6DFF3B] px-5  text-[#050505] hover:bg-[#86ff60]">
                             View slots
@@ -527,9 +595,12 @@ export function VenueBooking() {
           ) : (
             <Card className="rounded-[24px] border-white/[0.08] bg-[#101216]">
               <CardContent className="flex flex-col items-center justify-center gap-4 py-16 text-center">
-                <p className="text-lg  text-white">No venues match your filters</p>
+                <p className="text-lg  text-white">
+                  No venues match your filters
+                </p>
                 <p className="max-w-md text-sm leading-7 text-white/58">
-                  Try widening the price range or switching the sport and location filters.
+                  Try widening the price range or switching the sport and
+                  location filters.
                 </p>
                 <Button
                   onClick={() => {
@@ -553,4 +624,3 @@ export function VenueBooking() {
     </div>
   );
 }
-

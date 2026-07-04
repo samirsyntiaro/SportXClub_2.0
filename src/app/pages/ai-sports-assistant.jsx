@@ -1,17 +1,15 @@
 import { useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "../components/ui/card";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import { Avatar, AvatarFallback } from "../components/ui/avatar";
 import { Badge } from "../components/ui/badge";
-import {
-  Bot,
-  Send,
-  MapPin,
-  Trophy,
-  Users,
-  Sparkles,
-} from "lucide-react";
+import { Bot, Send, MapPin, Trophy, Users, Sparkles } from "lucide-react";
 import { Container } from "../components/ui/container";
 
 const suggestions = [
@@ -122,7 +120,9 @@ Would you like to book any of these venues?`,
                   </div>
                 </div>
                 <p className=" text-sm mb-1">{feature.title}</p>
-                <p className="text-xs text-muted-foreground">{feature.description}</p>
+                <p className="text-xs text-muted-foreground">
+                  {feature.description}
+                </p>
               </CardContent>
             </Card>
           );
@@ -197,6 +197,7 @@ Would you like to book any of these venues?`,
               onKeyDown={(e) => e.key === "Enter" && handleSend()}
               className="flex-1"
             />
+
             <Button onClick={handleSend} className="gap-2">
               <Send className="h-4 w-4" />
               Send
@@ -205,7 +206,9 @@ Would you like to book any of these venues?`,
 
           {/* Quick Actions */}
           <div className="flex flex-wrap gap-2 pt-4 border-t border-border/50">
-            <p className="text-sm text-muted-foreground w-full mb-2">Quick Actions:</p>
+            <p className="text-sm text-muted-foreground w-full mb-2">
+              Quick Actions:
+            </p>
             {suggestions.map((suggestion) => (
               <Badge
                 key={suggestion}
@@ -248,9 +251,13 @@ Would you like to book any of these venues?`,
                 key={insight.title}
                 className="p-4 rounded-lg border border-border/50 bg-muted/30"
               >
-                <p className="text-sm text-muted-foreground mb-2">{insight.title}</p>
+                <p className="text-sm text-muted-foreground mb-2">
+                  {insight.title}
+                </p>
                 <p className="text-2xl  mb-1">{insight.value}</p>
-                <p className="text-xs text-muted-foreground">{insight.description}</p>
+                <p className="text-xs text-muted-foreground">
+                  {insight.description}
+                </p>
               </div>
             ))}
           </div>
@@ -259,4 +266,3 @@ Would you like to book any of these venues?`,
     </Container>
   );
 }
-

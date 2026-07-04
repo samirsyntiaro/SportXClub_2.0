@@ -1,37 +1,37 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router";
-import { Card, CardContent } from "../../../components/ui/card";
+import { Card } from "../../../components/ui/card";
 import { Button } from "../../../components/ui/button";
 import { Badge } from "../../../components/ui/badge";
 import { Input } from "../../../components/ui/input";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../../components/ui/tabs";
+import { Tabs, TabsList, TabsTrigger } from "../../../components/ui/tabs";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "../../../components/ui/dropdown-menu";
-import { 
-  Loader2, 
-  AlertCircle, 
-  Search, 
-  Calendar, 
-  Clock, 
-  MoreVertical, 
-  CheckCircle, 
+import {
+  Loader2,
+  AlertCircle,
+  Search,
+  Calendar,
+  Clock,
+  MoreVertical,
+  CheckCircle,
   XCircle,
   Eye,
   Download,
-  Filter
+  Filter,
 } from "lucide-react";
 import { bookingService } from "../../../services/booking.service";
 
 const OWNER_ID = "owner-123";
 
 export function BookingsList() {
-  const [data, setData] = useState<any[]>([]);
+  const [data, setData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [activeTab, setActiveTab] = useState("all");
 
@@ -42,8 +42,10 @@ export function BookingsList() {
         // Uses the real backend integration method
         const result = await bookingService.getAll(OWNER_ID);
         setData(result);
-      } catch (err: any) {
-        setError("Backend API is not yet available. Please implement the GET /api/owner/booking endpoint.");
+      } catch (err) {
+        setError(
+          "Backend API is not yet available. Please implement the GET /api/owner/booking endpoint.",
+        );
       } finally {
         setIsLoading(false);
       }
@@ -51,10 +53,12 @@ export function BookingsList() {
     fetchBookings();
   }, []);
 
-  const handleStatusChange = async (bookingId: string, newStatus: string) => {
+  const handleStatusChange = async (bookingId, newStatus) => {
     try {
       // Optimistic update
-      setData(prev => prev.map(b => b.id === bookingId ? { ...b, status: newStatus } : b));
+      setData((prev) =>
+        prev.map((b) => (b.id === bookingId ? { ...b, status: newStatus } : b)),
+      );
       // Real API call
       await bookingService.update(OWNER_ID, bookingId, { status: newStatus });
     } catch (err) {
@@ -78,27 +82,35 @@ export function BookingsList() {
         <AlertCircle className="h-12 w-12 text-destructive" />
         <p className="text-lg text-foreground">Failed to Load Bookings</p>
         <p className="text-sm max-w-md text-center">{error}</p>
-        <Button variant="outline" onClick={() => window.location.reload()}>Retry</Button>
+        <Button variant="outline" onClick={() => window.location.reload()}>
+          Retry
+        </Button>
       </div>
     );
   }
 
-  const filteredData = data.filter(booking => {
-    const matchesSearch = 
+  const filteredData = data.filter((booking) => {
+    const matchesSearch =
       booking.customerName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
       booking.id?.toLowerCase().includes(searchQuery.toLowerCase());
-    
     if (activeTab === "all") return matchesSearch;
-    return matchesSearch && booking.status.toLowerCase() === activeTab.toLowerCase();
+    return (
+      matchesSearch && booking.status.toLowerCase() === activeTab.toLowerCase()
+    );
   });
 
-  const getStatusColor = (status: string) => {
-    switch(status?.toLowerCase()) {
-      case 'confirmed': return 'bg-green-500/10 text-green-600 dark:bg-green-500/20 dark:text-green-400';
-      case 'pending': return 'bg-amber-500/10 text-amber-600 dark:bg-amber-500/20 dark:text-amber-400';
-      case 'completed': return 'bg-blue-500/10 text-blue-600 dark:bg-blue-500/20 dark:text-blue-400';
-      case 'cancelled': return 'bg-destructive/10 text-destructive dark:bg-destructive/20 dark:text-red-400';
-      default: return 'bg-muted text-muted-foreground';
+  const getStatusColor = (status) => {
+    switch (status?.toLowerCase()) {
+      case "confirmed":
+        return "bg-green-500/10 text-green-600 dark:bg-green-500/20 dark:text-green-400";
+      case "pending":
+        return "bg-amber-500/10 text-amber-600 dark:bg-amber-500/20 dark:text-amber-400";
+      case "completed":
+        return "bg-blue-500/10 text-blue-600 dark:bg-blue-500/20 dark:text-blue-400";
+      case "cancelled":
+        return "bg-destructive/10 text-destructive dark:bg-destructive/20 dark:text-red-400";
+      default:
+        return "bg-muted text-muted-foreground";
     }
   };
 
@@ -107,7 +119,9 @@ export function BookingsList() {
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
           <h1 className="text-3xl tracking-tight">Booking Management</h1>
-          <p className="text-muted-foreground mt-1">Manage and track all venue bookings</p>
+          <p className="text-muted-foreground mt-1">
+            Manage and track all venue bookings
+          </p>
         </div>
         <div className="flex gap-2">
           <Button variant="outline" className="gap-2">
@@ -117,7 +131,11 @@ export function BookingsList() {
       </div>
 
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full sm:w-auto overflow-x-auto">
+        <Tabs
+          value={activeTab}
+          onValueChange={setActiveTab}
+          className="w-full sm:w-auto overflow-x-auto"
+        >
           <TabsList>
             <TabsTrigger value="all">All</TabsTrigger>
             <TabsTrigger value="pending">Pending</TabsTrigger>
@@ -130,8 +148,8 @@ export function BookingsList() {
         <div className="flex items-center gap-2 w-full sm:w-auto">
           <div className="relative flex-1 sm:w-64">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-            <Input 
-              placeholder="Search by ID or customer..." 
+            <Input
+              placeholder="Search by ID or customer..."
               className="pl-9"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
@@ -166,18 +184,25 @@ export function BookingsList() {
               </thead>
               <tbody className="divide-y divide-border/50">
                 {filteredData.map((booking) => (
-                  <tr key={booking.id} className="hover:bg-muted/30 transition-colors">
+                  <tr
+                    key={booking.id}
+                    className="hover:bg-muted/30 transition-colors"
+                  >
                     <td className="px-6 py-4">{booking.id}</td>
                     <td className="px-6 py-4">
                       <div>
                         <div className="">{booking.customerName}</div>
-                        <div className="text-xs text-muted-foreground">{booking.customerPhone}</div>
+                        <div className="text-xs text-muted-foreground">
+                          {booking.customerPhone}
+                        </div>
                       </div>
                     </td>
                     <td className="px-6 py-4">
                       <div>
                         <div className="">{booking.turfName}</div>
-                        <div className="text-xs text-muted-foreground">{booking.sportType}</div>
+                        <div className="text-xs text-muted-foreground">
+                          {booking.sportType}
+                        </div>
                       </div>
                     </td>
                     <td className="px-6 py-4">
@@ -194,40 +219,67 @@ export function BookingsList() {
                     </td>
                     <td className="px-6 py-4">
                       <div className="">₹{booking.amount}</div>
-                      <div className="text-xs text-muted-foreground">{booking.paymentStatus}</div>
+                      <div className="text-xs text-muted-foreground">
+                        {booking.paymentStatus}
+                      </div>
                     </td>
                     <td className="px-6 py-4">
-                      <Badge variant="outline" className={`border-0 ${getStatusColor(booking.status)}`}>
+                      <Badge
+                        variant="outline"
+                        className={`border-0 ${getStatusColor(booking.status)}`}
+                      >
                         {booking.status}
                       </Badge>
                     </td>
                     <td className="px-6 py-4 text-right">
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                          <Button variant="ghost" size="icon" className="h-8 w-8">
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-8 w-8"
+                          >
                             <MoreVertical className="h-4 w-4" />
                           </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
                           <DropdownMenuItem asChild>
-                            <Link to={`/owner-dashboard/bookings/${booking.id}`} className="gap-2">
+                            <Link
+                              to={`/owner-dashboard/bookings/${booking.id}`}
+                              className="gap-2"
+                            >
                               <Eye className="h-4 w-4" /> View Details
                             </Link>
                           </DropdownMenuItem>
-                          
-                          {booking.status?.toLowerCase() === 'pending' && (
+
+                          {booking.status?.toLowerCase() === "pending" && (
                             <>
-                              <DropdownMenuItem className="gap-2 text-green-600 dark:text-green-400" onClick={() => handleStatusChange(booking.id, 'Confirmed')}>
+                              <DropdownMenuItem
+                                className="gap-2 text-green-600 dark:text-green-400"
+                                onClick={() =>
+                                  handleStatusChange(booking.id, "Confirmed")
+                                }
+                              >
                                 <CheckCircle className="h-4 w-4" /> Approve
                               </DropdownMenuItem>
-                              <DropdownMenuItem className="gap-2 text-destructive" onClick={() => handleStatusChange(booking.id, 'Cancelled')}>
+                              <DropdownMenuItem
+                                className="gap-2 text-destructive"
+                                onClick={() =>
+                                  handleStatusChange(booking.id, "Cancelled")
+                                }
+                              >
                                 <XCircle className="h-4 w-4" /> Reject
                               </DropdownMenuItem>
                             </>
                           )}
-                          
-                          {booking.status?.toLowerCase() === 'confirmed' && (
-                            <DropdownMenuItem className="gap-2 text-destructive" onClick={() => handleStatusChange(booking.id, 'Cancelled')}>
+
+                          {booking.status?.toLowerCase() === "confirmed" && (
+                            <DropdownMenuItem
+                              className="gap-2 text-destructive"
+                              onClick={() =>
+                                handleStatusChange(booking.id, "Cancelled")
+                              }
+                            >
                               <XCircle className="h-4 w-4" /> Cancel Booking
                             </DropdownMenuItem>
                           )}

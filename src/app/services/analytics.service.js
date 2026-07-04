@@ -1,70 +1,78 @@
 // TODO: Implement actual endpoint when ready
-const API_BASE = '/api/owner';
+const API_BASE = "/api/owner";
 
 /**
  * Service for analytics
  * All requests must include ownerId to ensure data isolation.
  */
 export const analyticsService = {
-  getAll: async (ownerId: string, params?: Record<string, any>) => {
+  getAll: async (ownerId, params) => {
     try {
-      const queryParams = new URLSearchParams({ ownerId, ...params }).toString();
+      const queryParams = new URLSearchParams({
+        ownerId,
+        ...params,
+      }).toString();
       const response = await fetch(`${API_BASE}/analytics?${queryParams}`);
-      if (!response.ok) throw new Error('Network response was not ok');
+      if (!response.ok) throw new Error("Network response was not ok");
       return await response.json();
     } catch (error) {
-      console.error('Error fetching analytics:', error);
+      console.error("Error fetching analytics:", error);
       throw error;
     }
   },
-  getById: async (ownerId: string, id: string) => {
+  getById: async (ownerId, id) => {
     try {
-      const response = await fetch(`${API_BASE}/analytics/${id}?ownerId=${ownerId}`);
-      if (!response.ok) throw new Error('Network response was not ok');
+      const response = await fetch(
+        `${API_BASE}/analytics/${id}?ownerId=${ownerId}`,
+      );
+      if (!response.ok) throw new Error("Network response was not ok");
       return await response.json();
     } catch (error) {
-      console.error('Error fetching analytics details:', error);
+      console.error("Error fetching analytics details:", error);
       throw error;
     }
   },
-  create: async (ownerId: string, data: any) => {
+  create: async (ownerId, data) => {
     try {
       const response = await fetch(`${API_BASE}/analytics`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ ...data, ownerId }),
       });
-      if (!response.ok) throw new Error('Network response was not ok');
+      if (!response.ok) throw new Error("Network response was not ok");
       return await response.json();
     } catch (error) {
-      console.error('Error creating analytics:', error);
+      console.error("Error creating analytics:", error);
       throw error;
     }
   },
-  update: async (ownerId: string, id: string, data: any) => {
+  update: async (ownerId, id, data) => {
     try {
       const response = await fetch(`${API_BASE}/analytics/${id}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ ...data, ownerId }),
       });
-      if (!response.ok) throw new Error('Network response was not ok');
+      if (!response.ok) throw new Error("Network response was not ok");
       return await response.json();
     } catch (error) {
-      console.error('Error updating analytics:', error);
+      console.error("Error updating analytics:", error);
       throw error;
     }
   },
-  delete: async (ownerId: string, id: string) => {
+  delete: async (ownerId, id) => {
     try {
-      const response = await fetch(`${API_BASE}/analytics/${id}?ownerId=${ownerId}`, {
-        method: 'DELETE',
-      });
-      if (!response.ok) throw new Error('Network response was not ok');
+      const response = await fetch(
+        `${API_BASE}/analytics/${id}?ownerId=${ownerId}`,
+        {
+          method: "DELETE",
+        },
+      );
+      if (!response.ok) throw new Error("Network response was not ok");
       return await response.json();
     } catch (error) {
-      console.error('Error deleting analytics:', error);
+      console.error("Error deleting analytics:", error);
       throw error;
     }
-  }
+  },
 };

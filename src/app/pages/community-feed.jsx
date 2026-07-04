@@ -19,8 +19,10 @@ const posts = [
     id: 1,
     author: "Rahul Sharma",
     time: "2 hours ago",
-    content: "Amazing match today! Our team won the Summer Cricket League finals. Special thanks to all teammates! 🏏🏆",
-    image: "https://images.unsplash.com/photo-1594470117722-de4b9a02ebed?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjcmlja2V0JTIwc3RhZGl1bSUyMG1hdGNofGVufDF8fHx8MTc4MTUxNTMxNHww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
+    content:
+      "Amazing match today! Our team won the Summer Cricket League finals. Special thanks to all teammates! 🏏🏆",
+    image:
+      "https://images.unsplash.com/photo-1594470117722-de4b9a02ebed?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjcmlja2V0JTIwc3RhZGl1bSUyMG1hdGNofGVufDF8fHx8MTc4MTUxNTMxNHww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
     likes: 156,
     comments: 24,
     shares: 8,
@@ -30,7 +32,8 @@ const posts = [
     id: 2,
     author: "Priya Patel",
     time: "5 hours ago",
-    content: "Looking for badminton players for a friendly match this Saturday at Champions Sports Complex. Who's in?",
+    content:
+      "Looking for badminton players for a friendly match this Saturday at Champions Sports Complex. Who's in?",
     likes: 42,
     comments: 18,
     shares: 3,
@@ -40,8 +43,10 @@ const posts = [
     id: 3,
     author: "Arjun Malhotra",
     time: "1 day ago",
-    content: "Just completed my 100th match on SportXClub! Thank you to this amazing community for making sports accessible to everyone! ⚽",
-    image: "https://images.unsplash.com/photo-1431324155629-1a6deb1dec8d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxmb290YmFsbCUyMHNvY2NlciUyMGZpZWxkJTIwYWN0aW9ufGVufDF8fHx8MTc4MTU3OTY5NXww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
+    content:
+      "Just completed my 100th match on SportXClub! Thank you to this amazing community for making sports accessible to everyone! ⚽",
+    image:
+      "https://images.unsplash.com/photo-1431324155629-1a6deb1dec8d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxmb290YmFsbCUyMHNvY2NlciUyMGZpZWxkJTIwYWN0aW9ufGVufDF8fHx8MTc4MTU3OTY5NXww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
     likes: 234,
     comments: 45,
     shares: 12,
@@ -51,7 +56,8 @@ const posts = [
     id: 4,
     author: "Sneha Reddy",
     time: "2 days ago",
-    content: "Tennis coaching session was absolutely amazing! Improved my backhand significantly. Highly recommend Ace Tennis Academy!",
+    content:
+      "Tennis coaching session was absolutely amazing! Improved my backhand significantly. Highly recommend Ace Tennis Academy!",
     likes: 89,
     comments: 15,
     shares: 5,
@@ -73,7 +79,9 @@ export function CommunityFeed() {
       <div className="lg:col-span-2 space-y-6">
         <div>
           <h1 className="text-3xl ">Community Feed</h1>
-          <p className="text-muted-foreground mt-1">Stay connected with the sports community</p>
+          <p className="text-muted-foreground mt-1">
+            Stay connected with the sports community
+          </p>
         </div>
 
         {/* Create Post */}
@@ -81,13 +89,16 @@ export function CommunityFeed() {
           <CardContent className="p-4">
             <div className="flex gap-3">
               <Avatar>
-                <AvatarFallback className="bg-primary text-primary-foreground">RV</AvatarFallback>
+                <AvatarFallback className="bg-primary text-primary-foreground">
+                  RV
+                </AvatarFallback>
               </Avatar>
               <div className="flex-1 space-y-3">
                 <Textarea
                   placeholder="Share your sports moment..."
                   className="min-h-[80px] resize-none"
                 />
+
                 <div className="flex items-center justify-between">
                   <div className="flex gap-2">
                     <Button variant="ghost" size="sm" className="gap-2">
@@ -114,14 +125,19 @@ export function CommunityFeed() {
                 <div className="flex items-start gap-3 mb-4">
                   <Avatar>
                     <AvatarFallback className="bg-primary text-primary-foreground">
-                      {post.author.split(" ").map(n => n[0]).join("")}
+                      {post.author
+                        .split(" ")
+                        .map((n) => n[0])
+                        .join("")}
                     </AvatarFallback>
                   </Avatar>
                   <div className="flex-1">
                     <div className="flex items-center justify-between">
                       <div>
                         <p className="">{post.author}</p>
-                        <p className="text-sm text-muted-foreground">{post.time}</p>
+                        <p className="text-sm text-muted-foreground">
+                          {post.time}
+                        </p>
                       </div>
                       {post.type === "match" && (
                         <Badge className="gap-1">
@@ -179,8 +195,13 @@ export function CommunityFeed() {
                 { label: "Following", value: "156" },
                 { label: "Followers", value: "342" },
               ].map((stat) => (
-                <div key={stat.label} className="flex items-center justify-between">
-                  <span className="text-sm text-muted-foreground">{stat.label}</span>
+                <div
+                  key={stat.label}
+                  className="flex items-center justify-between"
+                >
+                  <span className="text-sm text-muted-foreground">
+                    {stat.label}
+                  </span>
                   <span className="">{stat.value}</span>
                 </div>
               ))}
@@ -219,7 +240,10 @@ export function CommunityFeed() {
                   <div className="flex items-center gap-3">
                     <Avatar className="h-10 w-10">
                       <AvatarFallback className="text-sm bg-primary text-primary-foreground">
-                        {name.split(" ").map(n => n[0]).join("")}
+                        {name
+                          .split(" ")
+                          .map((n) => n[0])
+                          .join("")}
                       </AvatarFallback>
                     </Avatar>
                     <div>
@@ -227,7 +251,9 @@ export function CommunityFeed() {
                       <p className="text-xs text-muted-foreground">Cricket</p>
                     </div>
                   </div>
-                  <Button variant="outline" size="sm">Follow</Button>
+                  <Button variant="outline" size="sm">
+                    Follow
+                  </Button>
                 </div>
               ))}
             </div>
@@ -237,4 +263,3 @@ export function CommunityFeed() {
     </div>
   );
 }
-

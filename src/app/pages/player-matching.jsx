@@ -91,8 +91,10 @@ const players = [
 
 const skillColors = {
   Beginner: "bg-blue-100 text-blue-700 dark:bg-blue-950 dark:text-blue-300",
-  Intermediate: "bg-amber-100 text-amber-700 dark:bg-amber-950 dark:text-amber-300",
-  Advanced: "bg-purple-100 text-purple-700 dark:bg-purple-950 dark:text-purple-300",
+  Intermediate:
+    "bg-amber-100 text-amber-700 dark:bg-amber-950 dark:text-amber-300",
+  Advanced:
+    "bg-purple-100 text-purple-700 dark:bg-purple-950 dark:text-purple-300",
   Expert: "bg-red-100 text-red-700 dark:bg-red-950 dark:text-red-300",
 };
 
@@ -102,7 +104,9 @@ export function PlayerMatching() {
       {/* Header */}
       <div>
         <h1 className="text-3xl ">Find Players</h1>
-        <p className="text-muted-foreground mt-1">Connect with players nearby and build your team</p>
+        <p className="text-muted-foreground mt-1">
+          Connect with players nearby and build your team
+        </p>
       </div>
 
       {/* Search and Filters */}
@@ -114,19 +118,34 @@ export function PlayerMatching() {
               <Input placeholder="Search players..." className="pl-10" />
             </div>
             <div className="flex gap-2 flex-wrap">
-              <Badge variant="outline" className="cursor-pointer hover:bg-primary hover:text-primary-foreground transition-colors">
+              <Badge
+                variant="outline"
+                className="cursor-pointer hover:bg-primary hover:text-primary-foreground transition-colors"
+              >
                 All Sports
               </Badge>
-              <Badge variant="outline" className="cursor-pointer hover:bg-primary hover:text-primary-foreground transition-colors">
+              <Badge
+                variant="outline"
+                className="cursor-pointer hover:bg-primary hover:text-primary-foreground transition-colors"
+              >
                 Cricket
               </Badge>
-              <Badge variant="outline" className="cursor-pointer hover:bg-primary hover:text-primary-foreground transition-colors">
+              <Badge
+                variant="outline"
+                className="cursor-pointer hover:bg-primary hover:text-primary-foreground transition-colors"
+              >
                 Football
               </Badge>
-              <Badge variant="outline" className="cursor-pointer hover:bg-primary hover:text-primary-foreground transition-colors">
+              <Badge
+                variant="outline"
+                className="cursor-pointer hover:bg-primary hover:text-primary-foreground transition-colors"
+              >
                 Tennis
               </Badge>
-              <Badge variant="outline" className="cursor-pointer hover:bg-primary hover:text-primary-foreground transition-colors">
+              <Badge
+                variant="outline"
+                className="cursor-pointer hover:bg-primary hover:text-primary-foreground transition-colors"
+              >
                 Basketball
               </Badge>
             </div>
@@ -172,7 +191,10 @@ export function PlayerMatching() {
                 <div className="flex items-start gap-4 mb-4">
                   <Avatar className="h-16 w-16">
                     <AvatarFallback className="text-lg bg-primary text-primary-foreground">
-                      {player.name.split(" ").map(n => n[0]).join("")}
+                      {player.name
+                        .split(" ")
+                        .map((n) => n[0])
+                        .join("")}
                     </AvatarFallback>
                   </Avatar>
                   <div className="flex-1">
@@ -181,7 +203,9 @@ export function PlayerMatching() {
                       <Badge variant="outline" className="text-xs">
                         {player.sport}
                       </Badge>
-                      <Badge className={`text-xs border-0 ${skillColors[player.skillLevel as keyof typeof skillColors]}`}>
+                      <Badge
+                        className={`text-xs border-0 ${skillColors[player.skillLevel]}`}
+                      >
                         {player.skillLevel}
                       </Badge>
                     </div>
@@ -252,4 +276,3 @@ export function PlayerMatching() {
     </div>
   );
 }
-

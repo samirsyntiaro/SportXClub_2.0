@@ -7,4 +7,3 @@ export function LandingPage() {
 
   return isMobile ? <MobileHomePage /> : <HomePage />;
 }
-

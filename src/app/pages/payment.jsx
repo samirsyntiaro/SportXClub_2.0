@@ -17,7 +17,12 @@ import {
 
 import { Badge } from "../components/ui/badge";
 import { Button } from "../components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "../components/ui/card";
 import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
 import { RadioGroup, RadioGroupItem } from "../components/ui/radio-group";
@@ -25,7 +30,7 @@ import { Separator } from "../components/ui/separator";
 import { ImageWithFallback } from "../components/figma/ImageWithFallback";
 import { toast } from "sonner";
 
-const asset = (path: string) => `/assets${path}`;
+const asset = (path) => `/assets${path}`;
 
 const booking = {
   venue: "Elite Turf Arena",
@@ -106,7 +111,8 @@ export function Payment() {
               Secure booking and payment
             </h1>
             <p className="mt-4 max-w-2xl text-sm leading-7 text-white/64 md:text-base">
-              Review the venue, apply an offer, choose a payment method, and confirm with confidence.
+              Review the venue, apply an offer, choose a payment method, and
+              confirm with confidence.
             </p>
           </div>
 
@@ -126,7 +132,9 @@ export function Payment() {
                   : "border-white/[0.08] bg-[#101216]"
               }`}
             >
-              <p className="text-xs uppercase tracking-[0.24em] text-white/45">Step {index + 1}</p>
+              <p className="text-xs uppercase tracking-[0.24em] text-white/45">
+                Step {index + 1}
+              </p>
               <p className="mt-2 text-sm  text-white">{step}</p>
             </div>
           ))}
@@ -136,10 +144,16 @@ export function Payment() {
           <div className="space-y-6">
             <Card className="rounded-[28px] border-white/[0.08] bg-[#101216]">
               <CardHeader className="border-b border-white/[0.06] px-6 py-5">
-                <CardTitle className="text-xl text-white">1. Choose a payment method</CardTitle>
+                <CardTitle className="text-xl text-white">
+                  1. Choose a payment method
+                </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4 p-6">
-                <RadioGroup value={paymentMethod} onValueChange={setPaymentMethod} className="grid gap-3">
+                <RadioGroup
+                  value={paymentMethod}
+                  onValueChange={setPaymentMethod}
+                  className="grid gap-3"
+                >
                   {methods.map((method) => {
                     const Icon = method.icon;
                     return (
@@ -153,13 +167,19 @@ export function Payment() {
                         }`}
                       >
                         <div className="flex items-center gap-4">
-                          <RadioGroupItem value={method.id} id={method.id} className="sr-only" />
+                          <RadioGroupItem
+                            value={method.id}
+                            id={method.id}
+                            className="sr-only"
+                          />
                           <div className="flex h-12 w-12 items-center justify-center rounded-full border border-[#6DFF3B]/18 bg-[#6DFF3B]/10">
                             <Icon className="h-5 w-5 text-[#6DFF3B]" />
                           </div>
                           <div>
                             <p className=" text-white">{method.title}</p>
-                            <p className="mt-1 text-sm text-white/52">{method.description}</p>
+                            <p className="mt-1 text-sm text-white/52">
+                              {method.description}
+                            </p>
                           </div>
                         </div>
                         {paymentMethod === method.id ? (
@@ -174,7 +194,9 @@ export function Payment() {
 
             <Card className="rounded-[28px] border-white/[0.08] bg-[#101216]">
               <CardHeader className="border-b border-white/[0.06] px-6 py-5">
-                <CardTitle className="text-xl text-white">2. Payment details</CardTitle>
+                <CardTitle className="text-xl text-white">
+                  2. Payment details
+                </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4 p-6">
                 {paymentMethod === "upi" ? (
@@ -187,12 +209,18 @@ export function Payment() {
                       placeholder="example@okhdfcbank"
                       className="h-12 rounded-[18px] border-white/[0.08] bg-white/[0.03] text-white placeholder:text-white/35"
                     />
-                    <p className="text-xs text-white/50">A payment request will be sent to your UPI app.</p>
+
+                    <p className="text-xs text-white/50">
+                      A payment request will be sent to your UPI app.
+                    </p>
                   </div>
                 ) : (
                   <div className="grid gap-4">
                     <div className="space-y-2">
-                      <Label htmlFor="card-number" className="text-sm text-white/78">
+                      <Label
+                        htmlFor="card-number"
+                        className="text-sm text-white/78"
+                      >
                         Card number
                       </Label>
                       <Input
@@ -203,7 +231,10 @@ export function Payment() {
                     </div>
                     <div className="grid gap-4 md:grid-cols-2">
                       <div className="space-y-2">
-                        <Label htmlFor="expiry" className="text-sm text-white/78">
+                        <Label
+                          htmlFor="expiry"
+                          className="text-sm text-white/78"
+                        >
                           Expiry date
                         </Label>
                         <Input
@@ -232,10 +263,13 @@ export function Payment() {
                       <Lock className="h-4 w-4 text-[#6DFF3B]" />
                     </div>
                     <div>
-                      <p className=" text-white">Secure 256-bit SSL encrypted payment</p>
+                      <p className=" text-white">
+                        Secure 256-bit SSL encrypted payment
+                      </p>
                       <p className="mt-1 text-sm leading-7 text-white/62">
-                        Your payment details are never stored on our servers. Transactions are processed
-                        securely through trusted payment partners.
+                        Your payment details are never stored on our servers.
+                        Transactions are processed securely through trusted
+                        payment partners.
                       </p>
                     </div>
                   </div>
@@ -259,6 +293,7 @@ export function Payment() {
                     placeholder="teammate@example.com"
                     className="h-12 rounded-[18px] border-white/[0.08] bg-white/[0.03] text-white placeholder:text-white/35"
                   />
+
                   <Button className="h-12 rounded-[18px] bg-white/[0.08] px-5  text-white hover:bg-white/[0.12]">
                     Add player
                   </Button>
@@ -275,6 +310,7 @@ export function Payment() {
                   alt={booking.venue}
                   className="h-full w-full object-cover"
                 />
+
                 <div className="absolute inset-0 image-overlay bg-[linear-gradient(180deg,rgba(5,5,5,0.08),rgba(5,5,5,0.82))]" />
                 <div className="absolute left-4 top-4 rounded-full border border-[#6DFF3B]/20 bg-[#6DFF3B]/10 px-3 py-1 text-xs  uppercase tracking-[0.22em] text-[#6DFF3B]">
                   Booking summary
@@ -284,7 +320,9 @@ export function Payment() {
               <CardContent className="space-y-5 p-6">
                 <div>
                   <h2 className="text-2xl  text-white">{booking.venue}</h2>
-                  <p className="mt-2 text-sm text-white/54">{booking.location}</p>
+                  <p className="mt-2 text-sm text-white/54">
+                    {booking.location}
+                  </p>
                 </div>
 
                 <div className="grid gap-3 rounded-[22px] border border-white/[0.08] bg-white/[0.03] p-4">
@@ -329,8 +367,12 @@ export function Payment() {
 
                 <div className="flex items-end justify-between gap-4">
                   <div>
-                    <p className="text-xs  uppercase tracking-[0.28em] text-white/45">Total amount</p>
-                    <p className="mt-1 text-3xl  text-white">₹{total.toLocaleString()}</p>
+                    <p className="text-xs  uppercase tracking-[0.28em] text-white/45">
+                      Total amount
+                    </p>
+                    <p className="mt-1 text-3xl  text-white">
+                      ₹{total.toLocaleString()}
+                    </p>
                   </div>
                   <Badge className="rounded-full border-none bg-[#6DFF3B]/10 px-3 py-1 text-xs  uppercase tracking-[0.18em] text-[#6DFF3B]">
                     Save ₹{discount}
@@ -345,6 +387,7 @@ export function Payment() {
                       placeholder="Apply coupon"
                       className="h-11 rounded-[16px] border-white/[0.08] bg-white/[0.03] text-white placeholder:text-white/35"
                     />
+
                     <Button className="h-11 rounded-[16px] bg-white/[0.08] px-5  text-white hover:bg-white/[0.12]">
                       Apply
                     </Button>
@@ -360,7 +403,8 @@ export function Payment() {
                   </Button>
 
                   <p className="text-center text-xs leading-6 text-white/48">
-                    Free cancellation up to 4 hours before the booking start time.
+                    Free cancellation up to 4 hours before the booking start
+                    time.
                   </p>
                 </div>
               </CardContent>
@@ -370,8 +414,8 @@ export function Payment() {
               <CardContent className="space-y-3 p-6">
                 <p className="text-sm  text-white">Refund policy note</p>
                 <p className="text-sm leading-7 text-white/58">
-                  Refund eligibility and cancellation windows are shown before payment, so there are no
-                  surprises after checkout.
+                  Refund eligibility and cancellation windows are shown before
+                  payment, so there are no surprises after checkout.
                 </p>
               </CardContent>
             </Card>
@@ -381,8 +425,12 @@ export function Payment() {
         <div className="fixed inset-x-0 bottom-0 z-40 border-t border-white/[0.08] bg-[#050505]/94 px-4 py-3 backdrop-blur-2xl lg:hidden">
           <div className="mx-auto flex max-w-[1400px] items-center justify-between gap-3">
             <div>
-              <p className="text-xs uppercase tracking-[0.24em] text-white/45">Total</p>
-              <p className="mt-1 text-sm  text-white">₹{total.toLocaleString()}</p>
+              <p className="text-xs uppercase tracking-[0.24em] text-white/45">
+                Total
+              </p>
+              <p className="mt-1 text-sm  text-white">
+                ₹{total.toLocaleString()}
+              </p>
             </div>
             <Button
               className="h-11 rounded-[16px] bg-[#6DFF3B] px-5  text-[#050505] hover:bg-[#86ff60]"
@@ -397,4 +445,3 @@ export function Payment() {
     </div>
   );
 }
-

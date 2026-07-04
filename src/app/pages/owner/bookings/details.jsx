@@ -1,5 +1,10 @@
 import { useState, useEffect } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "../../../components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "../../../components/ui/card";
 import { Button } from "../../../components/ui/button";
 import { Loader2, AlertCircle } from "lucide-react";
 import { bookingService } from "../../../services/booking.service";
@@ -8,9 +13,9 @@ import { bookingService } from "../../../services/booking.service";
 const OWNER_ID = "owner-123";
 
 export function BookingDetails() {
-  const [data, setData] = useState<any>(null);
+  const [data, setData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -19,7 +24,7 @@ export function BookingDetails() {
         // Replace with actual method when implemented
         const result = await bookingService.getAll(OWNER_ID);
         setData(result);
-      } catch (err: any) {
+      } catch (err) {
         setError(err.message || "Failed to load data");
       } finally {
         setIsLoading(false);
@@ -42,7 +47,9 @@ export function BookingDetails() {
       <div className="flex h-[400px] flex-col items-center justify-center text-destructive space-y-4">
         <AlertCircle className="h-12 w-12" />
         <p className="text-lg">{error}</p>
-        <Button variant="outline" onClick={() => window.location.reload()}>Retry</Button>
+        <Button variant="outline" onClick={() => window.location.reload()}>
+          Retry
+        </Button>
       </div>
     );
   }
@@ -51,7 +58,9 @@ export function BookingDetails() {
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
       <div>
         <h1 className="text-3xl tracking-tight">Booking Details</h1>
-        <p className="text-muted-foreground mt-2">Manage your booking details</p>
+        <p className="text-muted-foreground mt-2">
+          Manage your booking details
+        </p>
       </div>
 
       <Card className="border-border/50 bg-card/50 backdrop-blur-xl">
@@ -65,10 +74,10 @@ export function BookingDetails() {
             </div>
           ) : (
             <div className="text-sm">
-               {/* Replace with actual data rendering */}
-               <pre className="p-4 bg-muted/50 rounded-lg overflow-auto max-h-96">
-                 {JSON.stringify(data, null, 2)}
-               </pre>
+              {/* Replace with actual data rendering */}
+              <pre className="p-4 bg-muted/50 rounded-lg overflow-auto max-h-96">
+                {JSON.stringify(data, null, 2)}
+              </pre>
             </div>
           )}
         </CardContent>

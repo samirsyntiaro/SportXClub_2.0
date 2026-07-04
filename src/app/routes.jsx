@@ -23,6 +23,13 @@ export const router = createBrowserRouter([
     },
   },
   {
+    path: "/player-login",
+    lazy: async () => {
+      const { PlayerLoginPage } = await import("./pages/player/login");
+      return { Component: PlayerLoginPage };
+    },
+  },
+  {
     path: "/owner-dashboard",
     element: <OwnerLayout />,
     children: [
@@ -64,7 +71,8 @@ export const router = createBrowserRouter([
       {
         path: "bookings/:id",
         lazy: async () => {
-          const { BookingDetails } = await import("./pages/owner/bookings/details");
+          const { BookingDetails } =
+            await import("./pages/owner/bookings/details");
           return { Component: BookingDetails };
         },
       },
@@ -144,6 +152,13 @@ export const router = createBrowserRouter([
         },
       },
       {
+        path: "/player-dashboard",
+        lazy: async () => {
+          const { PlayerDashboard } = await import("./pages/player/dashboard");
+          return { Component: PlayerDashboard };
+        },
+      },
+      {
         path: "/venues",
         lazy: async () => {
           const { VenueBooking } = await import("./pages/venue-booking");
@@ -216,14 +231,16 @@ export const router = createBrowserRouter([
       {
         path: "/organizer-dashboard",
         lazy: async () => {
-          const { TournamentOrganizerDashboard } = await import("./pages/tournament-organizer-dashboard");
+          const { TournamentOrganizerDashboard } =
+            await import("./pages/tournament-organizer-dashboard");
           return { Component: TournamentOrganizerDashboard };
         },
       },
       {
         path: "/ai-assistant",
         lazy: async () => {
-          const { AISportsAssistant } = await import("./pages/ai-sports-assistant");
+          const { AISportsAssistant } =
+            await import("./pages/ai-sports-assistant");
           return { Component: AISportsAssistant };
         },
       },

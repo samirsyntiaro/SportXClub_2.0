@@ -1,5 +1,10 @@
 import { Link, useNavigate } from "react-router";
-import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "../components/ui/card";
 import { Button } from "../components/ui/button";
 import { Badge } from "../components/ui/badge";
 import {
@@ -7,12 +12,9 @@ import {
   Calendar,
   Clock,
   Star,
-  TrendingUp,
-  Users,
   Trophy,
   Activity,
   ArrowRight,
-  Play,
   Wallet,
   Heart,
 } from "lucide-react";
@@ -49,7 +51,8 @@ const favoriteVenues = [
     distance: "1.2 km",
     rating: 4.8,
     price: "₹600/hr",
-    image: "https://images.unsplash.com/photo-1590227632180-80a3bf110871?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxiYXNrZXRiYWxsJTIwY291cnQlMjBwbGF5ZXJzfGVufDF8fHx8MTc4MTU3OTY5NXww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
+    image:
+      "https://images.unsplash.com/photo-1590227632180-80a3bf110871?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxiYXNrZXRiYWxsJTIwY291cnQlMjBwbGF5ZXJzfGVufDF8fHx8MTc4MTU3OTY5NXww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
   },
   {
     id: 2,
@@ -57,7 +60,8 @@ const favoriteVenues = [
     distance: "2.5 km",
     rating: 4.6,
     price: "₹800/hr",
-    image: "https://images.unsplash.com/photo-1530549387789-4c1017266635?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxzd2ltbWluZyUyMHBvb2wlMjBhdGhsZXRlfGVufDF8fHx8MTc4MTU3MzA5N3ww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
+    image:
+      "https://images.unsplash.com/photo-1530549387789-4c1017266635?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxzd2ltbWluZyUyMHBvb2wlMjBhdGhsZXRlfGVufDF8fHx8MTc4MTU3MzA5N3ww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
   },
 ];
 
@@ -83,7 +87,9 @@ export function HomeDashboard() {
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div>
           <h1 className="text-3xl  tracking-tight">Good evening, Rohan! 👋</h1>
-          <p className="text-muted-foreground mt-1 text-lg">Ready for your next game?</p>
+          <p className="text-muted-foreground mt-1 text-lg">
+            Ready for your next game?
+          </p>
         </div>
         <div className="flex flex-wrap gap-3">
           <Link to="/venues">
@@ -148,13 +154,19 @@ export function HomeDashboard() {
               <Card className="border-border/50 shadow-sm hover:shadow-md transition-shadow">
                 <CardContent className="p-6">
                   <div className="flex items-center justify-between mb-4">
-                    <p className="text-sm  text-muted-foreground">{stat.title}</p>
-                    <div className={`flex h-10 w-10 items-center justify-center rounded-full ${stat.bgColor}`}>
+                    <p className="text-sm  text-muted-foreground">
+                      {stat.title}
+                    </p>
+                    <div
+                      className={`flex h-10 w-10 items-center justify-center rounded-full ${stat.bgColor}`}
+                    >
                       <Icon className={`h-5 w-5 ${stat.color}`} />
                     </div>
                   </div>
                   <p className="text-2xl  mb-1">{stat.value}</p>
-                  <p className="text-xs text-muted-foreground ">{stat.description}</p>
+                  <p className="text-xs text-muted-foreground ">
+                    {stat.description}
+                  </p>
                 </CardContent>
               </Card>
             </motion.div>
@@ -169,7 +181,11 @@ export function HomeDashboard() {
             <div className="flex items-center justify-between">
               <CardTitle className="text-xl">Your Bookings</CardTitle>
               <Link to="/profile">
-                <Button variant="ghost" size="sm" className="text-primary hover:text-primary hover:bg-primary/10">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="text-primary hover:text-primary hover:bg-primary/10"
+                >
                   View History
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
@@ -189,7 +205,10 @@ export function HomeDashboard() {
                   <div className="flex-1 min-w-0 space-y-1">
                     <div className="flex items-center justify-between gap-2">
                       <h4 className=" text-base truncate">{booking.venue}</h4>
-                      <Badge variant="outline" className="bg-background/50 border-primary/20 text-primary">
+                      <Badge
+                        variant="outline"
+                        className="bg-background/50 border-primary/20 text-primary"
+                      >
                         {booking.sport}
                       </Badge>
                     </div>
@@ -231,7 +250,11 @@ export function HomeDashboard() {
                 Live Competitions
               </CardTitle>
               <Link to="/tournaments">
-                <Button variant="ghost" size="sm" className="text-primary hover:text-primary hover:bg-primary/10">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="text-primary hover:text-primary hover:bg-primary/10"
+                >
                   Join a Game
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
@@ -246,7 +269,9 @@ export function HomeDashboard() {
                   className="p-5 rounded-xl border border-border/40 bg-card hover:border-primary/40 transition-all shadow-sm"
                 >
                   <div className="flex items-center justify-between mb-4">
-                    <p className="text-sm  text-muted-foreground">{match.tournament}</p>
+                    <p className="text-sm  text-muted-foreground">
+                      {match.tournament}
+                    </p>
                     <Badge className="bg-red-500/10 text-red-600 hover:bg-red-500/20 border-red-200">
                       <span className="h-1.5 w-1.5 rounded-full bg-red-600 mr-2 animate-pulse" />
                       {match.status}
@@ -254,15 +279,21 @@ export function HomeDashboard() {
                   </div>
                   <div className="grid grid-cols-3 items-center gap-4">
                     <div className="text-center">
-                      <p className=" text-sm sm:text-base leading-tight h-10 flex items-center justify-center">{match.team1}</p>
+                      <p className=" text-sm sm:text-base leading-tight h-10 flex items-center justify-center">
+                        {match.team1}
+                      </p>
                       <p className="text-2xl  mt-2">{match.score1}</p>
                     </div>
                     <div className="flex flex-col items-center justify-center">
-                      <span className="text-xs  text-muted-foreground/30 italic">VS</span>
+                      <span className="text-xs  text-muted-foreground/30 italic">
+                        VS
+                      </span>
                       <div className="h-px w-full bg-border/40 mt-1" />
                     </div>
                     <div className="text-center">
-                      <p className=" text-sm sm:text-base leading-tight h-10 flex items-center justify-center">{match.team2}</p>
+                      <p className=" text-sm sm:text-base leading-tight h-10 flex items-center justify-center">
+                        {match.team2}
+                      </p>
                       <p className="text-2xl  mt-2">{match.score2}</p>
                     </div>
                   </div>
@@ -293,7 +324,11 @@ export function HomeDashboard() {
           <div className="flex items-center justify-between">
             <CardTitle className="text-xl">Your Favorites</CardTitle>
             <Link to="/venues">
-              <Button variant="ghost" size="sm" className="text-primary hover:text-primary hover:bg-primary/10">
+              <Button
+                variant="ghost"
+                size="sm"
+                className="text-primary hover:text-primary hover:bg-primary/10"
+              >
                 View All Venues
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
@@ -318,6 +353,7 @@ export function HomeDashboard() {
                           alt={venue.name}
                           className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                         />
+
                         <div className="absolute top-3 right-3 bg-background/90 backdrop-blur-sm text-foreground px-2.5 py-1 rounded-full text-xs  shadow-sm">
                           {venue.price}
                         </div>
@@ -331,7 +367,9 @@ export function HomeDashboard() {
                         </Button>
                       </div>
                       <div className="p-4">
-                        <h4 className=" mb-2 group-hover:text-primary transition-colors truncate">{venue.name}</h4>
+                        <h4 className=" mb-2 group-hover:text-primary transition-colors truncate">
+                          {venue.name}
+                        </h4>
                         <div className="flex items-center justify-between">
                           <div className="flex items-center gap-1.5 text-sm text-muted-foreground ">
                             <MapPin className="h-3.5 w-3.5" />
@@ -339,7 +377,9 @@ export function HomeDashboard() {
                           </div>
                           <div className="flex items-center gap-1 bg-amber-50 dark:bg-amber-950/20 px-2 py-0.5 rounded-md">
                             <Star className="h-3.5 w-3.5 fill-amber-400 text-amber-400" />
-                            <span className=" text-xs text-amber-700 dark:text-amber-500">{venue.rating}</span>
+                            <span className=" text-xs text-amber-700 dark:text-amber-500">
+                              {venue.rating}
+                            </span>
                           </div>
                         </div>
                       </div>
@@ -362,4 +402,3 @@ export function HomeDashboard() {
     </div>
   );
 }
-
