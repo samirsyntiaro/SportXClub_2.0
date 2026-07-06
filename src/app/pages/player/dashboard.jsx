@@ -33,6 +33,28 @@ import {
   DialogTrigger,
 } from "../../components/ui/dialog";
 import { Input } from "../../components/ui/input";
+import { useAuth } from "../../providers/auth-provider";
+
+const sportsOptions = [
+  { id: "football", name: "Football", emoji: "⚽" },
+  { id: "cricket", name: "Cricket", emoji: "🏏" },
+  { id: "badminton", name: "Badminton", emoji: "🏸" },
+  { id: "tennis", name: "Tennis", emoji: "🎾" },
+  { id: "basketball", name: "Basketball", emoji: "🏀" },
+  { id: "swimming", name: "Swimming", emoji: "🏊" },
+  { id: "gym", name: "Gym & Fitness", emoji: "🏋️" },
+  { id: "volleyball", name: "Volleyball", emoji: "🏐" },
+];
+
+const getMappedSports = (selectedSports) => {
+  if (!selectedSports || selectedSports.length === 0) {
+    return ["Football", "Cricket", "Badminton"];
+  }
+  return selectedSports.map((id) => {
+    const found = sportsOptions.find((s) => s.id === id);
+    return found ? found.name : id.charAt(0).toUpperCase() + id.slice(1);
+  });
+};
 
 // Mock data exactly matching the user's screenshot
 const player = {
@@ -127,6 +149,11 @@ const amenitiesList = [
 ];
 
 export function PlayerDashboard() {
+  const { currentUser } = useAuth();
+  const playerName = currentUser?.fullName || player.name;
+  const playerCity = currentUser?.city || "Powai, Mumbai";
+  const displaySports = getMappedSports(currentUser?.selectedSports);
+
   const [walletBalance, setWalletBalance] = useState(player.walletBalance);
   // Interactive States
   const [matchStatus, setMatchStatus] = useState("CONFIRMED");
@@ -203,7 +230,7 @@ export function PlayerDashboard() {
             <div className="relative shrink-0">
               <div className="w-20 h-20 rounded-full border-2 border-[#6DFF3B] p-1">
                 <ImageWithFallback
-                  src="https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?q=80&w=1080"
+                  src={currentUser?.profilePicture || "https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?q=80&w=1080"}
                   alt="Player"
                   className="w-full h-full rounded-full object-cover"
                 />
@@ -213,25 +240,26 @@ export function PlayerDashboard() {
             <div className="text-center sm:text-left space-y-2">
               <div className="flex flex-col sm:flex-row items-center gap-3">
                 <h1 className="text-2xl font-bold tracking-tight text-foreground">
-                  {player.name}
+                  {playerName}
                 </h1>
                 <Badge className="bg-[#6DFF3B]/15 text-[#6DFF3B] border border-[#6DFF3B]/30 font-bold py-0.5 px-3 text-[10px] rounded-full">
                   {player.level}
                 </Badge>
               </div>
               <p className="text-muted-foreground text-xs font-medium">
-                Powai, Mumbai • Active since May 2025
+                {playerCity} • Active since May 2025
               </p>
               <div className="flex flex-wrap gap-2 pt-2 justify-center sm:justify-start">
-                <Badge className="bg-muted text-muted-foreground border border-border/80 text-[10px] py-0.5 px-2.5 rounded-full">
-                  ⚽ Football
-                </Badge>
-                <Badge className="bg-muted text-muted-foreground border border-border/80 text-[10px] py-0.5 px-2.5 rounded-full">
-                  🏏 Cricket
-                </Badge>
-                <Badge className="bg-muted text-muted-foreground border border-border/80 text-[10px] py-0.5 px-2.5 rounded-full">
-                  🏸 Badminton
-                </Badge>
+                {displaySports.map((sport) => {
+                  const sportObj = sportsOptions.find(
+                    (s) => s.name.toLowerCase() === sport.toLowerCase()
+                  );
+                  return (
+                    <Badge key={sport} className="bg-muted text-muted-foreground border border-border/80 text-[10px] py-0.5 px-2.5 rounded-full">
+                      {sportObj ? sportObj.emoji + " " : ""} {sport}
+                    </Badge>
+                  );
+                })}
               </div>
             </div>
           </div>
@@ -439,7 +467,7 @@ export function PlayerDashboard() {
                   <DialogContent className="bg-white text-black sm:max-w-xs text-center border-0 p-8">
                     <div className="space-y-4">
                       <h3 className="font-bold text-xl uppercase tracking-wider">
-                        {player.name}
+                        {playerName}
                       </h3>
                       <div className="bg-zinc-100 p-4 rounded-2xl mx-auto w-fit">
                         <QrCode className="h-40 w-40 text-black" />
@@ -1137,7 +1165,7 @@ export function PlayerDashboard() {
                               "Amit Sharma",
                               "Sanjay Kumar",
                               "John Doe",
-                              "Rohan Das",
+                              playerName,
                             ].map((name) => (
                               <Button
                                 key={name}

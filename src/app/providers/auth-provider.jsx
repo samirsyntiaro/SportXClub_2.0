@@ -52,10 +52,33 @@ export function AuthProvider({ children }) {
   const logout = () => {
     setCurrentUser(null);
     localStorage.removeItem("currentUser");
+    localStorage.removeItem("isLoggedIn");
+    localStorage.removeItem("userName");
+  };
+
+  const updateUser = (updatedData) => {
+    if (!currentUser) return { success: false, error: "No user logged in" };
+    const users = JSON.parse(localStorage.getItem("users") || "[]");
+    const updatedUser = { ...currentUser, ...updatedData };
+    
+    // Update in users array
+    const updatedUsers = users.map((u) => u.id === currentUser.id ? updatedUser : u);
+    localStorage.setItem("users", JSON.stringify(updatedUsers));
+    
+    // Update currentUser in state and localStorage
+    setCurrentUser(updatedUser);
+    localStorage.setItem("currentUser", JSON.stringify(updatedUser));
+    
+    // Sync userName in localStorage if fullName changes
+    if (updatedData.fullName) {
+      localStorage.setItem("userName", updatedData.fullName.split(" ")[0]);
+    }
+    
+    return { success: true, user: updatedUser };
   };
 
   return (
-    <AuthContext.Provider value={{ currentUser, login, register, logout }}>
+    <AuthContext.Provider value={{ currentUser, login, register, logout, updateUser }}>
       {children}
     </AuthContext.Provider>
   );

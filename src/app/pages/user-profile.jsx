@@ -17,7 +17,7 @@ import {
   Wallet,
 } from "lucide-react";
 
-import { Avatar, AvatarFallback } from "../components/ui/avatar";
+import { Avatar, AvatarImage, AvatarFallback } from "../components/ui/avatar";
 import { Badge } from "../components/ui/badge";
 import { Button } from "../components/ui/button";
 import { Card, CardContent } from "../components/ui/card";
@@ -28,8 +28,48 @@ import {
   TabsList,
   TabsTrigger,
 } from "../components/ui/tabs";
+import { useAuth } from "../providers/auth-provider";
 
-const sports = ["Cricket", "Football", "Tennis"];
+const sportsOptions = [
+  { id: "football", name: "Football", emoji: "⚽" },
+  { id: "cricket", name: "Cricket", emoji: "🏏" },
+  { id: "badminton", name: "Badminton", emoji: "🏸" },
+  { id: "tennis", name: "Tennis", emoji: "🎾" },
+  { id: "basketball", name: "Basketball", emoji: "🏀" },
+  { id: "swimming", name: "Swimming", emoji: "🏊" },
+  { id: "gym", name: "Gym & Fitness", emoji: "🏋️" },
+  { id: "volleyball", name: "Volleyball", emoji: "🏐" },
+];
+
+const getInitials = (name) => {
+  if (!name) return "RV";
+  const parts = name.trim().split(/\s+/);
+  if (parts.length >= 2) {
+    return (parts[0][0] + parts[1][0]).toUpperCase();
+  }
+  return name.slice(0, 2).toUpperCase();
+};
+
+const getHandle = (user) => {
+  if (!user) return "@rohanv";
+  if (user.fullName) {
+    return "@" + user.fullName.toLowerCase().replace(/\s+/g, "");
+  }
+  if (user.email) {
+    return "@" + user.email.split("@")[0];
+  }
+  return "@user";
+};
+
+const getMappedSports = (selectedSports) => {
+  if (!selectedSports || selectedSports.length === 0) {
+    return ["Cricket", "Football", "Tennis"];
+  }
+  return selectedSports.map((id) => {
+    const found = sportsOptions.find((s) => s.id === id);
+    return found ? found.name : id.charAt(0).toUpperCase() + id.slice(1);
+  });
+};
 const recentBookings = [
   {
     title: "Elite Turf Arena",
@@ -95,6 +135,19 @@ const matchHistory = [
 
 function MobileProfilePage() {
   const navigate = useNavigate();
+  const { currentUser, logout } = useAuth();
+
+  const handleLogout = () => {
+    logout();
+    navigate("/login");
+  };
+
+  const displayName = currentUser?.fullName || "Rohan Verma";
+  const displayHandle = getHandle(currentUser);
+  const displayCity = currentUser?.city ? `${currentUser.city}, India` : "Mumbai, India";
+  const displayInitials = getInitials(currentUser?.fullName);
+  const displaySports = getMappedSports(currentUser?.selectedSports);
+
   return (
     <div className="space-y-5 px-4 py-4">
       <div className="space-y-5">
@@ -105,9 +158,12 @@ function MobileProfilePage() {
           className="rounded-[28px] border border-primary/10 bg-gradient-to-br from-primary/10 via-card to-card p-4 shadow-[0_16px_38px_-28px_rgba(15,23,42,0.35)]"
         >
           <div className="flex items-start gap-4">
-            <Avatar className="h-20 w-20 border border-primary/15">
+            <Avatar className="h-20 w-20 border border-primary/15 bg-background">
+              {currentUser?.profilePicture && (
+                <AvatarImage src={currentUser.profilePicture} className="object-cover" />
+              )}
               <AvatarFallback className="bg-primary/10 text-2xl  text-primary">
-                RV
+                {displayInitials}
               </AvatarFallback>
             </Avatar>
             <div className="min-w-0 flex-1">
@@ -117,29 +173,31 @@ function MobileProfilePage() {
                     Account
                   </p>
                   <h1 className="mt-2 truncate text-2xl  tracking-tight">
-                    Rohan Verma
+                    {displayName}
                   </h1>
-                  <p className="mt-1 text-sm text-muted-foreground">@rohanv</p>
+                  <p className="mt-1 text-sm text-muted-foreground">{displayHandle}</p>
                 </div>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="h-11 w-11 rounded-2xl border border-border/60 bg-background/80"
-                  aria-label="Edit profile"
-                >
-                  <Edit className="h-4.5 w-4.5" />
-                </Button>
+                <Link to="/edit-profile">
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-11 w-11 rounded-2xl border border-border/60 bg-background/80"
+                    aria-label="Edit profile"
+                  >
+                    <Edit className="h-4.5 w-4.5" />
+                  </Button>
+                </Link>
               </div>
 
               <div className="mt-3 inline-flex items-center gap-2 rounded-full border border-border/60 bg-background/80 px-3 py-1.5 text-sm text-muted-foreground">
                 <MapPin className="h-4 w-4 text-primary" />
-                Mumbai, India
+                {displayCity}
               </div>
             </div>
           </div>
 
           <div className="mt-4 flex flex-wrap gap-2">
-            {sports.map((sport) => (
+            {displaySports.map((sport) => (
               <Badge
                 key={sport}
                 className="rounded-full border border-primary/15 bg-primary/10 px-3 py-1 text-[0.68rem]  uppercase tracking-[0.16em] text-primary"
@@ -290,7 +348,7 @@ function MobileProfilePage() {
                   whileTap={{ scale: 0.99 }}
                   onClick={() => {
                     if (item.label === "Logout") {
-                      navigate("/login");
+                      handleLogout();
                     }
                   }}
                   className="flex w-full items-center justify-between rounded-[20px] border border-border/60 bg-card px-4 py-3 shadow-[0_10px_24px_-20px_rgba(15,23,42,0.28)]"
@@ -314,6 +372,19 @@ function MobileProfilePage() {
 
 export function UserProfile() {
   const navigate = useNavigate();
+  const { currentUser, logout } = useAuth();
+
+  const handleLogout = () => {
+    logout();
+    navigate("/login");
+  };
+
+  const displayName = currentUser?.fullName || "Rohan Verma";
+  const displayHandle = getHandle(currentUser);
+  const displayCity = currentUser?.city ? `${currentUser.city}, India` : "Mumbai, India";
+  const displayInitials = getInitials(currentUser?.fullName);
+  const displaySports = getMappedSports(currentUser?.selectedSports);
+
   return (
     <>
       <div className="md:hidden">
@@ -325,26 +396,31 @@ export function UserProfile() {
           <Card className="border-border/50">
             <CardContent className="p-6">
               <div className="flex flex-col gap-6 md:flex-row md:items-start">
-                <Avatar className="h-24 w-24">
+                <Avatar className="h-24 w-24 bg-background">
+                  {currentUser?.profilePicture && (
+                    <AvatarImage src={currentUser.profilePicture} className="object-cover" />
+                  )}
                   <AvatarFallback className="bg-primary text-2xl text-primary-foreground">
-                    RV
+                    {displayInitials}
                   </AvatarFallback>
                 </Avatar>
                 <div className="flex-1">
                   <div className="mb-2 flex items-start justify-between">
                     <div>
-                      <h1 className="text-2xl ">Rohan Verma</h1>
-                      <p className="text-muted-foreground">@rohanv</p>
+                      <h1 className="text-2xl ">{displayName}</h1>
+                      <p className="text-muted-foreground">{displayHandle}</p>
                     </div>
                     <div className="flex items-center gap-2">
-                      <Button className="gap-2" variant="outline">
-                        <Edit className="h-4 w-4" />
-                        Edit Profile
-                      </Button>
+                      <Link to="/edit-profile">
+                        <Button className="gap-2" variant="outline">
+                          <Edit className="h-4 w-4" />
+                          Edit Profile
+                        </Button>
+                      </Link>
                       <Button
                         variant="destructive"
                         className="gap-2 shrink-0"
-                        onClick={() => navigate("/login")}
+                        onClick={handleLogout}
                       >
                         <LogOut className="h-4 w-4" />
                         Logout
@@ -353,10 +429,10 @@ export function UserProfile() {
                   </div>
                   <div className="mb-3 flex items-center gap-2">
                     <MapPin className="h-4 w-4 text-muted-foreground" />
-                    <span className="text-muted-foreground">Mumbai, India</span>
+                    <span className="text-muted-foreground">{displayCity}</span>
                   </div>
                   <div className="mb-4 flex flex-wrap gap-2">
-                    {sports.map((sport) => (
+                    {displaySports.map((sport) => (
                       <Badge key={sport} variant="outline">
                         {sport}
                       </Badge>

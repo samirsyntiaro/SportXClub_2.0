@@ -21,6 +21,7 @@ import {
 import { motion } from "motion/react";
 import { EmptyState } from "../components/ui/empty-state";
 import { useNavigate } from "react-router";
+import { useAuth } from "../providers/auth-provider";
 
 const teams = [
   {
@@ -90,6 +91,13 @@ const teamMembers = [
 
 export function TeamManagement() {
   const navigate = useNavigate();
+  const { currentUser } = useAuth();
+
+  const displayMembers = teamMembers.map((member) =>
+    member.id === 1 && currentUser?.fullName
+      ? { ...member, name: currentUser.fullName }
+      : member
+  );
 
   return (
     <div className="space-y-8 pb-12">
@@ -237,8 +245,8 @@ export function TeamManagement() {
               <CardTitle className="text-base">Mumbai Warriors</CardTitle>
             </CardHeader>
             <CardContent className="p-4 pt-0 space-y-4">
-              {teamMembers.length > 0 ? (
-                teamMembers.map((member) => (
+              {displayMembers.length > 0 ? (
+                displayMembers.map((member) => (
                   <div
                     key={member.id}
                     className="flex items-center justify-between p-3 rounded-xl border border-border/20 bg-muted/20 hover:bg-muted/40 transition-colors cursor-pointer"

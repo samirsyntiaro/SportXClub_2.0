@@ -59,6 +59,8 @@ export function LoginPage() {
     setIsSubmitting(false);
 
     if (result.success) {
+      localStorage.setItem("isLoggedIn", "true");
+      localStorage.setItem("userName", result.user.fullName.split(" ")[0]);
       setIsSuccess(true);
       setTimeout(() => {
         if (result.user.role === "owner" || loginType === "owner") navigate("/owner-dashboard");
@@ -226,11 +228,11 @@ export function LoginPage() {
                 </label>
               </div>
 
-              <div className="pt-2">
+              <div className="pt-2 flex justify-center">
                 <Button
                   type="submit"
                   disabled={!isFormValid() || isSubmitting}
-                  className="w-full h-11 rounded-full bg-primary text-primary-foreground  hover:shadow-lg hover:shadow-primary/10 transition-all flex items-center justify-center gap-1.5 group"
+                  className="w-1/2 h-11 rounded-full bg-primary text-primary-foreground  hover:shadow-lg hover:shadow-primary/10 transition-all flex items-center justify-center gap-1.5 group"
                 >
                   {isSubmitting ? (
                     <span className="flex items-center gap-2">
@@ -257,27 +259,29 @@ export function LoginPage() {
             </div>
 
             {/* Google Sign In */}
-            <Button
-              variant="outline"
-              type="button"
-              onClick={() => {
-                setIsSubmitting(true);
-                setTimeout(() => {
-                  setIsSubmitting(false);
-                  setIsSuccess(true);
+            <div className="flex justify-center">
+              <Button
+                variant="outline"
+                type="button"
+                onClick={() => {
+                  setIsSubmitting(true);
                   setTimeout(() => {
-                    localStorage.setItem("isLoggedIn", "true");
-                    localStorage.setItem("userName", "Guest");
-                    if (loginType === "owner") navigate("/owner-dashboard");
-                    else navigate("/");
-                  }, 1500);
-                }, 1200);
-              }}
-              className="w-full h-11 rounded-full border border-border bg-card/30 hover:bg-muted/40 transition-all flex items-center justify-center gap-2.5 "
-            >
-              <Chrome className="h-4.5 w-4.5 text-primary" />
-              Sign in with Google
-            </Button>
+                    setIsSubmitting(false);
+                    setIsSuccess(true);
+                    setTimeout(() => {
+                      localStorage.setItem("isLoggedIn", "true");
+                      localStorage.setItem("userName", "Guest");
+                      if (loginType === "owner") navigate("/owner-dashboard");
+                      else navigate("/");
+                    }, 1500);
+                  }, 1200);
+                }}
+                className="w-1/2 h-11 rounded-full border border-border bg-card/30 hover:bg-muted/40 transition-all flex items-center justify-center gap-2.5 "
+              >
+                <Chrome className="h-4.5 w-4.5 text-primary" />
+                Sign in with Google
+              </Button>
+            </div>
           </div>
         )}
 

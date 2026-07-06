@@ -19,6 +19,7 @@ import { Button } from "../ui/button";
 import { ImageWithFallback } from "../figma/ImageWithFallback";
 import { cn } from "../ui/utils";
 import { MobileAppBar, MobileBottomNav } from "./mobile-chrome";
+import { useAuth } from "../../providers/auth-provider";
 
 const asset = (path) => `/assets${path}`;
 
@@ -265,6 +266,10 @@ function CarouselCard({ title, copy, tint }) {
 
 export function MobileHomePage() {
   const [currentBg, setCurrentBg] = useState(0);
+  const { currentUser } = useAuth();
+  const firstName = currentUser?.fullName ? currentUser.fullName.split(" ")[0] : "Rohan";
+  const displayCity = currentUser?.city || "Mumbai Central";
+
   const bgImages = [
     asset("/hero/stadium-bg.png"),
     asset("/venues/turf-1.webp"),
@@ -312,11 +317,11 @@ export function MobileHomePage() {
                   Good evening
                 </p>
                 <h1 className="mt-2 text-2xl tracking-tight text-white drop-shadow-md">
-                  Ready for your next game, Rohan?
+                  Ready for your next game, {firstName}?
                 </h1>
                 <div className="mt-3 inline-flex items-center gap-2 rounded-full border border-white/20 bg-black/40 px-3 py-1.5 text-sm text-white/90 backdrop-blur-md">
                   <MapPin className="h-4 w-4 text-[#6DFF3B]" />
-                  Mumbai Central
+                  {displayCity}
                 </div>
               </div>
 

@@ -236,6 +236,13 @@ export const router = createBrowserRouter([
         },
       },
       {
+        path: "/edit-profile",
+        lazy: async () => {
+          const { EditProfilePage } = await import("./pages/edit-profile");
+          return { Component: EditProfilePage };
+        },
+      },
+      {
         path: "/organizer-dashboard",
         lazy: async () => {
           const { TournamentOrganizerDashboard } =
