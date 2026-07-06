@@ -24,10 +24,10 @@ import {
   DropdownMenuTrigger,
 } from "../../../components/ui/dropdown-menu";
 import { turfService } from "../../../services/turf.service";
-
-const OWNER_ID = "owner-123";
+import { useAuth } from "../../../providers/auth-provider";
 
 export function TurfList() {
+  const { currentUser } = useAuth();
   const [data, setData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -38,7 +38,8 @@ export function TurfList() {
       try {
         setIsLoading(true);
         // Using actual API method
-        const result = await turfService.getAll(OWNER_ID);
+        const ownerId = currentUser?.id || "guest";
+        const result = await turfService.getAll(ownerId);
         setData(result);
       } catch (err) {
         // Since there is no mock API, handle the missing endpoint gracefully

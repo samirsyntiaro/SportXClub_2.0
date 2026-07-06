@@ -90,9 +90,27 @@ export function BookingsList() {
   }
 
   const filteredData = data.filter((booking) => {
+    const searchLower = searchQuery.toLowerCase();
+    
+    // Create a comprehensive date string for searching (e.g., matching "October" or "2023")
+    let dateSearchStr = booking.date?.toLowerCase() || "";
+    try {
+      if (booking.date) {
+        const d = new Date(booking.date);
+        if (!isNaN(d.getTime())) {
+          const monthLong = d.toLocaleString('en-US', { month: 'long' }).toLowerCase();
+          const monthShort = d.toLocaleString('en-US', { month: 'short' }).toLowerCase();
+          dateSearchStr += ` ${monthLong} ${monthShort} ${d.getFullYear()}`;
+        }
+      }
+    } catch(e) {}
+
     const matchesSearch =
-      booking.customerName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      booking.id?.toLowerCase().includes(searchQuery.toLowerCase());
+      booking.id?.toLowerCase().includes(searchLower) ||
+      booking.customerName?.toLowerCase().includes(searchLower) ||
+      booking.turfName?.toLowerCase().includes(searchLower) ||
+      dateSearchStr.includes(searchLower);
+
     if (activeTab === "all") return matchesSearch;
     return (
       matchesSearch && booking.status.toLowerCase() === activeTab.toLowerCase()

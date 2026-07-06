@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router";
+import { useAuth } from "../providers/auth-provider";
 import { motion, AnimatePresence } from "motion/react";
 import {
   User,
@@ -38,6 +39,7 @@ const sportsOptions = [
 
 export function RegisterPage() {
   const navigate = useNavigate();
+  const { register } = useAuth();
   const [step, setStep] = useState(1);
   const [showPassword, setShowPassword] = useState(false);
 
@@ -167,16 +169,28 @@ export function RegisterPage() {
     }
 
     setIsSubmitting(true);
+    
+    const result = register({
+      fullName: formData.fullName,
+      email: formData.email,
+      phone: formData.phone,
+      password: formData.password,
+      role: formData.role,
+    });
+
     await new Promise((resolve) => setTimeout(resolve, 1500));
     setIsSubmitting(false);
-    setIsSuccess(true);
-    setTimeout(() => {
-      localStorage.setItem("isLoggedIn", "true");
-      localStorage.setItem("userName", formData.fullName.split(" ")[0]);
-      if (formData.role === "owner") navigate("/owner-dashboard");
-      else if (formData.role === "admin") navigate("/admin-dashboard");
-      else navigate("/");
-    }, 1500);
+    
+    if (result.success) {
+      setIsSuccess(true);
+      setTimeout(() => {
+        if (formData.role === "owner") navigate("/owner-setup");
+        else if (formData.role === "admin") navigate("/admin-dashboard");
+        else navigate("/");
+      }, 1500);
+    } else {
+      alert(result.error);
+    }
   };
 
   const passwordStrength = getPasswordStrength();
@@ -204,48 +218,12 @@ export function RegisterPage() {
         style={{ animationDuration: "6s" }}
       />
 
-      {/* FLOAT WIDGETS (Gives the unique, premium sports-dashboard feel around the card) */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.4 }}
-        className="hidden lg:flex absolute left-[10%] top-[30%] rounded-2xl border border-border/60 bg-card/60 backdrop-blur-md p-4 shadow-lg items-center gap-3 max-w-[200px]"
-      >
-        <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary border border-primary/20 shrink-0">
-          <Star className="h-5 w-5 fill-primary text-primary" />
-        </div>
-        <div>
-          <p className="text-xs ">4.9/5 Rating</p>
-          <p className="text-[0.62rem] text-muted-foreground">
-            Loved by 12k+ active athletes
-          </p>
-        </div>
-      </motion.div>
 
-      <motion.div
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.6 }}
-        className="hidden lg:flex absolute right-[10%] bottom-[30%] rounded-2xl border border-border/60 bg-card/60 backdrop-blur-md p-4 shadow-lg items-center gap-3 max-w-[200px]"
-      >
-        <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary border border-primary/20 shrink-0">
-          <Trophy className="h-5 w-5 text-primary" />
-        </div>
-        <div>
-          <p className="text-xs ">Tournaments</p>
-          <p className="text-[0.62rem] text-muted-foreground">
-            Compete, register, & win pools
-          </p>
-        </div>
-      </motion.div>
 
       {/* HEADER LOGO */}
-      <div className="w-full max-w-xl flex items-center mb-6 z-10">
+      <div className="w-full max-w-xl flex items-center justify-center mb-6 z-10">
         <Link to="/" className="flex items-center gap-3">
           <Logo />
-          <div className="flex flex-col justify-center">
-            <p className="text-sm">Register Platform</p>
-          </div>
         </Link>
       </div>
 

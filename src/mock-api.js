@@ -12,6 +12,35 @@ window.fetch = async (input, init) => {
   // Add a small delay to simulate network latency
   await new Promise((resolve) => setTimeout(resolve, 500));
 
+  if (url.includes("/api/owner/disabled-dates")) {
+    const urlObj = new URL(url.startsWith("http") ? url : `http://localhost${url}`);
+    const ownerId = urlObj.searchParams.get("ownerId");
+    
+    let dates = JSON.parse(localStorage.getItem("mock_disabled_dates") || "[]");
+
+    if (init?.method === "POST") {
+      const { date, ownerId } = JSON.parse(init.body);
+      if (!dates.some(d => d.date === date && d.ownerId === ownerId)) {
+        dates.push({ date, ownerId });
+        localStorage.setItem("mock_disabled_dates", JSON.stringify(dates));
+      }
+      return new Response(JSON.stringify({ success: true }), { status: 201 });
+    }
+
+    if (init?.method === "DELETE") {
+      const { date, ownerId } = JSON.parse(init.body);
+      dates = dates.filter(d => !(d.date === date && d.ownerId === ownerId));
+      localStorage.setItem("mock_disabled_dates", JSON.stringify(dates));
+      return new Response(JSON.stringify({ success: true }), { status: 200 });
+    }
+
+    if (ownerId) {
+      dates = dates.filter((d) => d.ownerId === ownerId);
+    }
+    
+    return new Response(JSON.stringify(dates), { status: 200 });
+  }
+
   if (url.includes("/api/owner/analytics")) {
     return new Response(
       JSON.stringify({
@@ -70,77 +99,111 @@ window.fetch = async (input, init) => {
   }
 
   if (url.includes("/api/owner/turf")) {
-    return new Response(
-      JSON.stringify([
+    const urlObj = new URL(url.startsWith("http") ? url : `http://localhost${url}`);
+    const ownerId = urlObj.searchParams.get("ownerId");
+    
+    let turfs = JSON.parse(localStorage.getItem("mock_turfs") || "null");
+    
+    if (!turfs) {
+      turfs = [
         {
           id: "1",
+          ownerId: "owner-123",
           name: "Premium Green Turf",
           location: "Downtown Sports Complex",
           price: 1500,
           status: "Active",
           rating: 4.8,
           sportType: "Football",
-          image:
-            "https://images.unsplash.com/photo-1579952363873-27f3bade9f55?q=80&w=600&auto=format&fit=crop",
+          image: "https://images.unsplash.com/photo-1579952363873-27f3bade9f55?q=80&w=600&auto=format&fit=crop",
         },
         {
           id: "2",
+          ownerId: "owner-123",
           name: "Skyline Arena",
           location: "Uptown Tech Park",
           price: 2000,
           status: "Active",
           rating: 4.9,
           sportType: "Cricket",
-          image:
-            "https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?q=80&w=600&auto=format&fit=crop",
+          image: "https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?q=80&w=600&auto=format&fit=crop",
         },
         {
           id: "3",
+          ownerId: "owner-123",
           name: "Community Pitch",
           location: "Suburbs Recreation Center",
           price: 800,
           status: "Maintenance",
           rating: 4.2,
           sportType: "Badminton",
-          image:
-            "https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?q=80&w=600&auto=format&fit=crop",
+          image: "https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?q=80&w=600&auto=format&fit=crop",
         },
         {
           id: "4",
+          ownerId: "owner-123",
           name: "Neon Box",
           location: "City Center Mall",
           price: 2500,
           status: "Active",
           rating: 4.7,
           sportType: "Box Cricket",
-          image:
-            "https://images.unsplash.com/photo-1518063319789-7217e6706b04?q=80&w=600&auto=format&fit=crop",
+          image: "https://images.unsplash.com/photo-1518063319789-7217e6706b04?q=80&w=600&auto=format&fit=crop",
         },
         {
           id: "5",
+          ownerId: "owner-123",
           name: "Olympus Tennis Court",
           location: "Westside Avenue",
           price: 1200,
           status: "Active",
           rating: 4.6,
           sportType: "Tennis",
-          image:
-            "https://images.unsplash.com/photo-1595435934249-5df7ed86e1c0?q=80&w=600&auto=format&fit=crop",
+          image: "https://images.unsplash.com/photo-1595435934249-5df7ed86e1c0?q=80&w=600&auto=format&fit=crop",
         },
         {
           id: "6",
+          ownerId: "owner-123",
           name: "Titan Basketball Gym",
           location: "East End Campus",
           price: 1800,
           status: "Active",
           rating: 4.9,
           sportType: "Basketball",
-          image:
-            "https://images.unsplash.com/photo-1504450758481-7338eba7524a?q=80&w=600&auto=format&fit=crop",
+          image: "https://images.unsplash.com/photo-1504450758481-7338eba7524a?q=80&w=600&auto=format&fit=crop",
         },
-      ]),
-      { status: 200 },
-    );
+      ];
+      localStorage.setItem("mock_turfs", JSON.stringify(turfs));
+    }
+
+    if (init?.method === "POST") {
+      const newTurf = JSON.parse(init.body);
+      newTurf.id = Date.now().toString();
+      turfs.push(newTurf);
+      localStorage.setItem("mock_turfs", JSON.stringify(turfs));
+      return new Response(JSON.stringify(newTurf), { status: 201 });
+    }
+
+    if (init?.method === "PUT") {
+      const turfId = url.split('/').pop().split('?')[0];
+      const updateData = JSON.parse(init.body);
+      turfs = turfs.map(t => t.id === turfId ? { ...t, ...updateData } : t);
+      localStorage.setItem("mock_turfs", JSON.stringify(turfs));
+      return new Response(JSON.stringify(updateData), { status: 200 });
+    }
+    
+    if (init?.method === "DELETE") {
+      const turfId = url.split('/').pop().split('?')[0];
+      turfs = turfs.filter(t => t.id !== turfId);
+      localStorage.setItem("mock_turfs", JSON.stringify(turfs));
+      return new Response(JSON.stringify({ success: true }), { status: 200 });
+    }
+
+    if (ownerId) {
+      turfs = turfs.filter((t) => t.ownerId === ownerId);
+    }
+    
+    return new Response(JSON.stringify(turfs), { status: 200 });
   }
 
   if (url.includes("/api/owner/booking")) {
