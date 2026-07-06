@@ -19,6 +19,7 @@ import {
   Heart,
 } from "lucide-react";
 import { motion } from "motion/react";
+import { useAuth } from "../providers/auth-provider";
 import { ImageWithFallback } from "../components/figma/ImageWithFallback";
 import { EmptyState } from "../components/ui/empty-state";
 
@@ -80,13 +81,15 @@ const liveMatches = [
 
 export function HomeDashboard() {
   const navigate = useNavigate();
+  const { currentUser } = useAuth();
+  const firstName = currentUser?.fullName ? currentUser.fullName.split(" ")[0] : "Rohan";
 
   return (
     <div className="space-y-8 pb-12">
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div>
-          <h1 className="text-3xl  tracking-tight">Good evening, Rohan! 👋</h1>
+          <h1 className="text-3xl  tracking-tight">Good evening, {firstName}! 👋</h1>
           <p className="text-muted-foreground mt-1 text-lg">
             Ready for your next game?
           </p>

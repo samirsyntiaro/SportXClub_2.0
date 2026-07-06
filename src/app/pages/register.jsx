@@ -71,6 +71,14 @@ export function RegisterPage() {
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
+    if (name === "email") {
+      setEmailOtpSent(false);
+      setEmailOtpError("");
+    }
+    if (name === "phone") {
+      setPhoneOtpSent(false);
+      setPhoneOtpError("");
+    }
   };
 
   const handleRoleSelect = (role) => {
@@ -176,12 +184,19 @@ export function RegisterPage() {
       phone: formData.phone,
       password: formData.password,
       role: formData.role,
+      selectedSports: formData.selectedSports,
+      skillLevel: formData.skillLevel,
+      city: formData.city,
     });
 
     await new Promise((resolve) => setTimeout(resolve, 1500));
     setIsSubmitting(false);
     
     if (result.success) {
+      // Ensure isLoggedIn and userName are explicitly set for homepage/mobile-home
+      localStorage.setItem("isLoggedIn", "true");
+      localStorage.setItem("userName", formData.fullName.split(" ")[0]);
+      
       setIsSuccess(true);
       setTimeout(() => {
         if (formData.role === "owner") navigate("/owner-setup");
@@ -636,12 +651,12 @@ export function RegisterPage() {
                         )}
                     </div>
 
-                    <div className="pt-3">
+                    <div className="pt-3 flex justify-center">
                       <Button
                         type="button"
                         disabled={!isStep1Valid()}
                         onClick={handleNext}
-                        className="w-full h-11 rounded-full bg-primary text-primary-foreground  hover:shadow-lg hover:shadow-primary/10 transition-all flex items-center justify-center gap-1.5 group"
+                        className="w-1/2 h-11 rounded-full bg-primary text-primary-foreground  hover:shadow-lg hover:shadow-primary/10 transition-all flex items-center justify-center gap-1.5 group"
                       >
                         Continue
                         <ChevronRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />

@@ -1,7 +1,7 @@
 import { Card, CardContent } from "../components/ui/card";
 import { Button } from "../components/ui/button";
 import { Textarea } from "../components/ui/textarea";
-import { Avatar, AvatarFallback } from "../components/ui/avatar";
+import { Avatar, AvatarImage, AvatarFallback } from "../components/ui/avatar";
 import { Badge } from "../components/ui/badge";
 import {
   Heart,
@@ -13,6 +13,7 @@ import {
   TrendingUp,
 } from "lucide-react";
 import { ImageWithFallback } from "../components/figma/ImageWithFallback";
+import { useAuth } from "../providers/auth-provider";
 
 const posts = [
   {
@@ -73,6 +74,20 @@ const trendingTopics = [
 ];
 
 export function CommunityFeed() {
+  const { currentUser } = useAuth();
+
+  const displayInitials = currentUser?.fullName
+    ? currentUser.fullName
+        .split(" ")
+        .map((n) => n[0])
+        .join("")
+    : "RV";
+
+  const suggestions = ["Vikram Singh", "Anjali Gupta", "Rohan Verma"];
+  const displaySuggestions = suggestions.map((name) =>
+    name === currentUser?.fullName ? "Karan Malhotra" : name
+  );
+
   return (
     <div className="grid lg:grid-cols-3 gap-8">
       {/* Main Feed */}
@@ -88,9 +103,12 @@ export function CommunityFeed() {
         <Card className="border-border/50">
           <CardContent className="p-4">
             <div className="flex gap-3">
-              <Avatar>
+              <Avatar className="bg-background">
+                {currentUser?.profilePicture && (
+                  <AvatarImage src={currentUser.profilePicture} className="object-cover" />
+                )}
                 <AvatarFallback className="bg-primary text-primary-foreground">
-                  RV
+                  {displayInitials}
                 </AvatarFallback>
               </Avatar>
               <div className="flex-1 space-y-3">
@@ -235,7 +253,7 @@ export function CommunityFeed() {
           <CardContent className="p-6">
             <h3 className=" mb-4">Suggested Players</h3>
             <div className="space-y-4">
-              {["Vikram Singh", "Anjali Gupta", "Rohan Verma"].map((name) => (
+              {displaySuggestions.map((name) => (
                 <div key={name} className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <Avatar className="h-10 w-10">

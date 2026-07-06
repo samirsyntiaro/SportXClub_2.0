@@ -17,6 +17,8 @@ import { Button } from "../ui/button";
 import { Logo } from "../brand/Logo";
 import { MobileAppBar, MobileBottomNav } from "../mobile/mobile-chrome";
 import { ThemeToggleButton } from "../ui/theme-toggle-button";
+import { useAuth } from "../../providers/auth-provider";
+import { Avatar, AvatarImage, AvatarFallback } from "../ui/avatar";
 
 const navigation = [
   { name: "Dashboard", href: "/dashboard", icon: Home },
@@ -128,6 +130,8 @@ export function Layout() {
     () => getMobileTab(location.pathname),
     [location.pathname],
   );
+  const { currentUser } = useAuth();
+  const displayName = currentUser?.fullName || "John Doe";
 
   return (
     <div className="flex flex-col min-h-dvh bg-background text-foreground">
@@ -182,10 +186,19 @@ export function Layout() {
           <Link to="/profile">
             <Button
               variant="ghost"
-              className="rounded-full gap-2 text-muted-foreground hover:text-foreground px-4"
+              className="rounded-full gap-2.5 text-muted-foreground hover:text-foreground px-2.5 h-10 cursor-pointer"
             >
-              <UserCircle className="h-5 w-5" />
-              <span>John Doe</span>
+              <Avatar className="h-6 w-6 border border-border/80">
+                {currentUser?.profilePicture && (
+                  <AvatarImage src={currentUser.profilePicture} className="object-cover" />
+                )}
+                <AvatarFallback className="bg-primary text-[10px] font-bold text-primary-foreground">
+                  {currentUser?.fullName
+                    ? currentUser.fullName.trim().split(/\s+/).map((n) => n[0]).join("").slice(0, 2)
+                    : "U"}
+                </AvatarFallback>
+              </Avatar>
+              <span className="text-sm font-semibold leading-none">{displayName}</span>
             </Button>
           </Link>
         </div>
