@@ -27,6 +27,8 @@ import {
 } from "recharts";
 import { analyticsService } from "../../services/analytics.service";
 import { Button } from "../../components/ui/button";
+import { Badge } from "../../components/ui/badge";
+import { TrendingUp, ArrowUpRight, CheckCircle2, Clock } from "lucide-react";
 
 // TODO: Replace with actual auth context ownerId
 const OWNER_ID = "owner-123";
@@ -113,69 +115,103 @@ export function Dashboard() {
 
   // If data exists, render the dashboard. (This will only happen when API is ready)
   return (
-    <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
-      <div>
-        <h1 className="text-3xl tracking-tight">Dashboard Overview</h1>
-        <p className="text-muted-foreground mt-2">
-          Monitor your turf performance, bookings, and revenue.
-        </p>
+    <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500 max-w-7xl mx-auto">
+      <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">
+            Dashboard Overview
+          </h1>
+          <p className="text-muted-foreground mt-2">
+            Welcome back! Here's what's happening with your turfs today.
+          </p>
+        </div>
+        <div className="flex items-center gap-3">
+          <Button variant="outline" className="gap-2 backdrop-blur-md bg-background/50 border-primary/20 hover:bg-primary/10 transition-colors">
+            <Calendar className="h-4 w-4 text-primary" />
+            Last 30 Days
+          </Button>
+          <Button className="gap-2 shadow-lg shadow-primary/20 transition-all hover:shadow-primary/40">
+            <TrendingUp className="h-4 w-4" />
+            Download Report
+          </Button>
+        </div>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
         {[
           {
-            title: "Monthly Revenue",
-            value: `₹${data.stats.monthlyRevenue}`,
+            title: "Total Revenue",
+            value: `₹${data.stats.monthlyRevenue.toLocaleString()}`,
+            trend: "+12.5%",
+            trendUp: true,
             icon: DollarSign,
-            color: "text-green-600",
-            bgColor: "bg-green-50 dark:bg-green-950/30",
+            color: "text-emerald-500",
+            bgColor: "bg-emerald-500/10",
+            borderColor: "border-emerald-500/20",
           },
           {
             title: "Today's Bookings",
             value: data.stats.todaysBookings,
+            trend: "+4.2%",
+            trendUp: true,
             icon: Calendar,
-            color: "text-blue-600",
-            bgColor: "bg-blue-50 dark:bg-blue-950/30",
+            color: "text-blue-500",
+            bgColor: "bg-blue-500/10",
+            borderColor: "border-blue-500/20",
           },
           {
             title: "Active Turfs",
             value: `${data.stats.activeTurfs} / ${data.stats.totalTurfs}`,
+            trend: "100%",
+            trendUp: true,
             icon: MapPin,
-            color: "text-purple-600",
-            bgColor: "bg-purple-50 dark:bg-purple-950/30",
+            color: "text-purple-500",
+            bgColor: "bg-purple-500/10",
+            borderColor: "border-purple-500/20",
           },
           {
-            title: "Average Rating",
-            value: `${data.stats.averageRating} (${data.stats.reviewsCount})`,
+            title: "Customer Rating",
+            value: `${data.stats.averageRating}`,
+            trend: `${data.stats.reviewsCount} reviews`,
+            trendUp: true,
             icon: Star,
-            color: "text-amber-600",
-            bgColor: "bg-amber-50 dark:bg-amber-950/30",
+            color: "text-amber-500",
+            bgColor: "bg-amber-500/10",
+            borderColor: "border-amber-500/20",
           },
-        ].map((stat) => {
+        ].map((stat, i) => {
           const Icon = stat.icon;
           return (
             <Card
               key={stat.title}
-              className="border-border/50 bg-card/50 backdrop-blur-sm"
+              className={`relative overflow-hidden border ${stat.borderColor} bg-card/40 backdrop-blur-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 group`}
             >
-              <CardContent className="p-6">
-                <div className="flex items-center justify-between mb-4">
-                  <p className="text-sm text-muted-foreground">{stat.title}</p>
+              <div className={`absolute top-0 right-0 p-4 opacity-10 transition-opacity group-hover:opacity-20`}>
+                <Icon className={`h-24 w-24 ${stat.color} -mt-8 -mr-8`} />
+              </div>
+              <CardContent className="p-6 relative z-10">
+                <div className="flex items-center justify-between mb-6">
                   <div
-                    className={`flex h-10 w-10 items-center justify-center rounded-full ${stat.bgColor}`}
+                    className={`flex h-12 w-12 items-center justify-center rounded-xl ${stat.bgColor} ring-1 ring-inset ${stat.borderColor}`}
                   >
-                    <Icon className={`h-5 w-5 ${stat.color}`} />
+                    <Icon className={`h-6 w-6 ${stat.color}`} />
                   </div>
+                  <Badge variant="outline" className={`bg-background/50 backdrop-blur-sm ${stat.trendUp ? 'text-emerald-500 border-emerald-500/30' : 'text-rose-500 border-rose-500/30'}`}>
+                    {stat.trend}
+                  </Badge>
                 </div>
-                <p className="text-2xl">{stat.value}</p>
+                <div className="space-y-1">
+                  <p className="text-sm font-medium text-muted-foreground">{stat.title}</p>
+                  <p className="text-3xl font-bold tracking-tight">{stat.value}</p>
+                </div>
               </CardContent>
             </Card>
           );
         })}
       </div>
 
-      <div className="grid lg:grid-cols-2 gap-6">
-        <Card className="border-border/50 bg-card/50 backdrop-blur-sm">
+      <div className="grid lg:grid-cols-7 gap-6">
+        <Card className="lg:col-span-4 border-border/50 bg-card/40 backdrop-blur-xl shadow-lg">
           <CardHeader>
             <CardTitle>Revenue Overview</CardTitle>
           </CardHeader>
@@ -229,18 +265,24 @@ export function Dashboard() {
           </CardContent>
         </Card>
 
-        <Card className="border-border/50 bg-card/50 backdrop-blur-sm">
-          <CardHeader>
-            <CardTitle>Booking Trend</CardTitle>
+
+
+        <Card className="lg:col-span-3 border-border/50 bg-card/40 backdrop-blur-xl shadow-lg">
+          <CardHeader className="flex flex-row items-center justify-between pb-2">
+            <CardTitle className="text-lg font-semibold">Booking Trend</CardTitle>
+            <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground">
+              <ArrowUpRight className="h-4 w-4" />
+            </Button>
           </CardHeader>
           <CardContent>
             {data.charts?.bookingTrend ? (
               <ResponsiveContainer width="100%" height={300}>
-                <BarChart data={data.charts.bookingTrend}>
+                <BarChart data={data.charts.bookingTrend} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                   <CartesianGrid
                     strokeDasharray="3 3"
                     vertical={false}
                     stroke="hsl(var(--border))"
+                    opacity={0.5}
                   />
                   <XAxis
                     dataKey="date"
@@ -248,6 +290,7 @@ export function Dashboard() {
                     fontSize={12}
                     tickLine={false}
                     axisLine={false}
+                    dy={10}
                   />
                   <YAxis
                     stroke="hsl(var(--muted-foreground))"
@@ -256,24 +299,24 @@ export function Dashboard() {
                     axisLine={false}
                   />
                   <Tooltip
+                    cursor={{ fill: "hsl(var(--primary)/0.1)" }}
                     contentStyle={{
                       backgroundColor: "hsl(var(--card))",
                       borderColor: "hsl(var(--border))",
-                      borderRadius: "8px",
+                      borderRadius: "12px",
+                      boxShadow: "0 4px 20px rgba(0,0,0,0.1)",
                     }}
-                    itemStyle={{ color: "hsl(var(--foreground))" }}
-                    cursor={{ fill: "hsl(var(--muted))" }}
                   />
-
                   <Bar
                     dataKey="count"
                     fill="hsl(var(--primary))"
-                    radius={[4, 4, 0, 0]}
+                    radius={[6, 6, 0, 0]}
+                    maxBarSize={40}
                   />
                 </BarChart>
               </ResponsiveContainer>
             ) : (
-              <div className="h-[300px] flex items-center justify-center text-muted-foreground text-sm">
+              <div className="h-[300px] flex items-center justify-center text-muted-foreground text-sm bg-muted/20 rounded-xl">
                 No booking trend data available
               </div>
             )}
@@ -281,40 +324,51 @@ export function Dashboard() {
         </Card>
       </div>
 
-      <div className="grid lg:grid-cols-2 gap-6">
-        <Card className="border-border/50 bg-card/50 backdrop-blur-sm">
-          <CardHeader className="flex flex-row items-center justify-between">
-            <CardTitle>Recent Activity</CardTitle>
-            <Button variant="outline" size="sm">
-              View All
+      <div className="grid lg:grid-cols-3 gap-6">
+        <Card className="lg:col-span-2 border-border/50 bg-card/40 backdrop-blur-xl shadow-lg overflow-hidden">
+          <CardHeader className="flex flex-row items-center justify-between bg-muted/20 border-b border-border/50">
+            <div>
+              <CardTitle className="text-lg font-semibold">Recent Activity</CardTitle>
+              <p className="text-sm text-muted-foreground mt-1">Live updates from your turfs</p>
+            </div>
+            <Button variant="outline" size="sm" className="rounded-full shadow-sm hover:shadow-md transition-all">
+              View All Activity
             </Button>
           </CardHeader>
-          <CardContent>
+          <CardContent className="p-0">
             {data.recentActivity?.bookings?.length > 0 ? (
-              <div className="space-y-4">
+              <div className="divide-y divide-border/50">
                 {data.recentActivity.bookings.map((activity, index) => (
                   <div
                     key={index}
-                    className="flex items-center gap-4 border-b border-border/50 pb-4 last:border-0 last:pb-0"
+                    className="flex items-center gap-4 p-5 hover:bg-muted/30 transition-colors"
                   >
-                    <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
-                      <Activity className="h-5 w-5 text-primary" />
+                    <div className="h-12 w-12 rounded-full bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center shrink-0 border border-primary/20 shadow-inner">
+                      {activity.title.includes("Payment") ? (
+                        <DollarSign className="h-5 w-5 text-primary" />
+                      ) : activity.title.includes("Review") ? (
+                        <Star className="h-5 w-5 text-amber-500" />
+                      ) : (
+                        <CheckCircle2 className="h-5 w-5 text-emerald-500" />
+                      )}
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm truncate">{activity.title}</p>
-                      <p className="text-xs text-muted-foreground truncate">
+                      <p className="text-sm font-semibold truncate text-foreground">{activity.title}</p>
+                      <p className="text-sm text-muted-foreground truncate mt-0.5">
                         {activity.description}
                       </p>
                     </div>
-                    <div className="text-xs text-muted-foreground shrink-0">
+                    <div className="flex items-center gap-1.5 text-xs font-medium text-muted-foreground shrink-0 bg-background/50 px-3 py-1.5 rounded-full border border-border/50">
+                      <Clock className="h-3 w-3" />
                       {activity.time}
                     </div>
                   </div>
                 ))}
               </div>
             ) : (
-              <div className="py-8 text-center text-muted-foreground text-sm">
-                No recent activity
+              <div className="py-12 text-center text-muted-foreground text-sm flex flex-col items-center gap-3">
+                <Activity className="h-8 w-8 opacity-20" />
+                No recent activity to show
               </div>
             )}
           </CardContent>
