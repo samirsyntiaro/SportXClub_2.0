@@ -179,7 +179,6 @@ export function Layout() {
         </nav>
 
         <div className="flex items-center gap-3">
-          <ThemeToggleButton className="h-10 w-10 rounded-full" />
           <Link to="/profile">
             <Button
               variant="ghost"

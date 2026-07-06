@@ -7,16 +7,25 @@ import {
   CalendarDays,
   Calendar,
   IndianRupee,
-  Users,
   Star,
   Tag,
   Menu,
   X,
   LogOut,
+  User,
 } from "lucide-react";
 import { Logo } from "../brand/Logo";
-import { ThemeToggleButton } from "../ui/theme-toggle-button";
 import { Button } from "../ui/button";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { useAuth } from "../../providers/auth-provider";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "../ui/dropdown-menu";
 
 const ownerNavigation = [
   { name: "Dashboard", href: "/owner-dashboard", icon: LayoutDashboard },
@@ -24,7 +33,6 @@ const ownerNavigation = [
   { name: "Bookings", href: "/owner-dashboard/bookings", icon: CalendarDays },
   { name: "Calendar", href: "/owner-dashboard/calendar", icon: Calendar },
   { name: "Revenue", href: "/owner-dashboard/revenue", icon: IndianRupee },
-  { name: "Customers", href: "/owner-dashboard/customers", icon: Users },
   { name: "Reviews", href: "/owner-dashboard/reviews", icon: Star },
   { name: "Promotions", href: "/owner-dashboard/promotions", icon: Tag },
 ];
@@ -32,12 +40,21 @@ const ownerNavigation = [
 export function OwnerLayout() {
   const location = useLocation();
   const navigate = useNavigate();
+  const { currentUser, logout } = useAuth();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const handleLogout = () => {
-    // TODO: Implement actual logout
+    logout();
     navigate("/login");
   };
+
+  const getInitials = (name) => {
+    if (!name) return "TO";
+    return name.split(" ").map(n => n[0]).join("").toUpperCase().slice(0, 2);
+  };
+  
+  const ownerName = currentUser?.fullName || "Turf Owner";
+  const ownerEmail = currentUser?.email || "owner@sportxclub.com";
 
   const SidebarContent = () => (
     <div className="flex flex-col h-full">
@@ -113,8 +130,43 @@ export function OwnerLayout() {
                 )?.name || "Admin Panel"}
               </h1>
             </div>
+            
             <div className="flex items-center gap-x-4 lg:gap-x-6">
-              <ThemeToggleButton className="h-10 w-10" />
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" className="relative flex items-center gap-2 rounded-full outline-none focus:ring-0 focus:ring-offset-0 ring-0 hover:bg-accent/50 p-1 pr-4 pl-1 transition-colors">
+                    <Avatar className="h-10 w-10 border-2 border-primary/10 transition-colors">
+                      {/* Using simple black and white user logo instead of an image */}
+                      <AvatarFallback className="bg-black text-white dark:bg-white dark:text-black flex items-center justify-center">
+                        <User className="h-5 w-5" />
+                      </AvatarFallback>
+                    </Avatar>
+                    <span className="hidden lg:block text-sm font-medium">
+                      {ownerName}
+                    </span>
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="w-56" align="end" forceMount>
+                  <DropdownMenuLabel className="font-normal">
+                    <div className="flex flex-col space-y-1">
+                      <p className="text-sm font-medium leading-none truncate">{ownerName}</p>
+                      <p className="text-xs leading-none text-muted-foreground truncate">{ownerEmail}</p>
+                    </div>
+                  </DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem>
+                    Profile
+                  </DropdownMenuItem>
+                  <DropdownMenuItem>
+                    Settings
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={handleLogout}>
+                    <LogOut className="mr-2 h-4 w-4" />
+                    <span>Log out</span>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </div>
           </div>
         </header>

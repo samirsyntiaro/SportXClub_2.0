@@ -633,16 +633,7 @@ export function Navbar() {
               )}
             </button>
 
-            {/* Theme Toggle Button */}
-            <ThemeToggleButton
-              className={cn(
-                "flex h-10 w-10 items-center justify-center rounded-full border shadow-sm transition",
-                isDark
-                  ? "border-white/[0.08] bg-white/[0.03] text-white/80 hover:bg-white/[0.06] hover:text-white"
-                  : "border-slate-200 bg-slate-50 text-slate-700 hover:bg-slate-100 hover:text-slate-900",
-              )}
-              variant="ghost"
-            />
+            {/* Removed Theme Toggle Button */}
           </div>
         </div>
 
@@ -909,58 +900,24 @@ export function Navbar() {
                   </Link>
                 );
               })}
+              
+              {/* Theme Toggle inside Menu */}
+              <div className="flex items-center justify-between w-full py-4 px-3 border-b border-slate-100 dark:border-white/[0.05] transition-colors duration-150">
+                <span className={cn("text-sm tracking-wide", isDark ? "text-white/90" : "text-slate-800")}>
+                  Theme (Dark/Light)
+                </span>
+                <ThemeToggleButton
+                  className={cn(
+                    "flex h-9 w-9 items-center justify-center rounded-full border shadow-sm transition",
+                    isDark
+                      ? "border-white/[0.08] bg-white/[0.03] text-white/80 hover:bg-white/[0.06] hover:text-white"
+                      : "border-slate-200 bg-slate-50 text-slate-700 hover:bg-slate-100 hover:text-slate-900"
+                  )}
+                  variant="ghost"
+                />
+              </div>
 
-              {isLoggedIn && (
-                <>
-                  <div
-                    className={cn(
-                      "h-[1px] w-full my-2",
-                      isDark ? "bg-white/10" : "bg-slate-200",
-                    )}
-                  />
-                  <Link
-                    to="/profile"
-                    onClick={() => setMenuOpen(false)}
-                    className="block text-left"
-                  >
-                    <div className="flex items-center justify-between w-full py-4 px-3 border-b border-slate-100 dark:border-white/[0.05] transition-colors duration-150 hover:bg-slate-50/50 dark:hover:bg-white/[0.02]">
-                      <div className="flex items-center gap-3">
-                        <User
-                          className={cn(
-                            "h-5 w-5",
-                            isDark ? "text-[#6DFF3B]" : "text-emerald-600",
-                          )}
-                        />
-                        <span
-                          className={cn(
-                            "text-sm tracking-wide",
-                            isDark ? "text-white/90" : "text-slate-800",
-                          )}
-                        >
-                          Profile
-                        </span>
-                      </div>
-                    </div>
-                  </Link>
-                  <button
-                    onClick={() => {
-                      localStorage.removeItem("isLoggedIn");
-                      setIsLoggedIn(false);
-                      setMenuOpen(false);
-                    }}
-                    className="block text-left w-full cursor-pointer"
-                  >
-                    <div className="flex items-center justify-between w-full py-4 px-3 border-b border-slate-100 dark:border-white/[0.05] transition-colors duration-150 hover:bg-slate-50/50 dark:hover:bg-white/[0.02]">
-                      <div className="flex items-center gap-3">
-                        <LogOut className="h-5 w-5 text-red-500" />
-                        <span className="text-sm tracking-wide text-red-500">
-                          Logout
-                        </span>
-                      </div>
-                    </div>
-                  </button>
-                </>
-              )}
+
             </div>
           </motion.div>
         )}
@@ -2414,9 +2371,12 @@ export function Footer() {
           ))}
         </div>
 
-        <div className="mt-14 flex flex-col gap-4 border-t border-white/[0.08] pt-6 text-sm text-white/46 md:flex-row md:items-center md:justify-between">
-          <p>© 2026 SportXClub. All rights reserved.</p>
-          <div className="flex flex-wrap gap-5">
+        <div className="mt-14 flex flex-col md:flex-row gap-4 border-t border-white/[0.08] pt-6 text-sm text-white/46 items-center justify-between">
+          <div className="flex-1 hidden md:block"></div>
+          <p className="flex-1 text-white/40 text-[10px] md:text-xs font-light text-center">
+            Designed and developed By <a href="https://www.syntiaro.com/" target="_blank" rel="noopener noreferrer" className="text-teal-400 font-normal hover:text-teal-300 transition-colors">SYNTIARO</a>
+          </p>
+          <div className="flex-1 flex flex-wrap gap-5 justify-center md:justify-end">
             <a href="#" className="transition hover:text-white">
               Privacy
             </a>

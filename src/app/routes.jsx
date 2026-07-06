@@ -30,6 +30,13 @@ export const router = createBrowserRouter([
     },
   },
   {
+    path: "/owner-setup",
+    lazy: async () => {
+      const { OwnerSetupPage } = await import("./pages/owner/setup");
+      return { Component: OwnerSetupPage };
+    },
+  },
+  {
     path: "/owner-dashboard",
     element: <OwnerLayout />,
     children: [

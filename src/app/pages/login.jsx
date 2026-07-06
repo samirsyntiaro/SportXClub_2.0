@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router";
+import { useAuth } from "../providers/auth-provider";
 import { motion } from "motion/react";
 import {
   Mail,
@@ -22,6 +23,7 @@ import { cn } from "../components/ui/utils";
 
 export function LoginPage() {
   const navigate = useNavigate();
+  const { login } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
   const [loginType, setLoginType] = useState("player");
   const [formData, setFormData] = useState({
@@ -51,15 +53,21 @@ export function LoginPage() {
     if (!isFormValid()) return;
 
     setIsSubmitting(true);
+    const result = login(formData.email, formData.password);
+    
     await new Promise((resolve) => setTimeout(resolve, 1200));
     setIsSubmitting(false);
-    setIsSuccess(true);
-    setTimeout(() => {
-      localStorage.setItem("isLoggedIn", "true");
-      localStorage.setItem("userName", formData.email.split("@")[0]);
-      if (loginType === "owner") navigate("/owner-dashboard");
-      else navigate("/");
-    }, 1500);
+
+    if (result.success) {
+      setIsSuccess(true);
+      setTimeout(() => {
+        if (result.user.role === "owner" || loginType === "owner") navigate("/owner-dashboard");
+        else if (result.user.role === "admin") navigate("/admin-dashboard");
+        else navigate("/");
+      }, 1500);
+    } else {
+      alert(result.error);
+    }
   };
 
   return (
@@ -77,48 +85,11 @@ export function LoginPage() {
         style={{ animationDuration: "6s" }}
       />
 
-      {/* FLOAT WIDGETS (Gives the unique, premium sports-dashboard feel around the card) */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.4 }}
-        className="hidden lg:flex absolute right-[10%] top-[30%] rounded-2xl border border-border/60 bg-card/60 backdrop-blur-md p-4 shadow-lg items-center gap-3 max-w-[200px]"
-      >
-        <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary border border-primary/20 shrink-0">
-          <Shield className="h-5 w-5 text-primary" />
-        </div>
-        <div>
-          <p className="text-xs ">100% Secured</p>
-          <p className="text-[0.62rem] text-muted-foreground">
-            Verified hosts & slot guarantee
-          </p>
-        </div>
-      </motion.div>
-
-      <motion.div
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.6 }}
-        className="hidden lg:flex absolute left-[10%] bottom-[30%] rounded-2xl border border-border/60 bg-card/60 backdrop-blur-md p-4 shadow-lg items-center gap-3 max-w-[200px]"
-      >
-        <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary border border-primary/20 shrink-0">
-          <Activity className="h-5 w-5 text-primary" />
-        </div>
-        <div>
-          <p className="text-xs ">Smart Matching</p>
-          <p className="text-[0.62rem] text-muted-foreground">
-            Find player match-ups near you
-          </p>
-        </div>
-      </motion.div>
 
       {/* HEADER LOGO */}
-      <div className="w-full max-w-md flex items-center mb-6 z-10">
+      <div className="w-full max-w-md flex items-center justify-center mb-6 z-10">
         <Link to="/" className="flex items-center gap-3">
           <Logo />
-          <div className="flex flex-col justify-center">
-            <p className="text-sm">Sign In Platform</p>
-          </div>
         </Link>
       </div>
 

@@ -151,7 +151,6 @@ export function MobileAppBar() {
               <Menu className="h-4.5 w-4.5" />
             )}
           </Button>
-          <ThemeToggleButton className="h-10.5 w-10.5 rounded-full border border-border/60 bg-background/60 text-foreground shadow-xs backdrop-blur-md cursor-pointer" />
         </div>
       </div>
 
@@ -242,6 +241,12 @@ export function MobileAppBar() {
                     </Link>
                   );
                 })}
+              </div>
+
+              {/* Theme Toggle inside Menu */}
+              <div className="flex items-center justify-between py-4 px-1">
+                <span className="text-sm tracking-wide text-left text-foreground">Theme (Dark/Light)</span>
+                <ThemeToggleButton className="h-9 w-9 rounded-full border border-border/60 shadow-xs cursor-pointer" />
               </div>
             </motion.div>
           </>
