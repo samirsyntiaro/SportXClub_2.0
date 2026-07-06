@@ -11,6 +11,17 @@ import {
 import { Button } from "../../components/ui/button";
 import { Badge } from "../../components/ui/badge";
 import { Loader2, AlertCircle, Ticket, Tag, Calendar, Users, Copy, Plus, MoreVertical, IndianRupee, Percent, Megaphone } from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "../../components/ui/dialog";
+import { Input } from "../../components/ui/input";
+import { Label } from "../../components/ui/label";
 import { motion, AnimatePresence } from "motion/react";
 
 // Assuming we have a promotionsService (we'll fetch it like in reviews)
@@ -21,6 +32,15 @@ export function Promotions() {
   const [data, setData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [isCreateOpen, setIsCreateOpen] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [formData, setFormData] = useState({
+    code: "",
+    discount: "",
+    type: "percentage",
+    validUntil: "",
+    usageLimit: "",
+  });
 
   useEffect(() => {
     const fetchData = async () => {
@@ -78,6 +98,37 @@ export function Promotions() {
     // You could trigger a toast here
   };
 
+  const handleCreate = async (e) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    try {
+      const ownerId = currentUser?.id || "guest";
+      const payload = {
+        ...formData,
+        discount: Number(formData.discount),
+        usageLimit: Number(formData.usageLimit),
+        status: "active",
+        used: 0,
+      };
+      
+      const newPromo = await promotionsService.create(ownerId, payload);
+      
+      try {
+        newPromo.validUntil = format(new Date(newPromo.validUntil), "MMM dd, yyyy");
+      } catch (e) {
+        // fallback
+      }
+      
+      setData((prev) => [newPromo, ...prev]);
+      setIsCreateOpen(false);
+      setFormData({ code: "", discount: "", type: "percentage", validUntil: "", usageLimit: "" });
+    } catch (err) {
+      console.error("Failed to create promotion", err);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   return (
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
@@ -85,10 +136,92 @@ export function Promotions() {
           <h1 className="text-3xl tracking-tight font-bold">Promotions & Offers</h1>
           <p className="text-muted-foreground mt-2">Create and manage discount codes to attract more players.</p>
         </div>
-        <Button className="h-11 rounded-xl shadow-lg shadow-primary/25 gap-2">
-          <Plus className="w-4 h-4" />
-          Create Promotion
-        </Button>
+        <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
+          <DialogTrigger asChild>
+            <Button className="h-11 rounded-xl shadow-lg shadow-primary/25 gap-2">
+              <Plus className="w-4 h-4" />
+              Create Promotion
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="sm:max-w-[425px]">
+            <form onSubmit={handleCreate}>
+              <DialogHeader>
+                <DialogTitle>Create Promotion</DialogTitle>
+                <DialogDescription>
+                  Create a new discount code for your customers.
+                </DialogDescription>
+              </DialogHeader>
+              <div className="grid gap-4 py-4">
+                <div className="grid grid-cols-4 items-center gap-4">
+                  <Label htmlFor="code" className="text-right">Code</Label>
+                  <Input 
+                    id="code" 
+                    value={formData.code}
+                    onChange={(e) => setFormData({...formData, code: e.target.value.toUpperCase()})}
+                    placeholder="e.g. SUMMER25" 
+                    className="col-span-3 uppercase" 
+                    required 
+                  />
+                </div>
+                <div className="grid grid-cols-4 items-center gap-4">
+                  <Label htmlFor="type" className="text-right">Type</Label>
+                  <select 
+                    id="type"
+                    className="col-span-3 flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+                    value={formData.type}
+                    onChange={(e) => setFormData({...formData, type: e.target.value})}
+                  >
+                    <option value="percentage">Percentage (%)</option>
+                    <option value="fixed">Fixed Amount (₹)</option>
+                  </select>
+                </div>
+                <div className="grid grid-cols-4 items-center gap-4">
+                  <Label htmlFor="discount" className="text-right">Discount</Label>
+                  <Input 
+                    id="discount" 
+                    type="number"
+                    min="1"
+                    value={formData.discount}
+                    onChange={(e) => setFormData({...formData, discount: e.target.value})}
+                    placeholder={formData.type === "percentage" ? "e.g. 20" : "e.g. 500"} 
+                    className="col-span-3" 
+                    required 
+                  />
+                </div>
+                <div className="grid grid-cols-4 items-center gap-4">
+                  <Label htmlFor="validUntil" className="text-right">Valid Until</Label>
+                  <Input 
+                    id="validUntil" 
+                    type="date"
+                    value={formData.validUntil}
+                    onChange={(e) => setFormData({...formData, validUntil: e.target.value})}
+                    className="col-span-3" 
+                    required 
+                  />
+                </div>
+                <div className="grid grid-cols-4 items-center gap-4">
+                  <Label htmlFor="usageLimit" className="text-right">Usage Limit</Label>
+                  <Input 
+                    id="usageLimit" 
+                    type="number"
+                    min="1"
+                    value={formData.usageLimit}
+                    onChange={(e) => setFormData({...formData, usageLimit: e.target.value})}
+                    placeholder="e.g. 100" 
+                    className="col-span-3" 
+                    required 
+                  />
+                </div>
+              </div>
+              <DialogFooter>
+                <Button type="submit" disabled={isSubmitting}>
+                  {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                  Create
+                </Button>
+              </DialogFooter>
+            </form>
+          </DialogContent>
+        </Dialog>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">

@@ -59,6 +59,10 @@ export function CalendarView() {
     fetchData();
   }, [currentUser]);
 
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const isPastDate = date ? new Date(date).setHours(0, 0, 0, 0) < today.getTime() : false;
+
   const selectedDateStr = date ? format(date, "yyyy-MM-dd") : "";
   const isDateDisabled = disabledDates.includes(selectedDateStr);
 
@@ -131,7 +135,11 @@ export function CalendarView() {
                 mode="single"
                 selected={date}
                 onSelect={(d) => d && setDate(d)}
-                disabled={disabledDays}
+                disabled={[{ before: new Date(new Date().setHours(0, 0, 0, 0)) }]}
+                modifiers={{ blocked: disabledDays }}
+                modifiersClassNames={{
+                  blocked: "text-destructive font-semibold bg-destructive/10 line-through"
+                }}
                 className="rounded-xl border border-border/50 bg-background/50 mb-4"
               />
               
@@ -141,6 +149,7 @@ export function CalendarView() {
                   variant={isDateDisabled ? "default" : "destructive"} 
                   className="w-full gap-2 shadow-sm"
                   onClick={toggleDateStatus}
+                  disabled={isPastDate}
                 >
                   {isDateDisabled ? (
                     <>

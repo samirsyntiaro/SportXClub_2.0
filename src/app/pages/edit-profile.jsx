@@ -9,6 +9,7 @@ import {
   ChevronLeft,
   Trophy,
   Upload,
+  Phone,
 } from "lucide-react";
 
 import { Button } from "../components/ui/button";
@@ -25,6 +26,8 @@ const sportsOptions = [
   { id: "swimming", name: "Swimming", emoji: "🏊" },
   { id: "gym", name: "Gym & Fitness", emoji: "🏋️" },
   { id: "volleyball", name: "Volleyball", emoji: "🏐" },
+  { id: "tabletennis", name: "Table Tennis", emoji: "🏓" },
+  { id: "baseball", name: "Baseball", emoji: "⚾" },
 ];
 
 export function EditProfilePage() {
@@ -34,6 +37,8 @@ export function EditProfilePage() {
   // Form State
   const [fullName, setFullName] = useState("");
   const [city, setCity] = useState("");
+  const [phone, setPhone] = useState("");
+  const [bio, setBio] = useState("");
   const [selectedSports, setSelectedSports] = useState([]);
   const [profilePicture, setProfilePicture] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -44,6 +49,8 @@ export function EditProfilePage() {
     if (currentUser) {
       setFullName(currentUser.fullName || "");
       setCity(currentUser.city || "");
+      setPhone(currentUser.phone || "");
+      setBio(currentUser.bio || "");
       setSelectedSports(currentUser.selectedSports || []);
       setProfilePicture(currentUser.profilePicture || "");
     }
@@ -52,6 +59,11 @@ export function EditProfilePage() {
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
+      if (file.size > 2 * 1024 * 1024) {
+        alert("File size exceeds 2MB limit. Please upload a smaller image.");
+        e.target.value = null;
+        return;
+      }
       const reader = new FileReader();
       reader.onloadend = () => {
         setProfilePicture(reader.result);
@@ -79,6 +91,8 @@ export function EditProfilePage() {
     const result = updateUser({
       fullName,
       city,
+      phone,
+      bio,
       selectedSports,
       profilePicture,
     });
@@ -196,6 +210,32 @@ export function EditProfilePage() {
                       onChange={(e) => setCity(e.target.value)}
                     />
                   </div>
+                </div>
+
+                <div className="space-y-1.5">
+                  <Label htmlFor="phone">Phone Number</Label>
+                  <div className="relative">
+                    <Phone className="absolute left-3 top-2.5 h-4.5 w-4.5 text-muted-foreground" />
+                    <Input
+                      id="phone"
+                      type="tel"
+                      className="pl-10 h-10.5 rounded-xl border-border bg-background/50 focus-visible:bg-background"
+                      value={phone}
+                      onChange={(e) => setPhone(e.target.value)}
+                      placeholder="+91 "
+                    />
+                  </div>
+                </div>
+
+                <div className="space-y-1.5">
+                  <Label htmlFor="bio">Bio</Label>
+                  <textarea
+                    id="bio"
+                    className="w-full min-h-[80px] p-3 text-sm rounded-xl border border-border bg-background/50 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary"
+                    placeholder="Tell us a bit about your play style or favorite turfs..."
+                    value={bio}
+                    onChange={(e) => setBio(e.target.value)}
+                  />
                 </div>
 
                 <div className="space-y-2.5">

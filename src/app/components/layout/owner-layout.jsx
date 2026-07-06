@@ -13,6 +13,7 @@ import {
   X,
   LogOut,
   User,
+  Settings as SettingsIcon,
 } from "lucide-react";
 import { Logo } from "../brand/Logo";
 import { Button } from "../ui/button";
@@ -35,6 +36,7 @@ const ownerNavigation = [
   { name: "Revenue", href: "/owner-dashboard/revenue", icon: IndianRupee },
   { name: "Reviews", href: "/owner-dashboard/reviews", icon: Star },
   { name: "Promotions", href: "/owner-dashboard/promotions", icon: Tag },
+  { name: "Settings", href: "/owner-dashboard/settings", icon: SettingsIcon },
 ];
 
 export function OwnerLayout() {
@@ -136,9 +138,11 @@ export function OwnerLayout() {
                 <DropdownMenuTrigger asChild>
                   <Button variant="ghost" className="relative flex items-center gap-2 rounded-full outline-none focus:ring-0 focus:ring-offset-0 ring-0 hover:bg-accent/50 p-1 pr-4 pl-1 transition-colors">
                     <Avatar className="h-10 w-10 border-2 border-primary/10 transition-colors">
-                      {/* Using simple black and white user logo instead of an image */}
-                      <AvatarFallback className="bg-black text-white dark:bg-white dark:text-black flex items-center justify-center">
-                        <User className="h-5 w-5" />
+                      {currentUser?.profilePicture && (
+                        <AvatarImage src={currentUser.profilePicture} alt={ownerName} className="object-cover" />
+                      )}
+                      <AvatarFallback className="bg-primary/10 text-primary flex items-center justify-center font-semibold">
+                        {getInitials(ownerName)}
                       </AvatarFallback>
                     </Avatar>
                     <span className="hidden lg:block text-sm font-medium">
@@ -154,14 +158,13 @@ export function OwnerLayout() {
                     </div>
                   </DropdownMenuLabel>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem>
-                    Profile
-                  </DropdownMenuItem>
-                  <DropdownMenuItem>
-                    Settings
+                  <DropdownMenuItem asChild>
+                    <Link to="/profile" className="cursor-pointer w-full">
+                      Profile
+                    </Link>
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem onClick={handleLogout}>
+                  <DropdownMenuItem onClick={handleLogout} className="cursor-pointer text-destructive focus:text-destructive">
                     <LogOut className="mr-2 h-4 w-4" />
                     <span>Log out</span>
                   </DropdownMenuItem>
