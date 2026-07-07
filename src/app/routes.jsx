@@ -146,6 +146,13 @@ export const router = createBrowserRouter([
           return { Component: Settings };
         },
       },
+      {
+        path: "profile",
+        lazy: async () => {
+          const { OwnerProfile } = await import("./pages/owner/profile");
+          return { Component: OwnerProfile };
+        },
+      },
     ],
   },
   {

@@ -13,7 +13,6 @@ import {
   X,
   LogOut,
   User,
-  Settings as SettingsIcon,
 } from "lucide-react";
 import { Logo } from "../brand/Logo";
 import { Button } from "../ui/button";
@@ -27,6 +26,12 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
+import {
+  Dialog,
+} from "../ui/dialog";
+import { Input } from "../ui/input";
+import { Label } from "../ui/label";
+import { toast } from "sonner";
 
 const ownerNavigation = [
   { name: "Dashboard", href: "/owner-dashboard", icon: LayoutDashboard },
@@ -36,14 +41,23 @@ const ownerNavigation = [
   { name: "Revenue", href: "/owner-dashboard/revenue", icon: IndianRupee },
   { name: "Reviews", href: "/owner-dashboard/reviews", icon: Star },
   { name: "Promotions", href: "/owner-dashboard/promotions", icon: Tag },
-  { name: "Settings", href: "/owner-dashboard/settings", icon: SettingsIcon },
 ];
 
 export function OwnerLayout() {
   const location = useLocation();
   const navigate = useNavigate();
-  const { currentUser, logout } = useAuth();
+  const { currentUser, updateUser, logout } = useAuth();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  
+  // Create a local override state for demo purposes (when not logged in)
+  const [demoProfile, setDemoProfile] = useState(() => {
+    return JSON.parse(localStorage.getItem("mockOwnerProfile")) || null;
+  });
+
+  const activeProfile = currentUser || demoProfile || {};
+
+  const ownerName = activeProfile.fullName || "Turf Owner";
+  const ownerEmail = activeProfile.email || "owner@sportxclub.com";
 
   const handleLogout = () => {
     logout();
@@ -54,9 +68,6 @@ export function OwnerLayout() {
     if (!name) return "TO";
     return name.split(" ").map(n => n[0]).join("").toUpperCase().slice(0, 2);
   };
-  
-  const ownerName = currentUser?.fullName || "Turf Owner";
-  const ownerEmail = currentUser?.email || "owner@sportxclub.com";
 
   const SidebarContent = () => (
     <div className="flex flex-col h-full">
@@ -135,33 +146,23 @@ export function OwnerLayout() {
             
             <div className="flex items-center gap-x-4 lg:gap-x-6">
               <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" className="relative flex items-center gap-2 rounded-full outline-none focus:ring-0 focus:ring-offset-0 ring-0 hover:bg-accent/50 p-1 pr-4 pl-1 transition-colors">
-                    <Avatar className="h-10 w-10 border-2 border-primary/10 transition-colors">
-                      {currentUser?.profilePicture && (
-                        <AvatarImage src={currentUser.profilePicture} alt={ownerName} className="object-cover" />
-                      )}
+                <DropdownMenuTrigger className="outline-none focus:outline-none flex items-center gap-2 rounded-full hover:bg-accent/50 p-1 pr-4 pl-1 transition-colors cursor-pointer border-0 bg-transparent">
+                  <Avatar className="h-10 w-10 border-2 border-primary/10 transition-colors">
+                    {activeProfile.profilePicture ? (
+                      <AvatarImage src={activeProfile.profilePicture} alt={ownerName} className="object-cover" />
+                    ) : (
                       <AvatarFallback className="bg-primary/10 text-primary flex items-center justify-center font-semibold">
                         {getInitials(ownerName)}
                       </AvatarFallback>
-                    </Avatar>
-                    <span className="hidden lg:block text-sm font-medium">
-                      {ownerName}
-                    </span>
-                  </Button>
+                    )}
+                  </Avatar>
+                  <span className="hidden lg:block text-sm font-medium">
+                    {ownerName}
+                  </span>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent className="w-56" align="end" forceMount>
-                  <DropdownMenuLabel className="font-normal">
-                    <div className="flex flex-col space-y-1">
-                      <p className="text-sm font-medium leading-none truncate">{ownerName}</p>
-                      <p className="text-xs leading-none text-muted-foreground truncate">{ownerEmail}</p>
-                    </div>
-                  </DropdownMenuLabel>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem asChild>
-                    <Link to="/profile" className="cursor-pointer w-full">
-                      Profile
-                    </Link>
+                  <DropdownMenuItem onClick={() => navigate("/owner-dashboard/profile")} className="cursor-pointer">
+                    View Profile
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem onClick={handleLogout} className="cursor-pointer text-destructive focus:text-destructive">
@@ -202,10 +203,11 @@ export function OwnerLayout() {
 
         <main className="flex-1">
           <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 md:py-8 lg:px-8">
-            <Outlet />
+            <Outlet context={{ activeProfile, setDemoProfile }} />
           </div>
         </main>
       </div>
-    </div>
+
+      </div>
   );
 }

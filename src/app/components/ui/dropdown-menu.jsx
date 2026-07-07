@@ -16,14 +16,14 @@ function DropdownMenuPortal({ ...props }) {
   );
 }
 
-function DropdownMenuTrigger({ ...props }) {
-  return (
-    <DropdownMenuPrimitive.Trigger
-      data-slot="dropdown-menu-trigger"
-      {...props}
-    />
-  );
-}
+const DropdownMenuTrigger = React.forwardRef(({ ...props }, ref) => (
+  <DropdownMenuPrimitive.Trigger
+    ref={ref}
+    data-slot="dropdown-menu-trigger"
+    {...props}
+  />
+));
+DropdownMenuTrigger.displayName = DropdownMenuPrimitive.Trigger.displayName;
 
 function DropdownMenuContent({ className, sideOffset = 4, ...props }) {
   return (

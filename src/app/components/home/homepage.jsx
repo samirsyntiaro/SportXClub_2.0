@@ -1352,60 +1352,7 @@ export function HeroSection() {
               final confirmation.
             </p>
 
-            {/* Social Links Row */}
-            <div className="mt-6 flex flex-wrap items-center justify-start gap-4">
-              <span
-                className={cn(
-                  "text-xs  uppercase tracking-widest",
-                  isDark ? "text-white/60" : "text-slate-600",
-                )}
-              >
-                Connect with us:
-              </span>
-              <div className="flex items-center gap-2.5">
-                {[
-                  {
-                    name: "Instagram",
-                    icon: Instagram,
-                    href: "https://instagram.com",
-                  },
-                  {
-                    name: "Facebook",
-                    icon: Facebook,
-                    href: "https://facebook.com",
-                  },
-                  {
-                    name: "LinkedIn",
-                    icon: Linkedin,
-                    href: "https://linkedin.com",
-                  },
-                  {
-                    name: "Twitter",
-                    icon: Twitter,
-                    href: "https://twitter.com",
-                  },
-                ].map((social) => {
-                  const Icon = social.icon;
-                  return (
-                    <a
-                      key={social.name}
-                      href={social.href}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className={cn(
-                        "flex h-9.5 w-9.5 items-center justify-center rounded-xl border transition-all duration-300 shadow-xs",
-                        isDark
-                          ? "border-white/[0.08] bg-white/[0.03] text-white/60 hover:bg-[#6DFF3B]/10 hover:text-[#6DFF3B] hover:border-[#6DFF3B]/30 hover:shadow-[0_0_15px_rgba(109,255,59,0.15)]"
-                          : "border-slate-200 bg-slate-50 text-slate-500 hover:bg-emerald-50 hover:text-emerald-600 hover:border-emerald-200 hover:shadow-[0_0_15px_rgba(16,185,129,0.15)]",
-                      )}
-                      aria-label={social.name}
-                    >
-                      <Icon className="h-4.5 w-4.5" />
-                    </a>
-                  );
-                })}
-              </div>
-            </div>
+
 
             <div className="mt-8 w-full">
               <SearchBar />
