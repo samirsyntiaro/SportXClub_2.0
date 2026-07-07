@@ -28,10 +28,6 @@ import {
 } from "../ui/dropdown-menu";
 import {
   Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogFooter,
 } from "../ui/dialog";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
@@ -52,7 +48,6 @@ export function OwnerLayout() {
   const navigate = useNavigate();
   const { currentUser, updateUser, logout } = useAuth();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [isEditProfileOpen, setIsEditProfileOpen] = useState(false);
   
   // Create a local override state for demo purposes (when not logged in)
   const [demoProfile, setDemoProfile] = useState(() => {
@@ -61,76 +56,8 @@ export function OwnerLayout() {
 
   const activeProfile = currentUser || demoProfile || {};
 
-  const [editFormData, setEditFormData] = useState({
-    fullName: activeProfile.fullName || "",
-    phone: activeProfile.phone || "",
-    bio: activeProfile.bio || "",
-    profilePicture: activeProfile.profilePicture || "",
-  });
-
   const ownerName = activeProfile.fullName || "Turf Owner";
   const ownerEmail = activeProfile.email || "owner@sportxclub.com";
-
-  const handleEditChange = (e) => {
-    const { name, value } = e.target;
-    setEditFormData(prev => ({ ...prev, [name]: value }));
-  };
-
-  const handleImageUpload = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        // Create an image object to compress it
-        const img = new Image();
-        img.onload = () => {
-          const canvas = document.createElement("canvas");
-          const MAX_WIDTH = 400;
-          const MAX_HEIGHT = 400;
-          let width = img.width;
-          let height = img.height;
-
-          if (width > height) {
-            if (width > MAX_WIDTH) {
-              height *= MAX_WIDTH / width;
-              width = MAX_WIDTH;
-            }
-          } else {
-            if (height > MAX_HEIGHT) {
-              width *= MAX_HEIGHT / height;
-              height = MAX_HEIGHT;
-            }
-          }
-          canvas.width = width;
-          canvas.height = height;
-          const ctx = canvas.getContext("2d");
-          ctx.drawImage(img, 0, 0, width, height);
-          
-          // Compress to JPEG with 0.7 quality
-          const compressedBase64 = canvas.toDataURL("image/jpeg", 0.7);
-          setEditFormData(prev => ({ ...prev, profilePicture: compressedBase64 }));
-        };
-        img.src = reader.result;
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
-  const handleSaveProfile = () => {
-    try {
-      if (currentUser) {
-        updateUser(editFormData);
-      } else {
-        // Save to local storage for demo mode
-        localStorage.setItem("mockOwnerProfile", JSON.stringify(editFormData));
-        setDemoProfile(editFormData);
-      }
-      toast.success("Profile updated successfully!");
-      setIsEditProfileOpen(false);
-    } catch (error) {
-      toast.error("Failed to save profile. Image might be too large.");
-    }
-  };
 
   const handleLogout = () => {
     logout();
@@ -237,9 +164,6 @@ export function OwnerLayout() {
                   <DropdownMenuItem onClick={() => navigate("/owner-dashboard/profile")} className="cursor-pointer">
                     View Profile
                   </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => setIsEditProfileOpen(true)} className="cursor-pointer">
-                    Edit Profile
-                  </DropdownMenuItem>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem onClick={handleLogout} className="cursor-pointer text-destructive focus:text-destructive">
                     <LogOut className="mr-2 h-4 w-4" />
@@ -279,86 +203,11 @@ export function OwnerLayout() {
 
         <main className="flex-1">
           <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 md:py-8 lg:px-8">
-            <Outlet context={{ activeProfile }} />
+            <Outlet context={{ activeProfile, setDemoProfile }} />
           </div>
         </main>
       </div>
 
-      <Dialog open={isEditProfileOpen} onOpenChange={setIsEditProfileOpen}>
-        <DialogContent className="sm:max-w-[425px]">
-          <DialogHeader>
-            <DialogTitle>Edit Profile</DialogTitle>
-          </DialogHeader>
-          <div className="grid gap-4 py-4">
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label className="text-right">Photo</Label>
-              <div className="col-span-3 flex items-center gap-4">
-                <Avatar className="h-16 w-16">
-                  {editFormData.profilePicture ? (
-                    <AvatarImage src={editFormData.profilePicture} className="object-cover" />
-                  ) : (
-                    <AvatarFallback className="bg-primary/10 text-primary">
-                      {getInitials(editFormData.fullName || "Turf Owner")}
-                    </AvatarFallback>
-                  )}
-                </Avatar>
-                <Label htmlFor="picture-upload" className="cursor-pointer bg-secondary hover:bg-secondary/80 text-secondary-foreground px-4 py-2 rounded-md text-sm font-medium transition-colors">
-                  Upload new
-                </Label>
-                <Input 
-                  id="picture-upload" 
-                  type="file" 
-                  accept="image/*" 
-                  className="hidden" 
-                  onChange={handleImageUpload}
-                />
-              </div>
-            </div>
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="fullName" className="text-right">
-                Name
-              </Label>
-              <Input
-                id="fullName"
-                name="fullName"
-                value={editFormData.fullName}
-                onChange={handleEditChange}
-                className="col-span-3"
-              />
-            </div>
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="phone" className="text-right">
-                Phone
-              </Label>
-              <Input
-                id="phone"
-                name="phone"
-                value={editFormData.phone}
-                onChange={handleEditChange}
-                className="col-span-3"
-              />
-            </div>
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="bio" className="text-right">
-                Bio
-              </Label>
-              <Input
-                id="bio"
-                name="bio"
-                value={editFormData.bio}
-                onChange={handleEditChange}
-                className="col-span-3"
-              />
-            </div>
-          </div>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setIsEditProfileOpen(false)}>
-              Cancel
-            </Button>
-            <Button onClick={handleSaveProfile}>Save changes</Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-    </div>
+      </div>
   );
 }

@@ -1,15 +1,93 @@
+import { useState } from "react";
 import { Button } from "../../components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "../../components/ui/avatar";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "../../components/ui/card";
 import { Badge } from "../../components/ui/badge";
 import { useAuth } from "../../providers/auth-provider";
-import { Mail, Phone, MapPin, Building2, Briefcase, Camera } from "lucide-react";
+import { Mail, Phone, MapPin, Building2, Briefcase, Camera, Edit2 } from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "../../components/ui/dialog";
+import { Input } from "../../components/ui/input";
+import { Label } from "../../components/ui/label";
+import { toast } from "sonner";
 
 import { useOutletContext } from "react-router";
 
 export function OwnerProfile() {
-  const { activeProfile } = useOutletContext();
+  const { activeProfile, setDemoProfile } = useOutletContext();
+  const { currentUser, updateUser } = useAuth();
   
+  const [isEditProfileOpen, setIsEditProfileOpen] = useState(false);
+  const [editFormData, setEditFormData] = useState({
+    fullName: activeProfile?.fullName || "",
+    phone: activeProfile?.phone || "",
+    bio: activeProfile?.bio || "",
+    profilePicture: activeProfile?.profilePicture || "",
+  });
+
+  const handleEditChange = (e) => {
+    const { name, value } = e.target;
+    setEditFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleImageUpload = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const img = new Image();
+        img.onload = () => {
+          const canvas = document.createElement("canvas");
+          const MAX_WIDTH = 400;
+          const MAX_HEIGHT = 400;
+          let width = img.width;
+          let height = img.height;
+
+          if (width > height) {
+            if (width > MAX_WIDTH) {
+              height *= MAX_WIDTH / width;
+              width = MAX_WIDTH;
+            }
+          } else {
+            if (height > MAX_HEIGHT) {
+              width *= MAX_HEIGHT / height;
+              height = MAX_HEIGHT;
+            }
+          }
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext("2d");
+          ctx.drawImage(img, 0, 0, width, height);
+          
+          const compressedBase64 = canvas.toDataURL("image/jpeg", 0.7);
+          setEditFormData(prev => ({ ...prev, profilePicture: compressedBase64 }));
+        };
+        img.src = reader.result;
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleSaveProfile = () => {
+    try {
+      if (currentUser) {
+        updateUser(editFormData);
+      } else {
+        localStorage.setItem("mockOwnerProfile", JSON.stringify(editFormData));
+        if (setDemoProfile) setDemoProfile(editFormData);
+      }
+      toast.success("Profile updated successfully!");
+      setIsEditProfileOpen(false);
+    } catch (error) {
+      toast.error("Failed to save profile. Image might be too large.");
+    }
+  };
+
   const ownerName = activeProfile?.fullName || "Turf Owner";
   const ownerEmail = activeProfile?.email || "owner@sportxclub.com";
   const getInitials = (name) => {
@@ -20,7 +98,7 @@ export function OwnerProfile() {
   return (
     <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500 max-w-5xl mx-auto">
       {/* Header Banner */}
-      <div className="relative rounded-2xl overflow-hidden bg-gradient-to-r from-primary/80 to-primary h-48 sm:h-64 shadow-xl">
+      <div className="relative rounded-2xl overflow-hidden bg-muted h-48 sm:h-64 shadow-xl">
         <div className="absolute inset-0 bg-grid-white/10" />
       </div>
 
@@ -47,6 +125,10 @@ export function OwnerProfile() {
               <Badge variant="secondary" className="bg-primary/10 text-primary hover:bg-primary/20 border-primary/20">
                 Verified Owner
               </Badge>
+              <Button size="sm" variant="outline" className="ml-auto flex items-center gap-2" onClick={() => setIsEditProfileOpen(true)}>
+                <Edit2 className="h-4 w-4" />
+                Edit Profile
+              </Button>
             </div>
             <p className="text-muted-foreground text-lg">{activeProfile?.bio || "Professional Turf Manager & Sports Enthusiast"}</p>
           </div>
@@ -126,6 +208,82 @@ export function OwnerProfile() {
           </CardContent>
         </Card>
       </div>
+
+      <Dialog open={isEditProfileOpen} onOpenChange={setIsEditProfileOpen}>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>Edit Profile</DialogTitle>
+          </DialogHeader>
+          <div className="grid gap-4 py-4">
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label className="text-right">Photo</Label>
+              <div className="col-span-3 flex items-center gap-4">
+                <Avatar className="h-16 w-16">
+                  {editFormData.profilePicture ? (
+                    <AvatarImage src={editFormData.profilePicture} className="object-cover" />
+                  ) : (
+                    <AvatarFallback className="bg-primary/10 text-primary">
+                      {getInitials(editFormData.fullName || "Turf Owner")}
+                    </AvatarFallback>
+                  )}
+                </Avatar>
+                <Label htmlFor="picture-upload" className="cursor-pointer bg-secondary hover:bg-secondary/80 text-secondary-foreground px-4 py-2 rounded-md text-sm font-medium transition-colors">
+                  Upload new
+                </Label>
+                <Input 
+                  id="picture-upload" 
+                  type="file" 
+                  accept="image/*" 
+                  className="hidden" 
+                  onChange={handleImageUpload}
+                />
+              </div>
+            </div>
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="fullName" className="text-right">
+                Name
+              </Label>
+              <Input
+                id="fullName"
+                name="fullName"
+                value={editFormData.fullName}
+                onChange={handleEditChange}
+                className="col-span-3"
+              />
+            </div>
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="phone" className="text-right">
+                Phone
+              </Label>
+              <Input
+                id="phone"
+                name="phone"
+                value={editFormData.phone}
+                onChange={handleEditChange}
+                className="col-span-3"
+              />
+            </div>
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="bio" className="text-right">
+                Bio
+              </Label>
+              <Input
+                id="bio"
+                name="bio"
+                value={editFormData.bio}
+                onChange={handleEditChange}
+                className="col-span-3"
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsEditProfileOpen(false)}>
+              Cancel
+            </Button>
+            <Button onClick={handleSaveProfile}>Save changes</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
