@@ -96,7 +96,7 @@ export function MobileAppBar() {
 
   const menuItems = [
     { label: "Turf", to: "/venues", hasChevron: true },
-    { label: "Events", to: "/community", hasChevron: true, isGreen: true },
+    { label: "Events", to: "/community", hasChevron: true },
     { label: "Tournaments", to: "/tournaments", hasChevron: true },
     {
       label: "Notifications",
@@ -182,7 +182,7 @@ export function MobileAppBar() {
               <div className="flex flex-col">
                 {menuItems.map((item) => {
                   const itemContent = (
-                    <div className="flex items-center justify-between w-full py-4 px-1 border-b border-border/40 transition-colors duration-150 hover:bg-muted/40">
+                    <div className="flex items-center justify-between w-full py-4 px-1 border-b border-border/40 transition-colors duration-150 hover:bg-muted/40 group">
                       <div className="flex items-center gap-3">
                         {item.isCart && (
                           <ShoppingCart className="h-5 w-5 text-primary" />
@@ -192,8 +192,8 @@ export function MobileAppBar() {
                         )}
                         <span
                           className={cn(
-                            "text-sm tracking-wide text-left",
-                            item.isGreen ? "text-primary" : "text-foreground",
+                            "text-sm tracking-wide text-left transition-colors duration-150",
+                            item.isGreen ? "text-primary" : "text-foreground group-hover:text-primary",
                           )}
                         >
                           {item.label}
@@ -207,7 +207,7 @@ export function MobileAppBar() {
                           </span>
                         )}
                         {item.hasChevron && (
-                          <ChevronRight className="h-4 w-4 text-muted-foreground/50" />
+                          <ChevronRight className="h-4 w-4 text-muted-foreground/50 transition-colors duration-150 group-hover:text-primary" />
                         )}
                       </div>
                     </div>
