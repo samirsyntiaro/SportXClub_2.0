@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
+import { toast } from "sonner";
+import { useAuth } from "../providers/auth-provider";
 import {
   ArrowRight,
   Calendar,
@@ -22,6 +24,13 @@ import {
 import { Badge } from "../components/ui/badge";
 import { Button } from "../components/ui/button";
 import { Card, CardContent } from "../components/ui/card";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../components/ui/select";
 import { ImageWithFallback } from "../components/figma/ImageWithFallback";
 import { AnimatePresence } from "motion/react";
 
@@ -93,7 +102,9 @@ const reviews = [
 const bookingFlow = ["Search", "Filter", "Slot selection", "Payment"];
 
 export function VenueDetails() {
-  const [selectedSport, setSelectedSport] = useState(venue.sport);
+  const { currentUser } = useAuth();
+  const navigate = useNavigate();
+  const [selectedSport, setSelectedSport] = useState("Football");
   const [selectedDate, setSelectedDate] = useState(
     new Date().toISOString().split("T")[0],
   );
@@ -164,30 +175,29 @@ export function VenueDetails() {
 
       <div className="space-y-3">
         <p className="text-sm  text-white/78">Select time slot</p>
-        <div className="grid gap-2">
-          {slots.map((slot) => (
-            <button
-              key={slot.time}
-              type="button"
-              disabled={!slot.available}
-              onClick={() => slot.available && setSelectedSlot(slot.time)}
-              className={`flex items-center justify-between rounded-[18px] border px-4 py-3 text-left transition ${
-                !slot.available
-                  ? "cursor-not-allowed border-white/[0.08] bg-white/[0.02] text-white/30"
-                  : selectedSlot === slot.time
-                    ? "border-[#6DFF3B]/30 bg-[#6DFF3B]/10 text-white"
-                    : "border-white/[0.08] bg-white/[0.03] text-white/72 hover:bg-white/[0.06]"
-              }`}
-            >
-              <span className="text-sm">{slot.time}</span>
-              {slot.available ? (
-                <Check className="h-4 w-4 text-[#6DFF3B]" />
-              ) : (
-                <span className="text-xs">Booked</span>
-              )}
-            </button>
-          ))}
-        </div>
+        <Select value={selectedSlot} onValueChange={setSelectedSlot}>
+          <SelectTrigger className="w-full h-[52px] rounded-[18px] border-white/[0.08] bg-white/[0.03] px-4 text-sm text-white hover:bg-white/[0.06] transition-colors">
+            <SelectValue placeholder="Select a time slot" />
+          </SelectTrigger>
+          <SelectContent 
+            className="theme-adaptive rounded-[18px] border-white/[0.08] bg-[#101216] text-white"
+            style={{ backgroundColor: '#101216', borderColor: 'rgba(255,255,255,0.08)', color: 'white' }}
+          >
+            {slots.map((slot) => (
+              <SelectItem
+                key={slot.time}
+                value={slot.time}
+                disabled={!slot.available}
+                className="rounded-[12px] my-1 data-[highlighted]:bg-[#6DFF3B]/10 data-[highlighted]:text-[#6DFF3B] cursor-pointer focus:bg-[#6DFF3B]/10 focus:text-[#6DFF3B]"
+              >
+                <div className="flex items-center justify-between w-full">
+                  <span>{slot.time}</span>
+                  {!slot.available && <span className="text-[10px] ml-4 opacity-50 uppercase tracking-wider">Booked</span>}
+                </div>
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
       </div>
 
       <div className="rounded-[20px] border border-[#6DFF3B]/18 bg-[#6DFF3B]/10 p-4">
@@ -201,12 +211,22 @@ export function VenueDetails() {
         </div>
       </div>
 
-      <Link to="/payment" className="block">
+      <div 
+        className="block cursor-pointer"
+        onClick={() => {
+          if (!currentUser) {
+            toast.error("Please login first to continue to payment.");
+            navigate("/login");
+          } else {
+            navigate("/payment");
+          }
+        }}
+      >
         <Button className="h-12 w-full rounded-[18px] bg-[#6DFF3B]  text-[#050505] hover:bg-[#86ff60]">
           Continue to payment
           <ArrowRight className="h-4 w-4 ml-2" />
         </Button>
-      </Link>
+      </div>
 
       <div className="grid grid-cols-2 gap-3 pb-8">
         <Button
@@ -487,7 +507,14 @@ export function VenueDetails() {
             </div>
             <Button
               className="h-11 rounded-[16px] bg-[#6DFF3B] px-5  text-[#050505] hover:bg-[#86ff60]"
-              onClick={() => setIsMobileBookingOpen(true)}
+              onClick={() => {
+                if (!currentUser) {
+                  toast.error("Please login first to book this venue.");
+                  navigate("/login");
+                } else {
+                  setIsMobileBookingOpen(true);
+                }
+              }}
             >
               Book now
             </Button>

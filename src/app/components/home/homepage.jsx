@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState } from "react";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
+import { toast } from "sonner";
+import { useAuth } from "../../providers/auth-provider";
 import { motion, useInView, AnimatePresence } from "motion/react";
 import { useTheme } from "next-themes";
 import {
@@ -24,6 +26,8 @@ import {
   X,
   User,
   LogOut,
+  Smartphone,
+  Download,
 } from "lucide-react";
 
 import { useIsMobile } from "../ui/use-mobile";
@@ -361,7 +365,6 @@ export function Navbar() {
     { label: "Events", to: "/community", hasChevron: true, isGreen: true },
     { label: "Coaching", to: "/ai-assistant", hasChevron: true },
     { label: "Tournaments", to: "/tournaments", hasChevron: true },
-    { label: "Membership", to: "/profile", hasChevron: true },
     {
       label: "Cart",
       to: "/bookings",
@@ -802,37 +805,7 @@ export function Navbar() {
                 />
               </button>
             </div>
-            {/* SELECT LOCATION section */}
-            <div className="flex flex-col gap-2 px-3 pt-2">
-              <span
-                className={cn(
-                  "text-[0.68rem] uppercase tracking-wider text-left",
-                  isDark ? "text-white/40" : "text-slate-400",
-                )}
-              >
-                Select Location
-              </span>
-              <div className="flex gap-2 overflow-x-auto pb-2 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
-                {cities.map((city) => (
-                  <button
-                    key={city}
-                    onClick={() => handleCitySelect(city)}
-                    className={cn(
-                      "px-4 py-1.5 rounded-full text-xs whitespace-nowrap transition cursor-pointer border",
-                      activeCity === city
-                        ? isDark
-                          ? "bg-[#6DFF3B]/10 border-[#6DFF3B] text-[#6DFF3B]"
-                          : "bg-emerald-50 border-emerald-500 text-emerald-700"
-                        : isDark
-                          ? "bg-white/[0.03] border-white/[0.08] text-white/70 hover:text-white"
-                          : "bg-slate-50 border-slate-200 text-slate-600 hover:bg-slate-100",
-                    )}
-                  >
-                    {city}
-                  </button>
-                ))}
-              </div>
-            </div>
+
 
             {/* Menu list items */}
             <div className="flex flex-col">
@@ -904,7 +877,7 @@ export function Navbar() {
               {/* Theme Toggle inside Menu */}
               <div className="flex items-center justify-between w-full py-4 px-3 border-b border-slate-100 dark:border-white/[0.05] transition-colors duration-150">
                 <span className={cn("text-sm tracking-wide", isDark ? "text-white/90" : "text-slate-800")}>
-                  Theme (Dark/Light)
+                  Theme
                 </span>
                 <ThemeToggleButton
                   className={cn(
@@ -926,217 +899,7 @@ export function Navbar() {
   );
 }
 
-function SearchBar() {
-  const { resolvedTheme } = useTheme();
-  const isDark = resolvedTheme !== "light";
 
-  return (
-    <div
-      className={cn(
-        "rounded-[24px] p-4",
-        isDark
-          ? "border border-white/[0.08] bg-[#101216] shadow-[0_24px_70px_-30px_rgba(0,0,0,0.8)]"
-          : "border border-white/40 bg-white/85 shadow-[0_24px_60px_rgba(15,23,42,0.12)] backdrop-blur-xl",
-      )}
-    >
-      <div
-        className={cn(
-          "flex flex-col gap-4 pb-4 lg:flex-row lg:items-center lg:justify-between",
-          isDark
-            ? "border-b border-white/[0.06]"
-            : "border-b border-transparent",
-        )}
-      >
-        <div className="flex flex-wrap items-center gap-3">
-          <Dialog>
-            <DialogTrigger asChild>
-              <button
-                type="button"
-                className={cn(
-                  "inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm transition",
-                  isDark
-                    ? "border border-white/[0.08] bg-white/[0.04] text-white hover:border-[#6DFF3B]/25 hover:bg-[#6DFF3B]/10"
-                    : "border border-slate-200 bg-white text-slate-700 hover:border-emerald-500/25 hover:bg-emerald-500/10 hover:text-slate-900",
-                )}
-              >
-                <MapPin
-                  className={cn(
-                    "h-4 w-4",
-                    isDark ? "text-[#6DFF3B]" : "text-emerald-600",
-                  )}
-                />
-                Mumbai
-                <ChevronDown
-                  className={cn(
-                    "h-4 w-4",
-                    isDark ? "text-white/40" : "text-slate-400",
-                  )}
-                />
-              </button>
-            </DialogTrigger>
-            <DialogContent
-              className={cn(
-                "sm:max-w-[425px]",
-                isDark
-                  ? "bg-[#101216] border-white/[0.08]"
-                  : "bg-white border-slate-200",
-              )}
-            >
-              <DialogHeader>
-                <DialogTitle
-                  className={cn(isDark ? "text-white" : "text-slate-900")}
-                >
-                  Select your city
-                </DialogTitle>
-              </DialogHeader>
-              <div className="flex flex-col gap-4 mt-2">
-                <button
-                  type="button"
-                  className={cn(
-                    "flex items-center gap-3 w-full p-3 rounded-xl transition text-left",
-                    isDark
-                      ? "bg-[#6DFF3B]/10 text-[#6DFF3B] hover:bg-[#6DFF3B]/20"
-                      : "bg-emerald-50 text-emerald-700 hover:bg-emerald-100",
-                  )}
-                >
-                  <Locate className="h-5 w-5" />
-                  <div className="flex flex-col">
-                    <span className=" text-sm">Detect my location</span>
-                    <span
-                      className={cn(
-                        "text-xs",
-                        isDark ? "text-[#6DFF3B]/70" : "text-emerald-600/70",
-                      )}
-                    >
-                      Using GPS
-                    </span>
-                  </div>
-                </button>
-                <div className="grid grid-cols-3 gap-3 mt-2">
-                  {[
-                    "Mumbai",
-                    "Delhi-NCR",
-                    "Bengaluru",
-                    "Hyderabad",
-                    "Chandigarh",
-                    "Ahmedabad",
-                    "Chennai",
-                    "Pune",
-                    "Kolkata",
-                  ].map((city) => (
-                    <button
-                      key={city}
-                      type="button"
-                      className={cn(
-                        "flex flex-col items-center justify-center p-3 rounded-xl transition text-center gap-2",
-                        isDark
-                          ? "hover:bg-white/[0.04] text-white/80 hover:text-white"
-                          : "hover:bg-slate-50 text-slate-700 hover:text-slate-900",
-                      )}
-                    >
-                      <MapPin className="h-5 w-5 opacity-50" />
-                      <span className="text-xs">{city}</span>
-                    </button>
-                  ))}
-                </div>
-              </div>
-            </DialogContent>
-          </Dialog>
-
-          <div
-            className={cn(
-              "inline-flex items-center gap-2 rounded-full px-4 py-2 text-xs ",
-              isDark
-                ? "border border-white/[0.08] bg-[#050505]/55 text-white/58"
-                : "border border-slate-200 bg-white text-slate-600",
-            )}
-          >
-            <ShieldCheck
-              className={cn(
-                "h-4 w-4",
-                isDark ? "text-[#6DFF3B]" : "text-emerald-600",
-              )}
-            />
-            Verified venues, secure payments, easy refunds
-          </div>
-        </div>
-        <p
-          className={cn("text-sm", isDark ? "text-white/48" : "text-slate-500")}
-        >
-          Discover sports, venues, and tournaments near your location.
-        </p>
-      </div>
-
-      <div className="mt-4 grid gap-3 lg:grid-cols-[1.4fr_0.9fr_auto]">
-        {[
-          { icon: Search, placeholder: "Search venues, sports or tournaments" },
-          { icon: CalendarDays, placeholder: "Date and time" },
-        ].map((field) => {
-          const Icon = field.icon;
-          return (
-            <label key={field.placeholder} className="relative block">
-              <Icon
-                className={cn(
-                  "pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2",
-                  isDark ? "text-white/55" : "text-slate-400",
-                )}
-              />
-
-              <Input
-                placeholder={field.placeholder}
-                className={cn(
-                  "h-12 rounded-[16px] pl-11 text-[0.95rem] transition-colors duration-200",
-                  isDark
-                    ? "border-white/[0.08] bg-white/[0.04] text-white placeholder:text-white/40 focus-visible:border-[#6DFF3B]/35 focus-visible:ring-[#6DFF3B]/20"
-                    : "border-slate-200 bg-white text-slate-900 placeholder:text-slate-400 hover:border-emerald-500 focus-visible:border-emerald-500 focus-visible:ring-emerald-500/20",
-                )}
-              />
-            </label>
-          );
-        })}
-        <Button
-          className={cn(
-            "h-12 rounded-[16px] px-8 text-[0.95rem]  transition duration-200 hover:scale-[1.02]",
-            isDark
-              ? "bg-[#6DFF3B] text-[#050505] shadow-[0_16px_28px_-18px_rgba(109,255,59,0.7)] hover:bg-[#5fe032] hover:shadow-[0_18px_34px_-16px_rgba(109,255,59,0.9)]"
-              : "bg-emerald-600 text-white shadow-[0_16px_28px_-18px_rgba(16,185,129,0.4)] hover:bg-emerald-700 hover:shadow-[0_18px_34px_-16px_rgba(16,185,129,0.6)]",
-          )}
-        >
-          Search
-        </Button>
-      </div>
-
-      <div className="mt-4 flex flex-nowrap overflow-x-auto gap-2 pb-2 [-webkit-overflow-scrolling:touch] snap-x snap-mandatory">
-        {[
-          "Sport",
-          "Location",
-          "Price",
-          "Rating",
-          "Distance",
-          "Availability",
-        ].map((chip) => (
-          <span
-            key={chip}
-            className={cn(
-              "shrink-0 snap-start inline-flex items-center gap-2 rounded-full px-3 py-1.5 text-xs ",
-              isDark
-                ? "border border-white/[0.08] bg-white/[0.04] text-white/66"
-                : "border border-slate-200 bg-white text-slate-600",
-            )}
-          >
-            <SlidersHorizontal
-              className={cn(
-                "h-3.5 w-3.5",
-                isDark ? "text-[#6DFF3B]" : "text-emerald-600",
-              )}
-            />
-            {chip}
-          </span>
-        ))}
-      </div>
-    </div>
-  );
-}
 
 function StatsRow() {
   const { resolvedTheme } = useTheme();
@@ -1265,7 +1028,7 @@ export function HeroSection() {
           className="absolute inset-0 dark:hidden"
           style={{
             backgroundImage:
-              "linear-gradient(90deg, rgba(255,255,255,0.75) 0%, rgba(255,255,255,0.28) 45%, transparent 85%)",
+              "linear-gradient(90deg, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0.1) 45%, transparent 85%)",
           }}
         />
 
@@ -1305,13 +1068,13 @@ export function HeroSection() {
         )}
       />
 
-      <div className="mx-auto flex min-h-[92svh] max-w-[1200px] flex-col justify-center items-start px-4 py-10 sm:px-6 md:min-h-[94svh] md:py-14 lg:px-8 lg:py-16 xl:min-h-[96svh]">
+      <div className="mx-auto flex min-h-[92svh] max-w-[1200px] flex-col justify-start pt-[20svh] items-start px-4 sm:px-6 md:min-h-[94svh] lg:px-8 xl:min-h-[96svh]">
         <div className="relative w-full max-w-4xl">
-          <div className="relative z-10 flex flex-col items-start text-left">
-            <div className="flex justify-start">
+          <div className="relative z-10 flex flex-col items-start text-left w-full max-w-4xl">
+            <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
               <Badge
                 className={cn(
-                  "rounded-full px-4 py-2 text-xs  uppercase tracking-[0.26em]",
+                  "rounded-full px-4 py-2 text-xs uppercase tracking-[0.26em]",
                   isDark
                     ? "border border-[#6DFF3B]/20 bg-[#6DFF3B]/10 text-[#6DFF3B]"
                     : "border border-emerald-500/30 bg-emerald-500/10 text-emerald-700",
@@ -1319,44 +1082,57 @@ export function HeroSection() {
               >
                 Premium sports booking
               </Badge>
-            </div>
+            </motion.div>
 
-            <h1
-              className={cn(
-                "mt-6 font-normal max-w-2xl text-left text-4xl sm:text-6xl tracking-tight lg:text-[4.8rem] lg:leading-[1.05]",
-                isDark ? "text-white" : "text-slate-900",
-              )}
-            >
-              Play. Book.{" "}
-              <span
+            <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.1 }}>
+              <h1
                 className={cn(
-                  isDark
-                    ? "text-[#6DFF3B] drop-shadow-[0_0_20px_rgba(109,255,59,0.18)]"
-                    : "text-[#16A34A]",
+                  "mt-6 font-light max-w-3xl text-left text-5xl sm:text-7xl tracking-tighter lg:text-[5.2rem] lg:leading-[1.05]",
+                  isDark ? "text-white" : "text-slate-900",
                 )}
               >
-                Compete.
-              </span>
-            </h1>
+                Play. Book.{" "}
+                <span
+                  className={cn(
+                    isDark
+                      ? "text-[#6DFF3B] drop-shadow-[0_0_20px_rgba(109,255,59,0.18)]"
+                      : "text-emerald-600",
+                  )}
+                >
+                  Compete.
+                </span>
+              </h1>
+            </motion.div>
 
-            <p
-              className={cn(
-                "mt-6 max-w-2xl text-left text-base sm:text-lg",
-                isDark
-                  ? "leading-8 text-white/68"
-                  : "leading-[1.7] text-slate-700",
-              )}
-            >
-              Discover elite turf venues, tournaments, and community sessions on
-              a booking flow designed to feel premium from the first tap to the
-              final confirmation.
-            </p>
+            <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.2 }} className="mt-10 flex flex-col sm:flex-row flex-wrap items-center gap-3 w-full sm:w-auto">
 
-
-
-            <div className="mt-8 w-full">
-              <SearchBar />
-            </div>
+              <Link to="/venues" className="w-full sm:w-auto">
+                <Button
+                  variant="outline"
+                  className={cn(
+                    "w-full sm:w-auto h-14 rounded-full px-8 text-base font-semibold backdrop-blur-md transition-all hover:scale-105 shadow-sm",
+                    isDark
+                      ? "border-white/30 bg-transparent text-white hover:bg-white/10 hover:border-white/50 hover:text-white"
+                      : "border-slate-400/50 bg-transparent text-slate-800 hover:bg-slate-100/50 hover:border-slate-500 hover:text-slate-900",
+                  )}
+                >
+                  Book a turf now
+                </Button>
+              </Link>
+              <Link to="/venues" className="w-full sm:w-auto">
+                <Button
+                  variant="outline"
+                  className={cn(
+                    "w-full sm:w-auto h-14 rounded-full px-8 text-base font-semibold backdrop-blur-md transition-all hover:scale-105 shadow-sm",
+                    isDark
+                      ? "border-white/30 bg-transparent text-white hover:bg-white/10 hover:border-white/50 hover:text-white"
+                      : "border-slate-400/50 bg-transparent text-slate-800 hover:bg-slate-100/50 hover:border-slate-500 hover:text-slate-900",
+                  )}
+                >
+                  List of our turfs
+                </Button>
+              </Link>
+            </motion.div>
           </div>
         </div>
       </div>
@@ -1367,6 +1143,8 @@ export function HeroSection() {
 function SportCard({ name, count, image, index }) {
   const { resolvedTheme } = useTheme();
   const isDark = resolvedTheme !== "light";
+  const { currentUser } = useAuth();
+  const navigate = useNavigate();
 
   return (
     <motion.div
@@ -1443,6 +1221,8 @@ function SportCard({ name, count, image, index }) {
 function MoreSportsCard() {
   const { resolvedTheme } = useTheme();
   const isDark = resolvedTheme !== "light";
+  const { currentUser } = useAuth();
+  const navigate = useNavigate();
 
   return (
     <motion.div
@@ -1859,7 +1639,18 @@ export function DiscoveryRails() {
 
             <CardContent className="space-y-4 p-6">
               {events.map((event) => (
-                <Link key={event.title} to="/tournaments" className="block">
+                <div 
+                  key={event.title} 
+                  className="block cursor-pointer"
+                  onClick={() => {
+                    if (!currentUser) {
+                      toast.error("Please sign up to view tournaments & events.");
+                      navigate("/register");
+                    } else {
+                      navigate("/tournaments");
+                    }
+                  }}
+                >
                   <div className="flex gap-4 rounded-[22px] border border-white/[0.08] bg-white/[0.03] p-3 transition hover:border-[#6DFF3B]/20 hover:bg-white/[0.05]">
                     <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-[18px]">
                       <ImageWithFallback
@@ -1884,7 +1675,7 @@ export function DiscoveryRails() {
                       </div>
                     </div>
                   </div>
-                </Link>
+                </div>
               ))}
             </CardContent>
           </Card>
@@ -1943,6 +1734,8 @@ export function WhySportXClub() {
 export function TournamentCTA() {
   const { resolvedTheme } = useTheme();
   const isDark = resolvedTheme !== "light";
+  const { currentUser } = useAuth();
+  const navigate = useNavigate();
 
   return (
     <section className="py-[100px]">
@@ -2009,30 +1802,23 @@ export function TournamentCTA() {
 
               <div className="mt-8 flex flex-col gap-3 sm:flex-row">
                 <Button
-                  asChild
+                  onClick={(e) => {
+                    if (!currentUser) {
+                      e.preventDefault();
+                      toast.error("Please login first to host a tournament.");
+                      navigate("/login");
+                    } else {
+                      navigate("/organizer-dashboard");
+                    }
+                  }}
                   className={cn(
-                    "h-12 rounded-full px-6",
+                    "h-12 rounded-full px-6 cursor-pointer",
                     isDark
                       ? "bg-[#6DFF3B] text-[#050505] hover:bg-[#86ff60]"
                       : "bg-[#6DFF3B] text-[#050505] hover:bg-[#5fe032] shadow-sm",
                   )}
                 >
-                  <Link to="/organizer-dashboard">Host Your Tournament</Link>
-                </Button>
-                <Button
-                  asChild
-                  variant="ghost"
-                  className={cn(
-                    "h-12 rounded-full border px-6",
-                    isDark
-                      ? "border-white/[0.08] bg-white/[0.04] text-white hover:bg-white/[0.08]"
-                      : "border-slate-200 bg-white/50 text-slate-700 hover:bg-white",
-                  )}
-                >
-                  <Link to="/tournaments">
-                    <PlayCircle className="h-4 w-4" />
-                    View tournament formats
-                  </Link>
+                  Host Your Tournament
                 </Button>
               </div>
             </div>
@@ -2543,6 +2329,8 @@ const galleryTurfs = [
 export function TurfGallery() {
   const { resolvedTheme } = useTheme();
   const isDark = resolvedTheme !== "light";
+  const { currentUser } = useAuth();
+  const navigate = useNavigate();
 
   return (
     <section className="py-[100px] relative overflow-hidden">
@@ -2606,8 +2394,16 @@ export function TurfGallery() {
 
                 <div className="mt-4 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
                   <Button
+                    onClick={() => {
+                      if (!currentUser) {
+                        toast.error("Please login first to view venue details and book.");
+                        navigate("/login");
+                      } else {
+                        navigate("/venues");
+                      }
+                    }}
                     variant="outline"
-                    className="rounded-full bg-white/10 text-white border-white/20 hover:bg-[#6DFF3B] hover:text-black hover:border-transparent backdrop-blur-sm transition-all"
+                    className="rounded-full bg-white/10 text-white border-white/20 hover:bg-[#6DFF3B] hover:text-black hover:border-transparent backdrop-blur-sm transition-all cursor-pointer"
                   >
                     View Details
                   </Button>
@@ -2615,6 +2411,102 @@ export function TurfGallery() {
               </div>
             </motion.div>
           ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function AppDownloadCTA() {
+  const { resolvedTheme } = useTheme();
+  const isDark = resolvedTheme !== "light";
+
+  return (
+    <section className="py-16 md:py-24 bg-white dark:bg-[#050505] relative overflow-hidden">
+      <div className="mx-auto max-w-[1200px] px-4 sm:px-6 lg:px-8 relative z-10">
+        <div className={cn(
+          "rounded-[2.5rem] p-10 md:p-16 flex flex-col md:flex-row items-center justify-between gap-12 relative overflow-hidden",
+          isDark 
+            ? "bg-[#101216] border border-white/10 shadow-[0_30px_100px_-20px_rgba(0,0,0,1)]" 
+            : "bg-slate-50 border border-slate-200 shadow-[0_30px_100px_-20px_rgba(15,23,42,0.1)]"
+        )}>
+          {/* Background decoration */}
+          <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-emerald-500/10 dark:bg-[#6DFF3B]/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3" />
+          <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-blue-500/10 dark:bg-blue-400/5 rounded-full blur-3xl translate-y-1/3 -translate-x-1/4" />
+          
+          <div className="flex-1 max-w-2xl relative z-10">
+            <div 
+              className={cn(
+                "inline-flex items-center justify-center mb-8 px-4 py-2 rounded-full font-semibold tracking-[0.15em] text-[0.7rem] uppercase",
+                isDark ? "bg-[#6DFF3B]/10 text-[#6DFF3B] border border-[#6DFF3B]/20" : "bg-emerald-100 text-emerald-800 border border-emerald-200"
+              )}
+            >
+              Get The App
+            </div>
+            <h2 className="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight mb-6 leading-[1.1]">
+              Your entire sports life. <br />
+              <span className={isDark ? "text-[#6DFF3B]" : "text-emerald-600"}>In your pocket.</span>
+            </h2>
+            <p className={cn(
+              "text-lg md:text-xl mb-10 max-w-lg leading-relaxed",
+              isDark ? "text-white/70" : "text-slate-600"
+            )}>
+              Book turfs in seconds, split payments with friends, and track your tournament progress on the go with the SportXClub app.
+            </p>
+            
+            <div className="flex flex-col sm:flex-row gap-4">
+              <Button size="lg" className="h-16 rounded-full px-8 gap-4 text-base shadow-xl transition-all hover:-translate-y-1 hover:shadow-2xl bg-black text-white hover:bg-neutral-800 border border-white/10">
+                <Smartphone className="w-6 h-6" />
+                <div className="flex flex-col items-start text-left">
+                  <span className="text-[0.65rem] uppercase tracking-wider leading-tight opacity-70 font-semibold mb-0.5">Download on the</span>
+                  <span className="font-bold text-lg leading-none">App Store</span>
+                </div>
+              </Button>
+              <Button size="lg" className="h-16 rounded-full px-8 gap-4 text-base shadow-xl transition-all hover:-translate-y-1 hover:shadow-2xl bg-black text-white hover:bg-neutral-800 border border-white/10">
+                <Download className="w-6 h-6" />
+                <div className="flex flex-col items-start text-left">
+                  <span className="text-[0.65rem] uppercase tracking-wider leading-tight opacity-70 font-semibold mb-0.5">Get it on</span>
+                  <span className="font-bold text-lg leading-none">Google Play</span>
+                </div>
+              </Button>
+            </div>
+          </div>
+          
+          {/* App Mockup Illustration */}
+          <div className="flex-1 relative z-10 hidden lg:flex justify-end w-full max-w-md">
+            <div className={cn(
+              "relative w-[280px] aspect-[4/8] rounded-[2.5rem] overflow-hidden border-[12px] shadow-2xl rotate-[-5deg] hover:rotate-0 transition-transform duration-700 ease-out",
+              isDark ? "border-[#20232a] bg-[#050505]" : "border-slate-800 bg-slate-50"
+            )}>
+              {/* iPhone Notch */}
+              <div className={cn("absolute top-0 inset-x-0 h-6 w-32 mx-auto rounded-b-2xl z-20", isDark ? "bg-[#20232a]" : "bg-slate-800")} />
+              
+              {/* Fake UI inside the phone */}
+              <div className="absolute inset-0 p-5 pt-10 flex flex-col gap-4">
+                {/* Header */}
+                <div className="flex justify-between items-center mb-2">
+                  <div className={cn("h-4 w-24 rounded-full", isDark ? "bg-white/20" : "bg-slate-300")} />
+                  <div className={cn("h-8 w-8 rounded-full", isDark ? "bg-white/10" : "bg-slate-200")} />
+                </div>
+                {/* Hero card */}
+                <div className={cn(
+                  "w-full aspect-[1.8/1] rounded-2xl border relative overflow-hidden",
+                  isDark ? "bg-[#6DFF3B]/20 border-[#6DFF3B]/30" : "bg-emerald-100 border-emerald-200"
+                )}>
+                  <div className="absolute bottom-3 left-3 h-3 w-1/2 bg-current opacity-40 rounded-full" />
+                </div>
+                {/* Quick actions */}
+                <div className="flex gap-3">
+                   <div className={cn("flex-1 h-14 rounded-xl", isDark ? "bg-white/10" : "bg-slate-200")} />
+                   <div className={cn("flex-1 h-14 rounded-xl", isDark ? "bg-white/10" : "bg-slate-200")} />
+                </div>
+                {/* List items */}
+                <div className={cn("w-full h-16 rounded-2xl", isDark ? "bg-white/5" : "bg-white border border-slate-100")} />
+                <div className={cn("w-full h-16 rounded-2xl", isDark ? "bg-white/5" : "bg-white border border-slate-100")} />
+                <div className={cn("w-full h-16 rounded-2xl", isDark ? "bg-white/5" : "bg-white border border-slate-100")} />
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </section>
@@ -2640,6 +2532,7 @@ export function HomePage() {
       <TurfGallery />
       <WhySportXClub />
       <TournamentCTA />
+      <AppDownloadCTA />
 
       <Footer />
     </div>

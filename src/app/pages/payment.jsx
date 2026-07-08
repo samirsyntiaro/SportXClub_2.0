@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
+import { useAuth } from "../providers/auth-provider";
 import {
   ArrowRight,
   Calendar,
@@ -70,10 +71,22 @@ const checkoutFlow = [
 ];
 
 export function Payment() {
+  const { currentUser } = useAuth();
   const navigate = useNavigate();
   const [paymentMethod, setPaymentMethod] = useState("upi");
   const [coupon, setCoupon] = useState("");
   const [isProcessing, setIsProcessing] = useState(false);
+
+  useEffect(() => {
+    if (!currentUser) {
+      toast.error("Please login to proceed with payment.");
+      navigate("/login");
+    }
+  }, [currentUser, navigate]);
+
+  if (!currentUser) {
+    return null; // Return null while redirecting
+  }
 
   const handlePayment = () => {
     setIsProcessing(true);

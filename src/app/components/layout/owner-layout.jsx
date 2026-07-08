@@ -13,6 +13,7 @@ import {
   X,
   LogOut,
   User,
+  Trophy,
 } from "lucide-react";
 import { Logo } from "../brand/Logo";
 import { Button } from "../ui/button";
@@ -37,6 +38,7 @@ const ownerNavigation = [
   { name: "Dashboard", href: "/owner-dashboard", icon: LayoutDashboard },
   { name: "My Turfs", href: "/owner-dashboard/turfs", icon: MapPin },
   { name: "Bookings", href: "/owner-dashboard/bookings", icon: CalendarDays },
+  { name: "Tournaments & Events", href: "/owner-dashboard/tournaments", icon: Trophy },
   { name: "Calendar", href: "/owner-dashboard/calendar", icon: Calendar },
   { name: "Revenue", href: "/owner-dashboard/revenue", icon: IndianRupee },
   { name: "Reviews", href: "/owner-dashboard/reviews", icon: Star },

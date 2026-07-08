@@ -140,6 +140,14 @@ export const router = createBrowserRouter([
         },
       },
       {
+        path: "tournaments",
+        lazy: async () => {
+          const { TournamentOrganizerDashboard } =
+            await import("./pages/tournament-organizer-dashboard");
+          return { Component: TournamentOrganizerDashboard };
+        },
+      },
+      {
         path: "settings",
         lazy: async () => {
           const { Settings } = await import("./pages/owner/settings");

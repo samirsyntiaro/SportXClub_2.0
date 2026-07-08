@@ -22,6 +22,7 @@ import { Button } from "../ui/button";
 import { cn } from "../ui/utils";
 import { ThemeToggleButton } from "../ui/theme-toggle-button";
 import { Logo } from "../brand/Logo";
+import { useAuth } from "../../providers/auth-provider";
 
 export const mobileNavigation = [
   { key: "home", label: "Home", href: "/", icon: Home },
@@ -48,6 +49,7 @@ export function MobileAppBar() {
   const [isOpen, setIsOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const { theme, setTheme, resolvedTheme } = useTheme();
+  const { currentUser } = useAuth();
   const isDark = resolvedTheme !== "light";
 
   useEffect(() => {
@@ -96,7 +98,6 @@ export function MobileAppBar() {
     { label: "Turf", to: "/venues", hasChevron: true },
     { label: "Events", to: "/community", hasChevron: true, isGreen: true },
     { label: "Tournaments", to: "/tournaments", hasChevron: true },
-    { label: "Membership", to: "/profile", hasChevron: true },
     {
       label: "Notifications",
       to: "/dashboard",
@@ -111,7 +112,12 @@ export function MobileAppBar() {
       isCart: true,
       badge: 2,
     },
-  ];
+  ].filter((item) => {
+    if (!currentUser && ["Events"].includes(item.label)) {
+      return false;
+    }
+    return true;
+  });
 
   return (
     <header className="sticky top-0 z-45 border-b border-border/40 bg-background/88 pt-[env(safe-area-inset-top)] backdrop-blur-2xl md:hidden">
@@ -172,29 +178,6 @@ export function MobileAppBar() {
               transition={{ duration: 0.2, ease: "easeOut" }}
               className="absolute top-full left-0 right-0 z-50 border-b shadow-2xl px-6 py-5 flex flex-col gap-4 bg-background border-border max-h-[calc(100vh-80px-env(safe-area-inset-top))] overflow-y-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
             >
-              {/* SELECT LOCATION section */}
-              <div className="flex flex-col gap-2 px-1 pt-1">
-                <span className="text-[0.68rem] uppercase tracking-wider text-left text-muted-foreground">
-                  Select Location
-                </span>
-                <div className="flex gap-2 overflow-x-auto pb-2 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
-                  {cities.map((c) => (
-                    <button
-                      key={c}
-                      onClick={() => handleCitySelect(c)}
-                      className={cn(
-                        "px-4 py-1.5 rounded-full text-xs whitespace-nowrap transition cursor-pointer border",
-                        city === c
-                          ? "bg-primary/10 border-primary text-primary"
-                          : "bg-muted/40 border-border text-muted-foreground hover:bg-muted",
-                      )}
-                    >
-                      {c}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
               {/* Menu list items */}
               <div className="flex flex-col">
                 {menuItems.map((item) => {
@@ -245,7 +228,7 @@ export function MobileAppBar() {
 
               {/* Theme Toggle inside Menu */}
               <div className="flex items-center justify-between py-4 px-1">
-                <span className="text-sm tracking-wide text-left text-foreground">Theme (Dark/Light)</span>
+                <span className="text-sm tracking-wide text-left text-foreground">Theme</span>
                 <ThemeToggleButton className="h-9 w-9 rounded-full border border-border/60 shadow-xs cursor-pointer" />
               </div>
             </motion.div>

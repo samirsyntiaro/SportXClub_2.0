@@ -15,6 +15,15 @@ import {
   TabsTrigger,
 } from "../components/ui/tabs";
 import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+  DialogFooter,
+} from "../components/ui/dialog";
+import {
   Trophy,
   Users,
   Calendar,
@@ -93,10 +102,56 @@ export function TournamentOrganizerDashboard() {
             Create and manage sports tournaments
           </p>
         </div>
-        <Button className="gap-2">
-          <Plus className="h-4 w-4" />
-          Create New Tournament
-        </Button>
+        <Dialog>
+          <DialogTrigger asChild>
+            <Button className="gap-2">
+              <Plus className="h-4 w-4" />
+              Create New Tournament
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="sm:max-w-[425px]">
+            <DialogHeader>
+              <DialogTitle>Create New Tournament</DialogTitle>
+              <DialogDescription>
+                Fill in the details to start organizing a new tournament.
+              </DialogDescription>
+            </DialogHeader>
+            <div className="grid gap-4 py-4">
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="name" className="text-right">
+                  Name
+                </Label>
+                <Input id="name" placeholder="Tournament Name" className="col-span-3" />
+              </div>
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="sport" className="text-right">
+                  Sport
+                </Label>
+                <Input id="sport" placeholder="e.g. Cricket, Football" className="col-span-3" />
+              </div>
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="teams" className="text-right">
+                  Max Teams
+                </Label>
+                <Input id="teams" type="number" placeholder="16" className="col-span-3" />
+              </div>
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="startDate" className="text-right">
+                  Start Date
+                </Label>
+                <Input id="startDate" type="date" className="col-span-3" />
+              </div>
+            </div>
+            <DialogFooter>
+              {/* Note: since there is no state hooked up, this just serves as a UI popup for now */}
+              <DialogTrigger asChild>
+                <Button type="button" onClick={() => {
+                  // The DialogTrigger automatically handles closing when clicked.
+                }}>Create Tournament</Button>
+              </DialogTrigger>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
       </div>
 
       {/* Stats */}

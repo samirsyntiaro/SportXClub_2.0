@@ -22,7 +22,7 @@ import { Avatar, AvatarImage, AvatarFallback } from "../ui/avatar";
 
 const navigation = [
   { name: "Dashboard", href: "/dashboard", icon: Home },
-  { name: "Player Dashboard", href: "/player-dashboard", icon: Activity },
+  { name: "Player Details", href: "/player-dashboard", icon: Activity },
   { name: "Turfs", href: "/venues", icon: MapPin },
   { name: "Tournaments", href: "/tournaments", icon: Trophy },
   { name: "Players", href: "/players", icon: Users },
@@ -157,6 +157,12 @@ export function Layout() {
                 item.name === "Player Dashboard"
               )
                 return false;
+              if (
+                !currentUser &&
+                ["Player Dashboard", "Players", "Community"].includes(item.name)
+              ) {
+                return false;
+              }
               return true;
             })
             .map((item) => {
@@ -183,24 +189,32 @@ export function Layout() {
         </nav>
 
         <div className="flex items-center gap-3">
-          <Link to="/profile">
-            <Button
-              variant="ghost"
-              className="rounded-full gap-2.5 text-muted-foreground hover:text-foreground px-2.5 h-10 cursor-pointer"
-            >
-              <Avatar className="h-6 w-6 border border-border/80">
-                {currentUser?.profilePicture && (
-                  <AvatarImage src={currentUser.profilePicture} className="object-cover" />
-                )}
-                <AvatarFallback className="bg-primary text-[10px] font-bold text-primary-foreground">
-                  {currentUser?.fullName
-                    ? currentUser.fullName.trim().split(/\s+/).map((n) => n[0]).join("").slice(0, 2)
-                    : "U"}
-                </AvatarFallback>
-              </Avatar>
-              <span className="text-sm font-semibold leading-none">{displayName}</span>
-            </Button>
-          </Link>
+          {currentUser ? (
+            <Link to="/profile">
+              <Button
+                variant="ghost"
+                className="rounded-full gap-2.5 text-muted-foreground hover:text-foreground px-2.5 h-10 cursor-pointer"
+              >
+                <Avatar className="h-6 w-6 border border-border/80">
+                  {currentUser?.profilePicture && (
+                    <AvatarImage src={currentUser.profilePicture} className="object-cover" />
+                  )}
+                  <AvatarFallback className="bg-primary text-[10px] font-bold text-primary-foreground">
+                    {currentUser?.fullName
+                      ? currentUser.fullName.trim().split(/\s+/).map((n) => n[0]).join("").slice(0, 2)
+                      : "U"}
+                  </AvatarFallback>
+                </Avatar>
+                <span className="text-sm font-semibold leading-none">{displayName}</span>
+              </Button>
+            </Link>
+          ) : (
+            <Link to="/login">
+              <Button className="rounded-full bg-primary text-primary-foreground hover:bg-primary/90 px-5 text-sm font-semibold">
+                Login / Sign Up
+              </Button>
+            </Link>
+          )}
         </div>
       </header>
 
