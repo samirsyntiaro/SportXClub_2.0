@@ -20,6 +20,8 @@ import { Label } from "../components/ui/label";
 import { Checkbox } from "../components/ui/checkbox";
 import { Logo } from "../components/brand/Logo";
 import { cn } from "../components/ui/utils";
+import { AppDownloadCTA } from "../components/home/AppDownloadCTA";
+import { Footer } from "../components/home/Footer";
 
 export function LoginPage() {
   const navigate = useNavigate();
@@ -73,9 +75,10 @@ export function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-background relative overflow-hidden flex flex-col items-center justify-center p-4 sm:p-6 md:p-10 transition-colors duration-200">
-      {/* BACKGROUND ELEMENTS (Grid + Radial Accent Glows) */}
-      <div className="absolute inset-0 opacity-[0.03] dark:opacity-[0.06] bg-[radial-gradient(#22c55e_1px,transparent_1px)] [background-size:24px_24px] pointer-events-none" />
+    <div className="bg-background relative overflow-hidden transition-colors duration-200">
+      <div className="min-h-screen relative flex flex-col items-center justify-center p-4 sm:p-6 md:p-10">
+        {/* BACKGROUND ELEMENTS (Grid + Radial Accent Glows) */}
+        <div className="absolute inset-0 opacity-[0.03] dark:opacity-[0.06] bg-[radial-gradient(#22c55e_1px,transparent_1px)] [background-size:24px_24px] pointer-events-none" />
 
       {/* Floating Blur Circles (Dynamic glow backdrop) */}
       <div
@@ -306,6 +309,9 @@ export function LoginPage() {
           </div>
         )}
       </div>
+      </div>
+      <AppDownloadCTA />
+      <Footer />
     </div>
   );
 }
