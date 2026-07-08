@@ -364,7 +364,7 @@ export function Navbar() {
 
   const menuItems = [
     { label: "Turf", to: "/venues", hasChevron: true },
-    { label: "Events", to: "/community", hasChevron: true, isGreen: true },
+    { label: "Events", to: "/community", hasChevron: true },
     { label: "Coaching", to: "/ai-assistant", hasChevron: true },
     { label: "Tournaments", to: "/tournaments", hasChevron: true },
     {
@@ -813,7 +813,7 @@ export function Navbar() {
             <div className="flex flex-col">
               {menuItems.map((item) => {
                 const itemContent = (
-                  <div className="flex items-center justify-between w-full py-4 px-3 border-b border-slate-100 dark:border-white/[0.05] transition-colors duration-150 hover:bg-slate-50/50 dark:hover:bg-white/[0.02]">
+                  <div className="flex items-center justify-between w-full py-4 px-3 border-b border-slate-100 dark:border-white/[0.05] transition-colors duration-150 hover:bg-slate-50/50 dark:hover:bg-white/[0.02] group">
                     <div className="flex items-center gap-3">
                       {item.isCart && (
                         <ShoppingCart
@@ -825,14 +825,14 @@ export function Navbar() {
                       )}
                       <span
                         className={cn(
-                          "text-sm tracking-wide",
+                          "text-sm tracking-wide transition-colors duration-150",
                           item.isGreen
                             ? isDark
                               ? "text-[#6DFF3B]"
                               : "text-emerald-600"
                             : isDark
-                              ? "text-white/90"
-                              : "text-slate-800",
+                              ? "text-white/90 group-hover:text-[#6DFF3B]"
+                              : "text-slate-800 group-hover:text-emerald-600",
                         )}
                       >
                         {item.label}
@@ -855,8 +855,10 @@ export function Navbar() {
                       {item.hasChevron && (
                         <ChevronRight
                           className={cn(
-                            "h-4 w-4",
-                            isDark ? "text-white/20" : "text-slate-300",
+                            "h-4 w-4 transition-colors duration-150",
+                            isDark
+                              ? "text-white/20 group-hover:text-[#6DFF3B]"
+                              : "text-slate-300 group-hover:text-emerald-600",
                           )}
                         />
                       )}
