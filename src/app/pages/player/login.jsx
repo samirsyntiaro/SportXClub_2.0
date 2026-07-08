@@ -5,6 +5,8 @@ import { ArrowRight, Fingerprint, Zap, Trophy } from "lucide-react";
 import { Button } from "../../components/ui/button";
 import { Input } from "../../components/ui/input";
 import { ImageWithFallback } from "../../components/figma/ImageWithFallback";
+import { AppDownloadCTA } from "../../components/home/AppDownloadCTA";
+import { Footer } from "../../components/home/Footer";
 
 export function PlayerLoginPage() {
   const navigate = useNavigate();
@@ -23,7 +25,8 @@ export function PlayerLoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-background text-foreground relative overflow-hidden flex flex-col md:flex-row">
+    <div className="bg-background text-foreground relative overflow-hidden">
+      <div className="min-h-screen relative flex flex-col md:flex-row">
       {/* Background ambient light */}
       <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-[#6DFF3B]/10 blur-[120px] rounded-full pointer-events-none" />
       <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-[#6DFF3B]/5 blur-[120px] rounded-full pointer-events-none" />
@@ -164,6 +167,9 @@ export function PlayerLoginPage() {
           </motion.form>
         </div>
       </div>
+      </div>
+      <AppDownloadCTA />
+      <Footer />
     </div>
   );
 }
