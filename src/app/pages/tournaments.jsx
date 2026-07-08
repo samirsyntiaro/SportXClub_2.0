@@ -1,4 +1,5 @@
 import { Link, useNavigate } from "react-router";
+import { useAuth } from "../providers/auth-provider";
 import {
   Card,
   CardContent,
@@ -103,6 +104,7 @@ const fixtures = [
 
 export function Tournaments() {
   const navigate = useNavigate();
+  const { currentUser } = useAuth();
 
   return (
     <div className="space-y-8 pb-12">
@@ -114,12 +116,14 @@ export function Tournaments() {
             Compete with the best and win exciting prizes
           </p>
         </div>
-        <Link to="/organizer-dashboard">
-          <Button size="lg" className="shadow-lg shadow-primary/20">
-            <Plus className="mr-2 h-4 w-4" />
-            Organize Tournament
-          </Button>
-        </Link>
+        {currentUser && (
+          <Link to="/organizer-dashboard">
+            <Button size="lg" className="shadow-lg shadow-primary/20">
+              <Plus className="mr-2 h-4 w-4" />
+              Organize Tournament
+            </Button>
+          </Link>
+        )}
       </div>
 
       {/* Stats */}

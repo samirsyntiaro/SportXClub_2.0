@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router";
 import { motion } from "motion/react";
 import {
   Wallet,
@@ -34,6 +35,7 @@ import {
 } from "../../components/ui/dialog";
 import { Input } from "../../components/ui/input";
 import { useAuth } from "../../providers/auth-provider";
+import { toast } from "sonner";
 
 const sportsOptions = [
   { id: "football", name: "Football", emoji: "⚽" },
@@ -149,10 +151,18 @@ const amenitiesList = [
 ];
 
 export function PlayerDashboard() {
+  const navigate = useNavigate();
   const { currentUser } = useAuth();
-  const playerName = currentUser?.fullName || player.name;
+  const playerName = currentUser?.fullName || "Player";
   const playerCity = currentUser?.city || "Powai, Mumbai";
   const displaySports = getMappedSports(currentUser?.selectedSports);
+
+  useEffect(() => {
+    if (!currentUser) {
+      toast.error("Please login to view your dashboard.");
+      navigate("/login");
+    }
+  }, [currentUser, navigate]);
 
   const [walletBalance, setWalletBalance] = useState(player.walletBalance);
   // Interactive States
@@ -178,6 +188,10 @@ export function PlayerDashboard() {
       prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id],
     );
   };
+
+  if (!currentUser) {
+    return null;
+  }
 
   const calculateTotalAddons = () => {
     return selectedAmenities.reduce((total, id) => {
@@ -228,12 +242,20 @@ export function PlayerDashboard() {
 
           <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6 relative z-10 w-full md:w-auto">
             <div className="relative shrink-0">
-              <div className="w-20 h-20 rounded-full border-2 border-[#6DFF3B] p-1">
-                <ImageWithFallback
-                  src={currentUser?.profilePicture || "https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?q=80&w=1080"}
-                  alt="Player"
-                  className="w-full h-full rounded-full object-cover"
-                />
+              <div className="w-20 h-20 rounded-full border-2 border-[#6DFF3B] p-1 flex items-center justify-center bg-white/5">
+                {currentUser?.profilePicture ? (
+                  <ImageWithFallback
+                    src={currentUser.profilePicture}
+                    alt="Player"
+                    className="w-full h-full rounded-full object-cover"
+                  />
+                ) : (
+                  <span className="text-2xl font-bold text-white">
+                    {playerName !== "Player"
+                      ? playerName.trim().split(/\s+/).map(n => n[0]).join("").slice(0, 2).toUpperCase()
+                      : "P"}
+                  </span>
+                )}
               </div>
             </div>
 
@@ -799,6 +821,45 @@ export function PlayerDashboard() {
                 )}
               </div>
             </div>
+          </div>
+        </motion.div>
+
+        {/* Tournament & Event Organizer Block */}
+        <motion.div
+          initial={{ opacity: 0, y: 25 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          whileHover={{ y: -8, rotateX: 1.5, rotateY: -1.5, scale: 1.005 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.3 }}
+          style={{ perspective: 1000 }}
+          className="bg-gradient-to-br from-card to-card/95 border border-border/80 border-t-white/[0.12] dark:border-t-white/[0.08] shadow-[0_15px_30px_-5px_rgba(0,0,0,0.35),inset_0_1px_1px_rgba(255,255,255,0.05)] rounded-3xl p-6 flex flex-col md:flex-row md:items-center justify-between gap-6 relative overflow-hidden"
+        >
+          <div className="absolute left-0 top-0 w-32 h-32 bg-amber-500/10 blur-[50px] pointer-events-none" />
+
+          <div className="flex items-center gap-4 z-10">
+            <div className="bg-amber-500/10 p-3.5 rounded-2xl border border-amber-500/20 text-amber-500">
+              <Trophy className="h-7 w-7" />
+            </div>
+            <div>
+              <p className="text-xs text-muted-foreground font-semibold">
+                Tournaments & Events
+              </p>
+              <h3 className="text-xl font-bold text-foreground mt-0.5">
+                Host Your Own Event
+              </h3>
+              <p className="text-xs text-muted-foreground mt-1 max-w-sm">
+                Organize tournaments, create custom matches, manage teams, and invite players across the city.
+              </p>
+            </div>
+          </div>
+
+          <div className="flex gap-3 w-full md:w-auto shrink-0 z-10">
+            <Button
+              className="flex-1 md:flex-initial rounded-2xl bg-amber-500 text-black hover:bg-amber-400 px-8 h-12 text-sm font-semibold shadow-md"
+              onClick={() => navigate("/organizer-dashboard")}
+            >
+              Go to Organizer Dashboard
+            </Button>
           </div>
         </motion.div>
 

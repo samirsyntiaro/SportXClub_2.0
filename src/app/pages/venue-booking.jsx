@@ -1,5 +1,7 @@
 import { useMemo, useState, useEffect } from "react";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
+import { toast } from "sonner";
+import { useAuth } from "../providers/auth-provider";
 import { motion } from "motion/react";
 import { useTheme } from "next-themes";
 import {
@@ -151,6 +153,8 @@ const bookingFlow = [
 export function VenueBooking() {
   const { resolvedTheme } = useTheme();
   const isDark = resolvedTheme !== "light";
+  const { currentUser } = useAuth();
+  const navigate = useNavigate();
   const [query, setQuery] = useState("");
   const [sport, setSport] = useState("All");
   const [location, setLocation] = useState(
@@ -500,7 +504,17 @@ export function VenueBooking() {
                   transition={{ duration: 0.35, delay: index * 0.04 }}
                   whileHover={{ y: -6 }}
                 >
-                  <Link to={`/venues/${venue.id}`} className="block h-full">
+                  <Link 
+                    to={`/venues/${venue.id}`} 
+                    className="block h-full"
+                    onClick={(e) => {
+                      if (!currentUser) {
+                        e.preventDefault();
+                        toast.error("Please sign in first to view slots and book.");
+                        navigate("/login");
+                      }
+                    }}
+                  >
                     <Card className="group h-full overflow-hidden rounded-[24px] border-white/[0.08] bg-[#101216] shadow-[0_18px_56px_-30px_rgba(0,0,0,0.85)]">
                       <div className="relative aspect-[4/3] overflow-hidden">
                         <ImageWithFallback
@@ -581,9 +595,9 @@ export function VenueBooking() {
                               ₹{venue.price}/hr
                             </p>
                           </div>
-                          <Button className="h-11 rounded-[16px] bg-[#6DFF3B] px-5  text-[#050505] hover:bg-[#86ff60]">
+                          <Button className="group h-11 rounded-[16px] border border-[#6DFF3B] bg-transparent px-5 text-white transition-all hover:bg-[#6DFF3B] hover:text-[#050505]">
                             View slots
-                            <ArrowRight className="h-4 w-4" />
+                            <ArrowRight className="h-4 w-4 text-[#6DFF3B] transition-colors group-hover:text-[#050505]" />
                           </Button>
                         </div>
                       </CardContent>
