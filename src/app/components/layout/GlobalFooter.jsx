@@ -89,28 +89,7 @@ export function GlobalFooter() {
           }`}>
             SportXClub is the premium way to discover, book, and compete across the best sports venues and tournaments.
           </p>
-          <div className="flex flex-wrap gap-3 pt-2">
-            <a href="#play" className="inline-flex hover:scale-[1.02] active:scale-[0.98] transition-transform">
-              <img
-                src="/assets/footer/play-store-badge.svg"
-                alt="Get it on Google Play"
-                className="h-10 w-auto"
-                onError={(e) => {
-                  e.target.style.display = "none";
-                }}
-              />
-            </a>
-            <a href="#app" className="inline-flex hover:scale-[1.02] active:scale-[0.98] transition-transform">
-              <img
-                src="/assets/footer/app-store-badge.svg"
-                alt="Download on the App Store"
-                className="h-10 w-auto"
-                onError={(e) => {
-                  e.target.style.display = "none";
-                }}
-              />
-            </a>
-          </div>
+
         </div>
 
         {/* Platform & For Business Columns */}

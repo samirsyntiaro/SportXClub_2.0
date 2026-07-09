@@ -236,7 +236,7 @@ export function RegisterPage() {
 
 
       {/* HEADER LOGO */}
-      <div className="w-full max-w-xl flex items-center justify-center mb-6 z-10">
+      <div className="w-full max-w-xl flex items-center justify-center mb-[1px] z-10">
         <Link to="/" className="flex items-center gap-3">
           <Logo />
         </Link>
@@ -347,7 +347,7 @@ export function RegisterPage() {
               transition={{ duration: 0.25 }}
             >
               {/* Step Header */}
-              <div className="flex items-center justify-between mb-8">
+              <div className="flex items-center justify-between mb-4">
                 <div className="space-y-1">
                   <p className="text-xs  uppercase tracking-[0.2em] text-primary">
                     Step {step} of 2
@@ -364,17 +364,17 @@ export function RegisterPage() {
               </div>
 
               {/* Progress Bar */}
-              <div className="w-full h-1 bg-muted rounded-full mb-8 overflow-hidden">
+              <div className="w-full h-1 bg-muted rounded-full mb-4 overflow-hidden">
                 <div
                   className="h-full bg-primary transition-all duration-300 ease-out"
                   style={{ width: `${(step / 2) * 100}%` }}
                 />
               </div>
 
-              <form onSubmit={handleSubmit} className="space-y-5">
+              <form onSubmit={handleSubmit} className="space-y-3">
                 {/* STEP 1: ACCOUNT DETAILS */}
                 {step === 1 && (
-                  <div className="space-y-4">
+                  <div className="space-y-3">
                     {/* Account Type Selector */}
                     <div className="flex p-1 space-x-1 rounded-xl bg-muted/50 border border-border/50 mb-2">
                       {["athlete", "owner"].map((type) => (
@@ -651,7 +651,7 @@ export function RegisterPage() {
                         )}
                     </div>
 
-                    <div className="pt-3 flex justify-center">
+                    <div className="flex justify-center">
                       <Button
                         type="button"
                         disabled={!isStep1Valid()}
@@ -823,7 +823,7 @@ export function RegisterPage() {
 
         {/* Form Footer */}
         {!isSuccess && (
-          <div className="text-center text-sm text-muted-foreground mt-8 pt-6 border-t border-border/40">
+          <div className="text-center text-sm text-muted-foreground mt-4 pt-4 border-t border-border/40">
             Already have an account?{" "}
             <Link to="/login" className="text-primary  hover:underline">
               Sign in

@@ -49,22 +49,7 @@ export function Footer() {
               SportXClub is the premium way to discover, book, and compete
               across the best sports venues and tournaments.
             </p>
-            <div className="mt-6 flex flex-wrap gap-3">
-              <a href="#" className="inline-flex">
-                <img
-                  src={asset("/footer/app-store-badge.svg")}
-                  alt="Download on the App Store"
-                  className="h-12 w-auto"
-                />
-              </a>
-              <a href="#" className="inline-flex">
-                <img
-                  src={asset("/footer/play-store-badge.svg")}
-                  alt="Get it on Google Play"
-                  className="h-12 w-auto"
-                />
-              </a>
-            </div>
+
           </div>
 
           {[

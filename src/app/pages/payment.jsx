@@ -393,18 +393,6 @@ export function Payment() {
                 </div>
 
                 <div className="space-y-3">
-                  <div className="flex gap-2">
-                    <Input
-                      value={coupon}
-                      onChange={(event) => setCoupon(event.target.value)}
-                      placeholder="Apply coupon"
-                      className="h-11 rounded-[16px] border-white/[0.08] bg-white/[0.03] text-white placeholder:text-white/35"
-                    />
-
-                    <Button className="h-11 rounded-[16px] bg-white/[0.08] px-5  text-white hover:bg-white/[0.12]">
-                      Apply
-                    </Button>
-                  </div>
 
                   <Button
                     className="h-14 w-full rounded-[18px] bg-[#6DFF3B] text-base  text-[#050505] hover:bg-[#86ff60]"

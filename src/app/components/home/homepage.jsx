@@ -322,6 +322,7 @@ export function Navbar() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
   const [userName, setUserName] = useState("");
+  const { currentUser } = useAuth();
 
   useEffect(() => {
     const loggedIn = localStorage.getItem("isLoggedIn") === "true";
@@ -563,7 +564,7 @@ export function Navbar() {
                   >
                     <div className="p-2 space-y-1">
                       <Link
-                        to="/profile"
+                        to={currentUser?.role === 'owner' ? '/owner-dashboard' : '/profile'}
                         onClick={() => setProfileOpen(false)}
                       >
                         <button
@@ -608,10 +609,10 @@ export function Navbar() {
               <Link to="/login">
                 <button
                   className={cn(
-                    "flex h-10 items-center justify-center rounded-full border px-5 text-sm tracking-wide transition cursor-pointer hover:bg-opacity-10",
+                    "flex h-10 items-center justify-center rounded-full border px-5 text-sm tracking-wide transition-all cursor-pointer group",
                     isDark
-                      ? "border-[#6DFF3B] text-[#6DFF3B] hover:bg-[#6DFF3B]/10"
-                      : "border-emerald-500 text-emerald-600 hover:bg-emerald-50",
+                      ? "border-[#6DFF3B] bg-transparent text-white hover:bg-[#6DFF3B] hover:text-[#050505]"
+                      : "border-[#6DFF3B] bg-transparent text-slate-800 hover:bg-[#6DFF3B] hover:text-[#050505]",
                   )}
                 >
                   Login
@@ -991,19 +992,13 @@ export function HeroSection() {
   const isMobile = useIsMobile();
   const [currentBg, setCurrentBg] = useState(0);
 
-  const bgImages = isDark
-    ? [
-        "/assets/hero/stadium-bg.png",
-        "/assets/venues/turf-1.webp",
-        "/assets/venues/turf-2.webp",
-        "/assets/venues/turf-3.webp",
-      ]
-    : [
-        "/assets/hero/stadium-light.png",
-        "/assets/venues/turf-1.webp",
-        "/assets/venues/turf-2.webp",
-        "/assets/venues/turf-3.webp",
-      ];
+  const bgImages = [
+    "/assets/hero/unique-hero.jpg",
+    "/assets/hero/unique-hero-2.jpg",
+    "/assets/hero/unique-hero-3.jpg",
+    "/assets/hero/unique-hero-4.jpg",
+    "/assets/hero/unique-hero-5.jpg",
+  ];
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -1018,71 +1013,22 @@ export function HeroSection() {
         <AnimatePresence mode="popLayout">
           <motion.div
             key={currentBg}
-            initial={isMobile ? { x: "100%", opacity: 1 } : { opacity: 0 }}
-            animate={isMobile ? { x: 0, opacity: 1 } : { opacity: 1 }}
-            exit={isMobile ? { x: "-100%", opacity: 1 } : { opacity: 0 }}
-            transition={{ duration: 1.2, ease: "easeInOut" }}
+            initial={{ opacity: 0, scale: 1.05 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.95 }}
+            transition={{ duration: 1.5, ease: "easeInOut" }}
             className="absolute inset-0 bg-cover bg-no-repeat bg-center brightness-100 contrast-[1.02] saturate-[1.05]"
             style={{ backgroundImage: `url(${bgImages[currentBg]})` }}
           />
         </AnimatePresence>
-
-        {/* Light Overlay Gradients */}
-        <div
-          className="absolute inset-0 dark:hidden"
-          style={{
-            backgroundImage:
-              "linear-gradient(90deg, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0.1) 45%, transparent 85%)",
-          }}
-        />
-
-        {/* Dark Overlay Gradients */}
-        <div
-          className="absolute inset-0 hidden dark:block"
-          style={{
-            backgroundImage:
-              "linear-gradient(90deg, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.4) 45%, transparent 85%)",
-          }}
-        />
-
-        <div
-          className="absolute inset-0 hidden dark:block"
-          style={{
-            backgroundImage:
-              "linear-gradient(180deg,rgba(0,0,0,0.2)_0%,rgba(0,0,0,0.4)_56%,rgba(0,0,0,0.75)_100%)",
-          }}
-        />
-
-        <div
-          className="absolute inset-0 hidden dark:block"
-          style={{
-            backgroundImage:
-              "radial-gradient(circle at 88% 88%, rgba(109,255,59,0.12), transparent 35%)",
-          }}
-        />
       </div>
-
-      <img
-        src={asset("/hero/hero-overlay-pattern.svg")}
-        alt=""
-        aria-hidden="true"
-        className={cn(
-          "absolute inset-0 h-full w-full object-cover",
-          isDark ? "opacity-16 mix-blend-screen md:opacity-24" : "hidden",
-        )}
-      />
 
       <div className="mx-auto flex min-h-[92svh] max-w-[1200px] flex-col justify-start pt-[20svh] items-start px-4 sm:px-6 md:min-h-[94svh] lg:px-8 xl:min-h-[96svh]">
         <div className="relative w-full max-w-4xl">
           <div className="relative z-10 flex flex-col items-start text-left w-full max-w-4xl">
             <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
               <Badge
-                className={cn(
-                  "rounded-full px-4 py-2 text-xs uppercase tracking-[0.26em]",
-                  isDark
-                    ? "border border-[#6DFF3B]/20 bg-[#6DFF3B]/10 text-[#6DFF3B]"
-                    : "border border-emerald-500/30 bg-emerald-500/10 text-emerald-700",
-                )}
+                className="rounded-full px-4 py-2 text-xs uppercase tracking-[0.26em] border border-[#6DFF3B]/20 bg-[#6DFF3B]/10 text-[#6DFF3B]"
               >
                 Premium sports booking
               </Badge>
@@ -1090,18 +1036,11 @@ export function HeroSection() {
 
             <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.1 }}>
               <h1
-                className={cn(
-                  "mt-6 font-light max-w-3xl text-left text-5xl sm:text-7xl tracking-tighter lg:text-[5.2rem] lg:leading-[1.05]",
-                  isDark ? "text-white" : "text-slate-900",
-                )}
+                className="mt-6 font-light max-w-3xl text-left text-5xl sm:text-7xl tracking-tighter lg:text-[5.2rem] lg:leading-[1.05] !text-white drop-shadow-md"
               >
                 Play. Book.{" "}
                 <span
-                  className={cn(
-                    isDark
-                      ? "text-[#6DFF3B] drop-shadow-[0_0_20px_rgba(109,255,59,0.18)]"
-                      : "text-emerald-600",
-                  )}
+                  className="text-[#6DFF3B] drop-shadow-[0_0_20px_rgba(109,255,59,0.3)]"
                 >
                   Compete.
                 </span>
@@ -1112,26 +1051,14 @@ export function HeroSection() {
 
               <Link to="/venues" className="w-full sm:w-auto">
                 <Button
-                  variant="outline"
-                  className={cn(
-                    "w-full sm:w-auto h-14 rounded-full px-8 text-base font-semibold backdrop-blur-md transition-all hover:scale-105 shadow-sm",
-                    isDark
-                      ? "border-white/30 bg-transparent text-white hover:bg-white/10 hover:border-white/50 hover:text-white"
-                      : "border-slate-400/50 bg-transparent text-slate-800 hover:bg-slate-100/50 hover:border-slate-500 hover:text-slate-900",
-                  )}
+                  className="w-full sm:w-auto h-14 rounded-full px-8 text-base font-semibold backdrop-blur-md transition-all hover:scale-105 shadow-sm group border border-[#6DFF3B] bg-transparent !text-white hover:bg-[#6DFF3B] hover:!text-[#050505]"
                 >
                   Book a turf now
                 </Button>
               </Link>
               <Link to="/venues" className="w-full sm:w-auto">
                 <Button
-                  variant="outline"
-                  className={cn(
-                    "w-full sm:w-auto h-14 rounded-full px-8 text-base font-semibold backdrop-blur-md transition-all hover:scale-105 shadow-sm",
-                    isDark
-                      ? "border-white/30 bg-transparent text-white hover:bg-white/10 hover:border-white/50 hover:text-white"
-                      : "border-slate-400/50 bg-transparent text-slate-800 hover:bg-slate-100/50 hover:border-slate-500 hover:text-slate-900",
-                  )}
+                  className="w-full sm:w-auto h-14 rounded-full px-8 text-base font-semibold backdrop-blur-md transition-all hover:scale-105 shadow-sm group border border-[#6DFF3B] bg-transparent !text-white hover:bg-[#6DFF3B] hover:!text-[#050505]"
                 >
                   List of our turfs
                 </Button>
@@ -1178,39 +1105,23 @@ function SportCard({ name, count, image, index }) {
           />
 
           <div
-            className="absolute inset-0 transition-all duration-300 ease-out opacity-100 group-hover:opacity-95"
-            style={{
-              background: isDark
-                ? "linear-gradient(180deg, rgba(5,5,5,0.08) 0%, rgba(5,5,5,0.88) 100%)"
-                : "linear-gradient(to top, rgba(255,255,255,0.92) 0%, rgba(255,255,255,0.65) 25%, rgba(255,255,255,0.20) 55%, transparent 100%)",
-            }}
+            className="absolute inset-0 bg-gradient-to-b from-black/20 via-black/50 to-black/90 transition-all duration-300 ease-out opacity-100 group-hover:opacity-95 z-10"
           />
 
-          <div className="absolute inset-x-0 bottom-0 p-6 sm:p-7">
+          <div className="absolute inset-x-0 bottom-0 z-20 p-6 sm:p-7">
             <p
-              className={cn(
-                "text-lg sm:text-xl  transition-colors duration-300",
-                isDark ? "text-white" : "text-slate-900",
-              )}
+              className="text-lg sm:text-xl !text-white drop-shadow-md font-medium transition-colors duration-300"
             >
               {name}
             </p>
             <div className="mt-3 flex items-center justify-between gap-3">
               <p
-                className={cn(
-                  "text-sm  transition-colors duration-300",
-                  isDark ? "text-white/60" : "text-slate-600",
-                )}
+                className="text-sm !text-white/80 drop-shadow-sm transition-colors duration-300"
               >
                 {count}
               </p>
               <div
-                className={cn(
-                  "flex h-10 w-10 items-center justify-center rounded-full border transition-all duration-300 ease-out",
-                  isDark
-                    ? "border-white/[0.08] bg-white/[0.08] text-[#6DFF3B] group-hover:bg-[#6DFF3B] group-hover:text-[#050505]"
-                    : "border-emerald-600/30 bg-white text-emerald-600 shadow-sm hover:scale-110 hover:bg-emerald-600 hover:text-white hover:border-emerald-600 hover:shadow-md hover:shadow-emerald-500/20",
-                )}
+                className="flex h-10 w-10 items-center justify-center rounded-full border border-white/[0.08] bg-white/[0.08] text-[#6DFF3B] group-hover:bg-[#6DFF3B] group-hover:text-[#050505] transition-all duration-300 ease-out"
               >
                 <ArrowRight className="h-4 w-4" />
               </div>
@@ -1261,33 +1172,18 @@ function MoreSportsCard() {
             ))}
           </div>
           <div
-            className="absolute inset-0 transition-all duration-300 ease-out"
-            style={{
-              background: isDark
-                ? "linear-gradient(180deg, rgba(5,5,5,0.1) 0%, rgba(5,5,5,0.88) 100%)"
-                : "linear-gradient(to top, rgba(255,255,255,0.92) 0%, rgba(255,255,255,0.65) 25%, rgba(255,255,255,0.20) 55%, transparent 100%)",
-            }}
+            className="absolute inset-0 bg-gradient-to-b from-black/20 via-black/50 to-black/90 transition-all duration-300 ease-out z-10"
           />
 
-          <div className="relative z-10 flex flex-1 flex-col justify-between p-6 sm:p-7">
+          <div className="relative z-20 flex flex-1 flex-col justify-between p-6 sm:p-7">
             <div className="flex items-center justify-between">
               <Badge
-                className={cn(
-                  "rounded-full border px-3 py-1 text-[0.7rem]  uppercase tracking-[0.2em] transition-all duration-300",
-                  isDark
-                    ? "border-white/[0.08] bg-white/[0.06] text-white/80"
-                    : "border-emerald-200 bg-emerald-50 text-emerald-700",
-                )}
+                className="rounded-full border border-white/[0.08] bg-white/[0.06] !text-white px-3 py-1 text-[0.7rem] uppercase tracking-[0.2em] transition-all duration-300"
               >
                 More
               </Badge>
               <div
-                className={cn(
-                  "flex h-10 w-10 items-center justify-center rounded-full border transition-all duration-300 ease-out",
-                  isDark
-                    ? "border-white/[0.08] bg-[#050505]/70 text-[#6DFF3B]"
-                    : "border-emerald-600/30 bg-white text-emerald-600 shadow-sm hover:scale-110 hover:bg-emerald-600 hover:text-white hover:border-emerald-600 hover:shadow-md hover:shadow-emerald-500/20",
-                )}
+                className="flex h-10 w-10 items-center justify-center rounded-full border border-white/[0.08] bg-[#050505]/70 text-[#6DFF3B] transition-all duration-300 ease-out"
               >
                 <ArrowRight className="h-4 w-4" />
               </div>
@@ -1295,18 +1191,12 @@ function MoreSportsCard() {
 
             <div className="mt-5 max-w-[18rem]">
               <p
-                className={cn(
-                  "text-xl  transition-colors duration-300",
-                  isDark ? "text-white" : "text-slate-900",
-                )}
+                className="text-xl !text-white drop-shadow-md font-medium transition-colors duration-300"
               >
                 More courts, more formats.
               </p>
               <p
-                className={cn(
-                  "mt-3 text-sm leading-relaxed transition-colors duration-300",
-                  isDark ? "text-white/60" : "text-slate-600",
-                )}
+                className="mt-3 text-sm leading-relaxed !text-white/80 drop-shadow-sm transition-colors duration-300"
               >
                 Padel, Box MMA, volleyball, and more formats stay one tap away.
               </p>
@@ -1314,12 +1204,7 @@ function MoreSportsCard() {
                 {["Volleyball", "Padel", "Box MMA"].map((label) => (
                   <span
                     key={label}
-                    className={cn(
-                      "rounded-full border px-3 py-1 text-xs  transition-all duration-300",
-                      isDark
-                        ? "border-white/[0.08] bg-white/[0.05] text-white/72"
-                        : "border-slate-200 bg-slate-50/80 text-slate-700",
-                    )}
+                    className="rounded-full border border-white/[0.08] bg-white/[0.05] !text-white px-3 py-1 text-xs transition-all duration-300"
                   >
                     {label}
                   </span>
@@ -2112,10 +1997,10 @@ export function StoreSection() {
                     <Button
                       size="sm"
                       className={cn(
-                        "rounded-full px-4 text-xs tracking-wide transition-all",
+                        "rounded-full px-4 text-xs tracking-wide transition-all group",
                         isDark
-                          ? "bg-white/[0.08] text-white hover:bg-[#6DFF3B] hover:text-[#050505]"
-                          : "bg-emerald-50 text-emerald-700 hover:bg-emerald-600 hover:text-white",
+                          ? "border border-[#6DFF3B] bg-transparent text-white hover:bg-[#6DFF3B] hover:text-[#050505]"
+                          : "border border-[#6DFF3B] bg-transparent text-slate-800 hover:bg-[#6DFF3B] hover:text-[#050505]",
                       )}
                     >
                       <ShoppingCart className="h-3.5 w-3.5 mr-1.5" />
@@ -2213,7 +2098,7 @@ export function TurfGallery() {
               viewport={{ once: true }}
               transition={{ duration: 0.5 }}
               className={cn(
-                "group relative overflow-hidden rounded-3xl",
+                "group relative overflow-hidden rounded-3xl bg-[#101216]",
                 turf.className,
               )}
             >
@@ -2223,22 +2108,17 @@ export function TurfGallery() {
                 className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
               />
 
-              <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-80 transition-opacity duration-300 group-hover:opacity-95" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent opacity-90 transition-opacity duration-300 group-hover:opacity-100" />
 
               <div className="absolute top-4 right-4 z-10">
                 <div className="flex flex-col items-end">
                   <Badge
-                    className={cn(
-                      "rounded-full px-3 py-1.5 flex items-center gap-1.5 shadow-lg backdrop-blur-md border",
-                      isDark
-                        ? "bg-[#050505]/60 text-[#6DFF3B] border-[#6DFF3B]/30"
-                        : "bg-white/80 text-emerald-700 border-emerald-200",
-                    )}
+                    className="rounded-full px-3 py-1.5 flex items-center gap-1.5 shadow-lg backdrop-blur-md border bg-[#050505]/60 text-[#6DFF3B] border-[#6DFF3B]/30"
                   >
                     <Star className="h-3.5 w-3.5 fill-current" />
                     <span className="text-sm">{turf.rating}</span>
                   </Badge>
-                  <span className="mt-1 text-[10px] text-white/90 drop-shadow-md mr-1">
+                  <span className="mt-1 text-[10px] text-[#ffffff]/90 drop-shadow-md mr-1">
                     {turf.reviews} Reviews
                   </span>
                 </div>
@@ -2247,11 +2127,11 @@ export function TurfGallery() {
               <div className="absolute bottom-0 left-0 w-full p-6 z-10 translate-y-2 transition-transform duration-300 group-hover:translate-y-0">
                 <div className="flex items-center gap-2 mb-2">
                   <MapPin className="h-4 w-4 text-[#6DFF3B]" />
-                  <span className="text-sm text-white/90 drop-shadow-md">
+                  <span className="text-sm text-[#ffffff]/90 drop-shadow-md">
                     {turf.location}
                   </span>
                 </div>
-                <h3 className="text-2xl text-white drop-shadow-lg">
+                <h3 className="text-2xl text-[#ffffff] drop-shadow-lg">
                   {turf.name}
                 </h3>
 
@@ -2266,7 +2146,7 @@ export function TurfGallery() {
                       }
                     }}
                     variant="outline"
-                    className="rounded-full bg-white/10 text-white border-white/20 hover:bg-[#6DFF3B] hover:text-black hover:border-transparent backdrop-blur-sm transition-all cursor-pointer"
+                    className="rounded-full bg-white/10 text-[#ffffff] border-white/20 hover:bg-[#6DFF3B] hover:text-black hover:border-transparent backdrop-blur-sm transition-all cursor-pointer"
                   >
                     View Details
                   </Button>
