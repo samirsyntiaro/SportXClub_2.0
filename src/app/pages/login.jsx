@@ -92,7 +92,7 @@ export function LoginPage() {
 
 
       {/* HEADER LOGO */}
-      <div className="w-full max-w-md flex items-center justify-center mb-6 z-10">
+      <div className="w-full max-w-md flex items-center justify-center mb-[1px] z-10">
         <Link to="/" className="flex items-center gap-3">
           <Logo />
         </Link>
@@ -134,7 +134,7 @@ export function LoginPage() {
           </motion.div>
         ) : (
           // Sign In Form
-          <div className="space-y-6">
+          <div className="space-y-4">
             <div className="space-y-1.5">
               <h1 className="text-2xl  tracking-tight sm:text-3xl">Sign in</h1>
               <p className="text-sm text-muted-foreground">
@@ -142,7 +142,7 @@ export function LoginPage() {
               </p>
             </div>
 
-            <form onSubmit={handleSubmit} className="space-y-4">
+            <form onSubmit={handleSubmit} className="space-y-3">
               {/* Account Type Selector */}
               <div className="flex p-1 space-x-1 rounded-xl bg-muted/50 border border-border/50">
                 {["player", "owner"].map((type) => (
@@ -231,7 +231,7 @@ export function LoginPage() {
                 </label>
               </div>
 
-              <div className="pt-2 flex justify-center">
+              <div className="flex justify-center">
                 <Button
                   type="submit"
                   disabled={!isFormValid() || isSubmitting}
@@ -253,7 +253,7 @@ export function LoginPage() {
             </form>
 
             {/* Social Login Divider */}
-            <div className="relative my-6 flex items-center">
+            <div className="relative my-4 flex items-center">
               <div className="flex-grow border-t border-border/60"></div>
               <span className="flex-shrink mx-4 text-[0.68rem] text-muted-foreground uppercase  tracking-wider bg-background px-2">
                 Or continue with
@@ -290,7 +290,7 @@ export function LoginPage() {
 
         {/* Form Footer */}
         {!isSuccess && (
-          <div className="text-center text-sm text-muted-foreground mt-8 pt-6 border-t border-border/40">
+          <div className="text-center text-sm text-muted-foreground mt-4 pt-4 border-t border-border/40">
             {loginType === "owner" ? (
               <>
                 Want to add your turf to our platform?{" "}

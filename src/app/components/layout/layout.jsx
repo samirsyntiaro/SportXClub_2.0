@@ -190,7 +190,7 @@ export function Layout() {
 
         <div className="flex items-center gap-3">
           {currentUser ? (
-            <Link to="/profile">
+            <Link to={currentUser.role === 'owner' ? '/owner-dashboard' : '/profile'}>
               <Button
                 variant="ghost"
                 className="rounded-full gap-2.5 text-muted-foreground hover:text-foreground px-2.5 h-10 cursor-pointer"
@@ -210,7 +210,10 @@ export function Layout() {
             </Link>
           ) : (
             <Link to="/login">
-              <Button className="rounded-full bg-primary text-primary-foreground hover:bg-primary/90 px-5 text-sm font-semibold">
+              <Button 
+                variant="outline"
+                className="rounded-full bg-transparent border border-[#6DFF3B] text-foreground hover:bg-[#6DFF3B] hover:text-[#050505] transition-all px-5 text-sm font-semibold"
+              >
                 Login / Sign Up
               </Button>
             </Link>

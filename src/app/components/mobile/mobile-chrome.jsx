@@ -310,6 +310,7 @@ export function MobileAppBar() {
 }
 
 export function MobileBottomNav({ activeTab }) {
+  const { currentUser } = useAuth();
   return (
     <nav className="fixed inset-x-0 bottom-0 z-50 md:hidden">
       <div className="mx-auto max-w-screen-xl px-3 pb-[calc(env(safe-area-inset-bottom)+0.5rem)]">
@@ -328,7 +329,7 @@ export function MobileBottomNav({ activeTab }) {
                   className="relative"
                 >
                   <Link
-                    to={item.href}
+                    to={item.key === 'profile' && currentUser?.role === 'owner' ? '/owner-dashboard' : item.href}
                     aria-current={isActive ? "page" : undefined}
                     className={cn(
                       "relative flex min-h-[64px] flex-col items-center justify-center gap-1 rounded-[20px] px-1 text-[0.68rem]  transition-colors",

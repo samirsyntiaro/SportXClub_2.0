@@ -17,21 +17,21 @@ export function AppDownloadCTA() {
             : "bg-slate-50 border border-slate-200 shadow-[0_30px_100px_-20px_rgba(15,23,42,0.1)]"
         )}>
           {/* Background decoration */}
-          <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-emerald-500/10 dark:bg-[#6DFF3B]/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3" />
-          <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-blue-500/10 dark:bg-blue-400/5 rounded-full blur-3xl translate-y-1/3 -translate-x-1/4" />
+          <div className={cn("absolute top-0 right-0 w-[500px] h-[500px] rounded-full blur-3xl -translate-y-1/2 translate-x-1/3", isDark ? "bg-[#6DFF3B]/5" : "bg-[#6DFF3B]/20")} />
+          <div className={cn("absolute bottom-0 left-0 w-[400px] h-[400px] rounded-full blur-3xl translate-y-1/3 -translate-x-1/4", isDark ? "bg-blue-400/5" : "bg-blue-500/10")} />
           
           <div className="flex-1 max-w-2xl relative z-10">
             <div 
               className={cn(
                 "inline-flex items-center justify-center mb-8 px-4 py-2 rounded-full font-semibold tracking-[0.15em] text-[0.7rem] uppercase",
-                isDark ? "bg-[#6DFF3B]/10 text-[#6DFF3B] border border-[#6DFF3B]/20" : "bg-emerald-100 text-emerald-800 border border-emerald-200"
+                isDark ? "bg-[#6DFF3B]/10 text-[#6DFF3B] border border-[#6DFF3B]/20" : "bg-[#6DFF3B]/20 text-[#050505] border border-[#6DFF3B]/40"
               )}
             >
               Get The App
             </div>
-            <h2 className="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight mb-6 leading-[1.1]">
+            <h2 className={cn("text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight mb-6 leading-[1.1]", isDark ? "text-white" : "text-slate-900")}>
               Your entire sports life. <br />
-              <span className={isDark ? "text-[#6DFF3B]" : "text-emerald-600"}>In your pocket.</span>
+              <span className={isDark ? "text-[#6DFF3B]" : "text-[#4ade80]"}>In your pocket.</span>
             </h2>
             <p className={cn(
               "text-lg md:text-xl mb-10 max-w-lg leading-relaxed",
@@ -42,8 +42,8 @@ export function AppDownloadCTA() {
             
             <div className="flex flex-col sm:flex-row gap-4">
               <Button size="lg" className={cn(
-                "h-16 rounded-full px-8 gap-4 text-base shadow-xl transition-all hover:-translate-y-1 hover:shadow-2xl",
-                isDark ? "bg-white text-black hover:bg-gray-100 border-transparent" : "bg-white text-slate-900 border border-slate-200 hover:bg-slate-50"
+                "h-16 rounded-full px-8 gap-4 text-base shadow-xl transition-all hover:-translate-y-1 hover:shadow-2xl group",
+                isDark ? "border border-[#6DFF3B] bg-[#6DFF3B] text-[#050505] hover:bg-[#86ff60]" : "border border-[#050505] bg-[#050505] text-[#6DFF3B] hover:bg-[#1a1a1a]"
               )}>
                 <Smartphone className="w-6 h-6" />
                 <div className="flex flex-col items-start text-left">
@@ -52,8 +52,8 @@ export function AppDownloadCTA() {
                 </div>
               </Button>
               <Button size="lg" className={cn(
-                "h-16 rounded-full px-8 gap-4 text-base shadow-xl transition-all hover:-translate-y-1 hover:shadow-2xl",
-                isDark ? "bg-white text-black hover:bg-gray-100 border-transparent" : "bg-white text-slate-900 border border-slate-200 hover:bg-slate-50"
+                "h-16 rounded-full px-8 gap-4 text-base shadow-xl transition-all hover:-translate-y-1 hover:shadow-2xl group",
+                isDark ? "border border-[#6DFF3B] bg-transparent text-white hover:bg-[#6DFF3B] hover:text-[#050505]" : "border border-slate-300 bg-white text-slate-900 hover:border-[#050505] hover:bg-slate-50"
               )}>
                 <Download className="w-6 h-6" />
                 <div className="flex flex-col items-start text-left">
@@ -83,9 +83,9 @@ export function AppDownloadCTA() {
                 {/* Hero card */}
                 <div className={cn(
                   "w-full aspect-[1.8/1] rounded-2xl border relative overflow-hidden",
-                  isDark ? "bg-[#6DFF3B]/20 border-[#6DFF3B]/30" : "bg-emerald-100 border-emerald-200"
+                  isDark ? "bg-[#6DFF3B]/20 border-[#6DFF3B]/30" : "bg-[#6DFF3B]/20 border-[#6DFF3B]/40"
                 )}>
-                  <div className="absolute bottom-3 left-3 h-3 w-1/2 bg-current opacity-40 rounded-full" />
+                  <div className={cn("absolute bottom-3 left-3 h-3 w-1/2 opacity-40 rounded-full", isDark ? "bg-[#6DFF3B]" : "bg-[#4ade80]")} />
                 </div>
                 {/* Quick actions */}
                 <div className="flex gap-3">
