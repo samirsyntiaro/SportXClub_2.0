@@ -74,8 +74,8 @@ export function OwnerLayout() {
   const SidebarContent = () => (
     <div className="flex flex-col h-full">
       <div className="flex h-16 shrink-0 items-center px-6">
-        <Link to="/" className="flex items-center gap-2 translate-y-[5px] md:translate-y-[8px]">
-          <Logo />
+        <Link to="/" className="flex items-center gap-2 h-[58px] translate-y-[4px]">
+          <Logo className="h-full" />
         </Link>
       </div>
       <div className="flex flex-1 flex-col overflow-y-auto px-4 py-4 space-y-1">

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router";
 import { motion, AnimatePresence } from "motion/react";
 import {
@@ -270,11 +270,65 @@ export function MobileHomePage() {
   const firstName = currentUser?.fullName ? currentUser.fullName.split(" ")[0] : "Rohan";
   const displayCity = currentUser?.city || "Mumbai Central";
 
+  const categoriesRef = useRef(null);
+
+  useEffect(() => {
+    const container = categoriesRef.current;
+    if (!container) return;
+
+    let animationFrameId;
+    let lastTime = 0;
+    const speed = 25; // pixels per second
+
+    const scroll = (time) => {
+      if (!lastTime) lastTime = time;
+      const delta = (time - lastTime) / 1000;
+      lastTime = time;
+
+      if (!container.dataset.userInteracting) {
+        container.scrollLeft += speed * delta;
+
+        // Wrap around smoothly to create infinite scroll feel
+        if (container.scrollLeft >= container.scrollWidth - container.clientWidth - 1) {
+          container.scrollLeft = 0;
+        }
+      }
+
+      animationFrameId = requestAnimationFrame(scroll);
+    };
+
+    const setInteracting = () => {
+      container.dataset.userInteracting = "true";
+    };
+    const stopInteracting = () => {
+      setTimeout(() => {
+        container.dataset.userInteracting = "";
+        lastTime = 0;
+      }, 1500);
+    };
+
+    container.addEventListener("touchstart", setInteracting, { passive: true });
+    container.addEventListener("touchend", stopInteracting, { passive: true });
+    container.addEventListener("mousedown", setInteracting);
+    container.addEventListener("mouseup", stopInteracting);
+
+    animationFrameId = requestAnimationFrame(scroll);
+
+    return () => {
+      cancelAnimationFrame(animationFrameId);
+      container.removeEventListener("touchstart", setInteracting);
+      container.removeEventListener("touchend", stopInteracting);
+      container.removeEventListener("mousedown", setInteracting);
+      container.removeEventListener("mouseup", stopInteracting);
+    };
+  }, []);
+
   const bgImages = [
-    asset("/hero/stadium-bg.png"),
-    asset("/venues/turf-1.webp"),
-    asset("/venues/turf-2.webp"),
-    asset("/venues/turf-3.webp"),
+    "/assets/hero/unique-hero.jpg",
+    "/assets/hero/unique-hero-2.jpg",
+    "/assets/hero/unique-hero-3.jpg",
+    "/assets/hero/unique-hero-4.jpg",
+    "/assets/hero/unique-hero-5.jpg",
   ];
 
   useEffect(() => {
@@ -294,7 +348,7 @@ export function MobileHomePage() {
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.35 }}
-            className="relative overflow-hidden rounded-[28px] p-4 shadow-[0_18px_40px_-30px_rgba(15,23,42,0.35)] min-h-[160px] flex flex-col justify-end"
+            className="relative overflow-hidden rounded-[28px] p-4 shadow-[0_18px_40px_-30px_rgba(15,23,42,0.35)] min-h-[360px] flex flex-col justify-end always-dark"
           >
             <div className="absolute inset-0 z-0">
               <AnimatePresence mode="popLayout">
@@ -311,23 +365,13 @@ export function MobileHomePage() {
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
             </div>
 
-            <div className="relative z-10 flex items-start justify-between gap-4">
-              <div>
-                <p className="text-xs uppercase tracking-[0.24em] text-white/90 drop-shadow-md">
-                  Good evening
-                </p>
-                <h1 className="mt-2 text-2xl tracking-tight text-white drop-shadow-md">
-                  Ready for your next game, {firstName}?
-                </h1>
-                <div className="mt-3 inline-flex items-center gap-2 rounded-full border border-white/20 bg-black/40 px-3 py-1.5 text-sm text-white/90 backdrop-blur-md">
-                  <MapPin className="h-4 w-4 text-[#6DFF3B]" />
-                  {displayCity}
-                </div>
-              </div>
-
-              <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-[22px] border border-[#6DFF3B]/30 bg-[#6DFF3B]/20 text-[#6DFF3B] shadow-sm backdrop-blur-md">
-                <Sparkles className="h-6 w-6" />
-              </div>
+            <div className="relative z-10">
+              <p className="text-xs uppercase tracking-[0.24em] text-always-white-90 drop-shadow-md">
+                Good evening
+              </p>
+              <h1 className="mt-2 text-2xl tracking-tight text-always-white drop-shadow-md">
+                Ready for your next game, {firstName}?
+              </h1>
             </div>
           </motion.section>
 
@@ -335,16 +379,19 @@ export function MobileHomePage() {
 
           <section className="space-y-3">
             <SectionHeader title="Sports categories" action="More" />
-            <div className="flex gap-3 overflow-x-auto pb-1 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+            <div
+              ref={categoriesRef}
+              className="flex gap-3 overflow-x-auto pb-1 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden sports-categories-container"
+            >
               {sportsCategories.map((item) => (
                 <motion.button
                   key={item.name}
                   whileTap={{ scale: 0.96 }}
-                  className="flex min-w-[76px] flex-col items-center gap-2"
+                  className="flex min-w-[76px] shrink-0 flex-col items-center gap-2 group"
                 >
                   <span
                     className={cn(
-                      "flex h-[72px] w-[72px] items-center justify-center rounded-[20px] border border-border/60 bg-gradient-to-br shadow-sm transition-all group-hover:shadow-md",
+                      "flex h-[72px] w-[72px] items-center justify-center rounded-[20px] bg-gradient-to-br shadow-sm transition-all group-hover:shadow-md",
                       item.accent,
                     )}
                   >
@@ -537,28 +584,38 @@ export function MobileHomePage() {
 
           <section className="space-y-3">
             <SectionHeader title="Trending activities" />
-            <div className="grid grid-cols-2 gap-3">
-              {trending.map((item) => {
-                const Icon = item.icon;
-
-                return (
-                  <motion.article
-                    key={item.name}
-                    whileTap={{ scale: 0.985 }}
-                    className="rounded-[22px] border border-border/60 bg-card p-4 shadow-[0_10px_24px_-20px_rgba(15,23,42,0.28)]"
-                  >
-                    <div className="flex h-12 w-12 items-center justify-center rounded-2xl border border-primary/15 bg-primary/10 text-primary">
-                      <Icon className="h-5 w-5" />
-                    </div>
-                    <h3 className="mt-4 text-sm  text-foreground">
-                      {item.name}
-                    </h3>
-                    <p className="mt-1 text-xs leading-5 text-muted-foreground">
-                      {item.note}
-                    </p>
-                  </motion.article>
-                );
-              })}
+            <div className="relative overflow-hidden">
+              <motion.div
+                className="flex gap-3"
+                animate={{ x: ["0%", "-50%"] }}
+                transition={{
+                  duration: 10,
+                  repeat: Infinity,
+                  repeatType: "loop",
+                  ease: "linear",
+                }}
+              >
+                {[...trending, ...trending].map((item, index) => {
+                  const Icon = item.icon;
+                  return (
+                    <motion.article
+                      key={`${item.name}-${index}`}
+                      whileTap={{ scale: 0.985 }}
+                      className="min-w-[44%] shrink-0 rounded-[22px] border border-border/60 bg-card p-4 shadow-[0_10px_24px_-20px_rgba(15,23,42,0.28)]"
+                    >
+                      <div className="flex h-12 w-12 items-center justify-center rounded-2xl border border-primary/15 bg-primary/10 text-primary">
+                        <Icon className="h-5 w-5" />
+                      </div>
+                      <h3 className="mt-4 text-sm text-foreground">
+                        {item.name}
+                      </h3>
+                      <p className="mt-1 text-xs leading-5 text-muted-foreground">
+                        {item.note}
+                      </p>
+                    </motion.article>
+                  );
+                })}
+              </motion.div>
             </div>
           </section>
         </div>

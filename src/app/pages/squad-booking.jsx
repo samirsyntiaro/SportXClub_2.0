@@ -64,7 +64,7 @@ export function SquadBookingPage() {
 
   return (
     <div className="theme-adaptive bg-[#050505] text-white min-h-screen">
-      <div className="mx-auto max-w-[1400px] px-4 py-6 pb-28 sm:px-6 lg:px-8 lg:py-8 lg:pb-8">
+      <div className="mx-auto max-w-[1400px] px-4 py-6 pb-6 sm:px-6 lg:px-8 lg:py-8 lg:pb-8">
         {/* Back Link */}
         <Link
           to="/players"

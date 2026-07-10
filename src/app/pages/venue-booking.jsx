@@ -2,7 +2,7 @@ import { useMemo, useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router";
 import { toast } from "sonner";
 import { useAuth } from "../providers/auth-provider";
-import { motion } from "motion/react";
+import { motion, AnimatePresence } from "motion/react";
 import { useTheme } from "next-themes";
 import {
   ArrowRight,
@@ -12,8 +12,10 @@ import {
   MapPin,
   Search,
   ShieldCheck,
+  SlidersHorizontal,
   Star,
   TimerReset,
+  X,
 } from "lucide-react";
 
 import { Badge } from "../components/ui/badge";
@@ -240,6 +242,7 @@ export function VenueBooking() {
   const [priceRange, setPriceRange] = useState([700, 1600]);
   const [availabilityOnly, setAvailabilityOnly] = useState(true);
   const [ratingOnly, setRatingOnly] = useState(false);
+  const [filterOpen, setFilterOpen] = useState(false);
 
   const filteredVenues = useMemo(() => {
     const filtered = venueData.filter((venue) => {
@@ -292,7 +295,7 @@ export function VenueBooking() {
       )}
     >
       <section
-        className="always-dark relative overflow-hidden border-b border-white/[0.08] bg-[#060813] min-h-[380px] md:min-h-[480px] flex items-center py-12 md:py-16 text-white"
+        className="always-dark relative overflow-hidden border-b border-white/[0.08] bg-[#060813] min-h-[320px] md:min-h-[480px] flex items-center py-8 md:py-16 text-white"
       >
         {/* Abstract Glowing Sports Field Background */}
         <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
@@ -311,7 +314,7 @@ export function VenueBooking() {
         </div>
 
         <div className="relative z-10 mx-auto max-w-[1400px] px-4 sm:px-6 lg:px-8 w-full">
-          <div className="flex flex-col gap-5">
+          <div className="flex flex-col gap-4">
             <div className="max-w-3xl space-y-3">
               <p className="text-[0.72rem] uppercase tracking-[0.36em] text-[#6DFF3B]">
                 Venues
@@ -325,7 +328,7 @@ export function VenueBooking() {
             </div>
 
             <div className="rounded-[24px] border border-white/10 bg-black/60 backdrop-blur-md shadow-2xl p-4 md:p-5">
-              <div className="grid gap-3 grid-cols-1 sm:grid-cols-[2.5fr_1.2fr_135px] items-center">
+              <div className="grid gap-2.5 grid-cols-1 sm:grid-cols-[2.5fr_1.2fr_135px] items-center">
                 <label className="relative block">
                   <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-white/50" />
                   <input
@@ -364,7 +367,7 @@ export function VenueBooking() {
                   type="button"
                   onClick={() => setSport(item)}
                   className={cn(
-                    "rounded-full border px-5 py-2.5 text-sm font-medium transition cursor-pointer shadow-md",
+                    "rounded-full border px-4 py-2 text-xs sm:px-5 sm:py-2.5 sm:text-sm font-medium transition cursor-pointer shadow-md",
                     sport === item
                       ? "border-transparent bg-[#6DFF3B] text-[#050505] shadow-[0_4px_12px_rgba(109,255,59,0.25)]"
                       : "border-white/10 bg-black/40 text-white/80 hover:border-white/20 hover:bg-black/60",
@@ -378,8 +381,157 @@ export function VenueBooking() {
         </div>
       </section>
 
+      {/* Mobile Filter FAB */}
+      <div className="fixed bottom-24 right-4 z-40 lg:hidden">
+        <button
+          type="button"
+          onClick={() => setFilterOpen(true)}
+          className="flex items-center gap-2 rounded-full bg-[#6DFF3B] px-4 py-3 text-sm font-semibold text-[#050505] shadow-[0_8px_24px_rgba(109,255,59,0.4)] active:scale-95 transition-transform"
+        >
+          <SlidersHorizontal className="h-4 w-4" />
+          Filters
+        </button>
+      </div>
+
+      {/* Mobile Filter Bottom Sheet */}
+      <AnimatePresence>
+        {filterOpen && (
+          <>
+            {/* Backdrop */}
+            <motion.div
+              key="filter-backdrop"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setFilterOpen(false)}
+              className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm lg:hidden"
+            />
+            {/* Drawer */}
+            <motion.div
+              key="filter-drawer"
+              initial={{ y: "100%" }}
+              animate={{ y: 0 }}
+              exit={{ y: "100%" }}
+              transition={{ type: "spring", damping: 26, stiffness: 260 }}
+              className="fixed bottom-0 left-0 right-0 z-50 max-h-[88vh] overflow-y-auto rounded-t-[32px] bg-[#101216] px-5 pb-10 pt-5 lg:hidden"
+            >
+              {/* Drag handle */}
+              <div className="mx-auto mb-4 h-1 w-10 rounded-full bg-white/20" />
+              {/* Header */}
+              <div className="flex items-center justify-between mb-5">
+                <div>
+                  <p className="text-xs uppercase tracking-[0.28em] text-white/45">Filters</p>
+                  <h2 className="mt-1 text-lg text-white">Refine your search</h2>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setFilterOpen(false)}
+                  className="flex h-9 w-9 items-center justify-center rounded-full border border-white/10 bg-white/5 text-white/70"
+                >
+                  <X className="h-4 w-4" />
+                </button>
+              </div>
+
+              {/* Sport */}
+              <div className="space-y-3 mb-5">
+                <p className="text-sm text-white/78">Sport</p>
+                <Select value={sport} onValueChange={setSport}>
+                  <SelectTrigger className="h-10 rounded-xl border-white/[0.08] bg-[#050505]/50 text-white cursor-pointer">
+                    <SelectValue placeholder="All Sports" />
+                  </SelectTrigger>
+                  <SelectContent className="bg-[#101216] border-white/[0.08] text-white rounded-xl">
+                    {sports.map((item) => (
+                      <SelectItem key={item} value={item} className="cursor-pointer">
+                        {item === "All" ? "All Sports" : item}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              {/* Price */}
+              <div className="space-y-3 mb-5">
+                <div className="flex items-center justify-between">
+                  <p className="text-sm text-white/78">Price per hour</p>
+                  <span className="text-xs text-[#6DFF3B] font-semibold bg-[#6DFF3B]/10 px-2 py-0.5 rounded-full">
+                    ₹{priceRange[0]} - ₹{priceRange[1]}+
+                  </span>
+                </div>
+                <div className="rounded-[24px] border border-white/[0.08] bg-[#050505]/40 p-4 space-y-4">
+                  <div className="flex items-end justify-between h-12 px-1">
+                    {[15, 25, 35, 55, 75, 95, 80, 60, 45, 30, 50, 65, 85, 55, 35, 20, 10, 5].map((height, idx) => {
+                      const barPrice = 500 + idx * ((2000 - 500) / 18);
+                      const isActive = barPrice >= priceRange[0] && barPrice <= priceRange[1];
+                      return (
+                        <div
+                          key={idx}
+                          className={cn("w-full mx-[2px] rounded-t-sm transition-all duration-300", isActive ? "bg-primary" : "bg-white/[0.08]")}
+                          style={{ height: `${height}%` }}
+                        />
+                      );
+                    })}
+                  </div>
+                  <Slider value={priceRange} min={500} max={2000} step={50} onValueChange={setPriceRange} className="py-1 cursor-pointer" />
+                  <div className="flex items-center gap-3">
+                    <div className="flex-1 rounded-xl border border-white/[0.08] bg-[#101216]/50 p-2 text-center">
+                      <p className="text-[10px] text-white/40 uppercase">Min Price</p>
+                      <p className="text-sm font-medium text-white">₹{priceRange[0]}</p>
+                    </div>
+                    <div className="text-white/35 text-xs">-</div>
+                    <div className="flex-1 rounded-xl border border-white/[0.08] bg-[#101216]/50 p-2 text-center">
+                      <p className="text-[10px] text-white/40 uppercase">Max Price</p>
+                      <p className="text-sm font-medium text-white">₹{priceRange[1]}+</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Trust & Availability */}
+              <div className="space-y-3 mb-5">
+                <p className="text-sm text-white/78">Trust &amp; availability</p>
+                <button
+                  type="button"
+                  onClick={() => setAvailabilityOnly((c) => !c)}
+                  className={cn("flex w-full items-center justify-between rounded-[18px] border px-4 py-3 text-left transition",
+                    availabilityOnly ? "border-[#6DFF3B]/30 bg-[#6DFF3B]/10 text-white" : "border-white/[0.08] bg-white/[0.03] text-white/72"
+                  )}
+                >
+                  <div>
+                    <p className="text-sm">Available today</p>
+                    <p className="mt-1 text-xs text-white/52">Hide sold-out venues</p>
+                  </div>
+                  <TimerReset className="h-4 w-4 text-[#6DFF3B]" />
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setRatingOnly((c) => !c)}
+                  className={cn("flex w-full items-center justify-between rounded-[18px] border px-4 py-3 text-left transition",
+                    ratingOnly ? "border-[#6DFF3B]/30 bg-[#6DFF3B]/10 text-white" : "border-white/[0.08] bg-white/[0.03] text-white/72"
+                  )}
+                >
+                  <div>
+                    <p className="text-sm">4.8+ only</p>
+                    <p className="mt-1 text-xs text-white/52">Prioritize better-rated venues</p>
+                  </div>
+                  <Star className="h-4 w-4 text-[#6DFF3B]" />
+                </button>
+              </div>
+
+              {/* Apply button */}
+              <button
+                type="button"
+                onClick={() => setFilterOpen(false)}
+                className="w-full rounded-[18px] bg-[#6DFF3B] py-3.5 text-sm font-semibold text-[#050505] shadow-[0_4px_12px_rgba(109,255,59,0.3)] active:scale-[0.98] transition-transform"
+              >
+                Apply Filters
+              </button>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
+
       <section className="mx-auto grid max-w-[1400px] gap-6 px-4 py-8 sm:px-6 lg:grid-cols-[300px_minmax(0,1fr)] lg:px-8 lg:py-10">
-        <aside className="space-y-4 lg:sticky lg:top-24 lg:self-start">
+        <aside className="hidden space-y-4 lg:block lg:sticky lg:top-24 lg:self-start">
           <Card className="rounded-[24px] border-white/[0.08] bg-[#101216]">
             <CardContent className="space-y-6 p-5">
               <div className="flex items-center justify-between">
