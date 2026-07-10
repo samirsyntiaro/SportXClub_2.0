@@ -33,6 +33,7 @@ import {
 } from "../components/ui/select";
 import { ImageWithFallback } from "../components/figma/ImageWithFallback";
 import { AnimatePresence } from "motion/react";
+import { cn } from "../components/ui/utils";
 
 const asset = (path) => `/assets${path}`;
 
@@ -108,8 +109,56 @@ export function VenueDetails() {
   const [selectedDate, setSelectedDate] = useState(
     new Date().toISOString().split("T")[0],
   );
-  const [selectedSlot, setSelectedSlot] = useState("7:00 PM - 8:00 PM");
+  const [selectedSlots, setSelectedSlots] = useState(["7:00 PM - 8:00 PM"]);
   const [isMobileBookingOpen, setIsMobileBookingOpen] = useState(false);
+  const [isFavorite, setIsFavorite] = useState(false);
+
+  const toggleSlot = (time) => {
+    if (selectedSlots.includes(time)) {
+      if (selectedSlots.length > 1) {
+        setSelectedSlots(selectedSlots.filter((t) => t !== time));
+      } else {
+        toast.info("Please select at least 1 hour slot.");
+      }
+    } else {
+      setSelectedSlots([...selectedSlots, time]);
+    }
+  };
+
+  const handleFavoriteClick = () => {
+    setIsFavorite(!isFavorite);
+    if (!isFavorite) {
+      toast.success("Added to favorites!");
+    } else {
+      toast.info("Removed from favorites.");
+    }
+  };
+
+  const handleShareClick = async () => {
+    const shareData = {
+      title: venue.name || "SportXClub Venue",
+      text: `Check out ${venue.name || "this venue"} on SportXClub!`,
+      url: window.location.href,
+    };
+
+    if (navigator.share && navigator.canShare && navigator.canShare(shareData)) {
+      try {
+        await navigator.share(shareData);
+        toast.success("Shared successfully!");
+      } catch (err) {
+        if (err.name !== "AbortError") {
+          toast.error("Could not share.");
+        }
+      }
+    } else {
+      try {
+        await navigator.clipboard.writeText(window.location.href);
+        toast.success("Link copied to clipboard!");
+      } catch (err) {
+        toast.error("Failed to copy link.");
+      }
+    }
+  };
 
   useEffect(() => {
     if (isMobileBookingOpen) {
@@ -142,21 +191,25 @@ export function VenueDetails() {
 
       <div className="space-y-3">
         <p className="text-sm  text-white/78">Select sport</p>
-        <div className="flex flex-wrap gap-2">
-          {["Football", "Cricket", "Basketball"].map((item) => (
-            <button
-              key={item}
-              type="button"
-              onClick={() => setSelectedSport(item)}
-              className={`rounded-full border px-4 py-2 text-sm transition ${selectedSport === item
-                  ? "border-[#6DFF3B]/30 bg-[#6DFF3B]/10 text-[#6DFF3B]"
-                  : "border-white/[0.08] bg-white/[0.03] text-white/68 hover:bg-white/[0.06]"
-                }`}
-            >
-              {item}
-            </button>
-          ))}
-        </div>
+        <Select value={selectedSport} onValueChange={setSelectedSport}>
+          <SelectTrigger className="w-1/2 h-[52px] rounded-[18px] border-white/[0.08] bg-white/[0.03] px-4 text-sm text-white hover:bg-white/[0.06] transition-colors">
+            <SelectValue placeholder="Select a sport" />
+          </SelectTrigger>
+          <SelectContent
+            className="theme-adaptive rounded-[18px] border-white/[0.08] bg-[#101216] text-white"
+            style={{ backgroundColor: '#101216', borderColor: 'rgba(255,255,255,0.08)', color: 'white' }}
+          >
+            {["Football", "Cricket", "Basketball"].map((item) => (
+              <SelectItem
+                key={item}
+                value={item}
+                className="rounded-[12px] my-1 data-[highlighted]:bg-[#6DFF3B]/10 data-[highlighted]:text-[#6DFF3B] cursor-pointer focus:bg-[#6DFF3B]/10 focus:text-[#6DFF3B]"
+              >
+                {item}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
       </div>
 
       <div className="space-y-3">
@@ -173,40 +226,66 @@ export function VenueDetails() {
       </div>
 
       <div className="space-y-3">
-        <p className="text-sm  text-white/78">Select time slot</p>
-        <Select value={selectedSlot} onValueChange={setSelectedSlot}>
-          <SelectTrigger className="w-full h-[52px] rounded-[18px] border-white/[0.08] bg-white/[0.03] px-4 text-sm text-white hover:bg-white/[0.06] transition-colors">
-            <SelectValue placeholder="Select a time slot" />
-          </SelectTrigger>
-          <SelectContent
-            className="theme-adaptive rounded-[18px] border-white/[0.08] bg-[#101216] text-white"
-            style={{ backgroundColor: '#101216', borderColor: 'rgba(255,255,255,0.08)', color: 'white' }}
-          >
-            {slots.map((slot) => (
-              <SelectItem
+        <div className="flex items-center justify-between">
+          <p className="text-sm text-white/78 font-medium">Select time slots</p>
+          <span className="text-xs text-[#6DFF3B] font-semibold bg-[#6DFF3B]/10 px-2 py-0.5 rounded-full">
+            {selectedSlots.length} hr{selectedSlots.length > 1 ? "s" : ""} selected
+          </span>
+        </div>
+
+        <div className="grid grid-cols-2 gap-2 max-h-[220px] overflow-y-auto pr-1">
+          {slots.map((slot) => {
+            const isSelected = selectedSlots.includes(slot.time);
+            return (
+              <button
                 key={slot.time}
-                value={slot.time}
+                type="button"
                 disabled={!slot.available}
-                className="rounded-[12px] my-1 data-[highlighted]:bg-[#6DFF3B]/10 data-[highlighted]:text-[#6DFF3B] cursor-pointer focus:bg-[#6DFF3B]/10 focus:text-[#6DFF3B]"
+                onClick={() => toggleSlot(slot.time)}
+                className={cn(
+                  "flex items-center justify-between rounded-xl border px-3 py-2.5 text-xs transition cursor-pointer text-left w-full",
+                  !slot.available
+                    ? "border-white/[0.04] bg-white/[0.01] text-white/30 cursor-not-allowed line-through"
+                    : isSelected
+                      ? "border-transparent bg-[#6DFF3B] text-[#050505] font-semibold shadow-[0_2px_8px_rgba(109,255,59,0.2)]"
+                      : "border-white/[0.08] bg-white/[0.03] text-white/80 hover:border-white/[0.16] hover:bg-white/[0.06]"
+                )}
               >
-                <div className="flex items-center justify-between w-full">
-                  <span>{slot.time}</span>
-                  {!slot.available && <span className="text-[10px] ml-4 opacity-50 uppercase tracking-wider">Booked</span>}
-                </div>
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+                <span>{slot.time.split(" - ")[0]}</span>
+                {slot.available ? (
+                  <span className={cn("text-[9px] px-1.5 py-0.5 rounded-md", isSelected ? "bg-black/10 text-black font-semibold" : "bg-white/5 text-white/40")}>1h</span>
+                ) : (
+                  <span className="text-[9px] text-white/20">Booked</span>
+                )}
+              </button>
+            );
+          })}
+        </div>
       </div>
 
       <div className="rounded-[20px] border border-[#6DFF3B]/18 bg-[#6DFF3B]/10 p-4">
-        <p className="text-xs uppercase tracking-[0.22em] text-[#6DFF3B]/80">
+        <p className="text-xs uppercase tracking-[0.22em] text-[#6DFF3B]/80 font-bold">
           Review booking
         </p>
         <div className="mt-3 space-y-2 text-sm text-white/72">
-          <p>{selectedSport}</p>
-          <p>{selectedDate}</p>
-          <p>{selectedSlot}</p>
+          <div className="flex justify-between">
+            <span>Sport:</span>
+            <span className="text-white font-medium">{selectedSport}</span>
+          </div>
+          <div className="flex justify-between">
+            <span>Date:</span>
+            <span className="text-white font-medium">{selectedDate}</span>
+          </div>
+          <div className="flex justify-between items-start">
+            <span className="shrink-0">Time Slots:</span>
+            <span className="text-white font-medium text-right max-w-[170px] break-words">
+              {selectedSlots.map(s => s.split(" - ")[0]).join(", ")}
+            </span>
+          </div>
+          <div className="border-t border-white/10 pt-2 mt-1 flex justify-between items-center">
+            <span className="text-xs text-white/50">Total Price ({selectedSlots.length} hr{selectedSlots.length > 1 ? "s" : ""}):</span>
+            <span className="text-[#6DFF3B] text-base font-bold">₹{venue.price * selectedSlots.length}</span>
+          </div>
         </div>
       </div>
 
@@ -217,11 +296,18 @@ export function VenueDetails() {
             toast.error("Please login first to continue to payment.");
             navigate("/login");
           } else {
+            sessionStorage.setItem("sportxclub_booking", JSON.stringify({
+              venue: venue.name,
+              sport: selectedSport,
+              date: selectedDate,
+              time: selectedSlots.join(", "),
+              price: venue.price * selectedSlots.length,
+            }));
             navigate("/payment");
           }
         }}
       >
-        <Button className="h-12 w-full rounded-[18px] bg-[#6DFF3B]  text-[#050505] hover:bg-[#86ff60]">
+        <Button className="h-12 w-full rounded-[18px] bg-[#6DFF3B] text-[#050505] hover:bg-[#86ff60] font-semibold transition-all">
           Continue to payment
           <ArrowRight className="h-4 w-4 ml-2" />
         </Button>
@@ -269,9 +355,6 @@ export function VenueDetails() {
 
                 <div className="absolute inset-0 image-overlay bg-[linear-gradient(180deg,rgba(5,5,5,0.06),rgba(5,5,5,0.82))]" />
                 <div className="absolute left-5 top-5 flex flex-wrap gap-2">
-                  <Badge className="rounded-full border border-emerald-500/20 bg-emerald-500/10 dark:border-[#6DFF3B]/20 dark:bg-[#6DFF3B]/10 px-3 py-1 text-[0.68rem] uppercase tracking-[0.2em] text-emerald-600 dark:text-[#6DFF3B]">
-                    Verified venue
-                  </Badge>
                   <Badge className="rounded-full border border-white/[0.08] bg-[#050505]/70 px-3 py-1 text-[0.68rem] uppercase tracking-[0.2em] text-[#ffffff]/78">
                     Secure payment
                   </Badge>
@@ -279,15 +362,19 @@ export function VenueDetails() {
                 <div className="absolute right-5 top-5 flex gap-3">
                   <button
                     type="button"
-                    className="flex h-11 w-11 items-center justify-center rounded-full border border-white/[0.08] bg-[#050505]/70 text-[#ffffff]/80 backdrop-blur-md"
+                    onClick={handleFavoriteClick}
+                    className="flex h-11 w-11 items-center justify-center rounded-full border border-white/[0.08] bg-[#050505]/70 text-[#ffffff]/80 backdrop-blur-md transition-all hover:bg-[#050505]/90 hover:scale-105 active:scale-95 cursor-pointer"
+                    aria-label="Add to favorites"
                   >
-                    <Heart className="h-4 w-4" />
+                    <Heart className={`h-4 w-4 transition-colors ${isFavorite ? "fill-rose-500 text-rose-500" : "text-white"}`} />
                   </button>
                   <button
                     type="button"
-                    className="flex h-11 w-11 items-center justify-center rounded-full border border-white/[0.08] bg-[#050505]/70 text-[#ffffff]/80 backdrop-blur-md"
+                    onClick={handleShareClick}
+                    className="flex h-11 w-11 items-center justify-center rounded-full border border-white/[0.08] bg-[#050505]/70 text-[#ffffff]/80 backdrop-blur-md transition-all hover:bg-[#050505]/90 hover:scale-105 active:scale-95 cursor-pointer"
+                    aria-label="Share venue"
                   >
-                    <Share2 className="h-4 w-4" />
+                    <Share2 className="h-4 w-4 text-white" />
                   </button>
                 </div>
                 <div className="absolute bottom-5 left-5 max-w-xl">
@@ -376,8 +463,8 @@ export function VenueDetails() {
                 <div
                   key={step}
                   className={`rounded-[20px] border p-4 ${index === 2
-                      ? "border-[#6DFF3B]/30 bg-[#6DFF3B]/10"
-                      : "border-white/[0.08] bg-[#101216]"
+                    ? "border-[#6DFF3B]/30 bg-[#6DFF3B]/10"
+                    : "border-white/[0.08] bg-[#101216]"
                     }`}
                 >
                   <p className="text-xs uppercase tracking-[0.24em] text-white/45">
@@ -415,8 +502,8 @@ export function VenueDetails() {
             <Card className="rounded-[28px] border-white/[0.08] bg-[#101216]">
               <CardContent className="p-6 md:p-8">
                 <h2 className="text-xl  text-white">Location map</h2>
-                <div className="mt-5 rounded-[22px] border border-dashed border-white/[0.12] bg-[linear-gradient(135deg,rgba(109,255,59,0.08),rgba(255,255,255,0.03))] p-6">
-                  <div className="h-52 w-full overflow-hidden rounded-[18px] border border-white/[0.08] bg-[#050505]/70 map-container">
+                <div className="mt-5 rounded-[22px] border border-dashed border-white/[0.12] bg-[linear-gradient(135deg,rgba(109,255,59,0.08),rgba(255,255,255,0.03))] overflow-hidden">
+                  <div className="h-[360px] w-full overflow-hidden bg-[#050505]/70 map-container">
                     <iframe
                       width="100%"
                       height="100%"

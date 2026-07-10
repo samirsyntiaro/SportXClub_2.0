@@ -92,7 +92,7 @@ export function PlayerLoginPage() {
               Player Portal
             </h2>
             <p className="text-muted-foreground">
-              Sign in to access your dashboard
+              Login to access your dashboard
             </p>
           </motion.div>
 

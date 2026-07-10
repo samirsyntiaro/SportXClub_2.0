@@ -92,7 +92,7 @@ export function LoginPage() {
 
 
       {/* HEADER LOGO */}
-      <div className="w-full max-w-md flex items-center justify-center mb-[1px] z-10">
+      <div className="w-full max-w-md flex items-center justify-center mb-[-12px] md:mb-[-22px] z-10">
         <Link to="/" className="flex items-center gap-3">
           <Logo />
         </Link>
@@ -126,7 +126,7 @@ export function LoginPage() {
             </div>
 
             <div className="space-y-2">
-              <h1 className="text-3xl  tracking-tight">Sign In Successful</h1>
+              <h1 className="text-3xl  tracking-tight">Login Successful</h1>
               <p className="text-muted-foreground text-sm">
                 Welcome back! Loading your profile dashboard...
               </p>
@@ -136,7 +136,7 @@ export function LoginPage() {
           // Sign In Form
           <div className="space-y-4">
             <div className="space-y-1.5">
-              <h1 className="text-2xl  tracking-tight sm:text-3xl">Sign in</h1>
+              <h1 className="text-2xl  tracking-tight sm:text-3xl">Login</h1>
               <p className="text-sm text-muted-foreground">
                 Enter your credentials below to access your account.
               </p>
@@ -240,11 +240,11 @@ export function LoginPage() {
                   {isSubmitting ? (
                     <span className="flex items-center gap-2">
                       <span className="h-4 w-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                      Signing in...
+                      Logging in...
                     </span>
                   ) : (
                     <>
-                      Sign In
+                      Login
                       <ChevronRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
                     </>
                   )}
@@ -282,7 +282,7 @@ export function LoginPage() {
                 className="w-1/2 h-11 rounded-full border border-border bg-card/30 hover:bg-muted/40 transition-all flex items-center justify-center gap-2.5 "
               >
                 <Chrome className="h-4.5 w-4.5 text-primary" />
-                Sign in with Google
+                Login with Google
               </Button>
             </div>
           </div>

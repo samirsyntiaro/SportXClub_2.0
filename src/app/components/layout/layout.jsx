@@ -138,7 +138,7 @@ export function Layout() {
       {/* Desktop Top Navbar */}
       <header className="hidden md:flex h-16 items-center justify-between border-b border-border/40 bg-background/80 backdrop-blur-xl px-6 sticky top-0 z-50 w-full">
         <div className="flex items-center gap-8">
-          <Link to="/" className="flex items-center gap-2">
+          <Link to="/" className="flex items-center gap-2 translate-y-[5px] md:translate-y-[8px]">
             <Logo />
           </Link>
           <CitySelector />
@@ -234,11 +234,11 @@ export function Layout() {
           className="flex-1 pb-[calc(104px+env(safe-area-inset-bottom))] md:pb-0"
         >
           <div
-            className={`px-4 py-5 md:px-6 md:py-6 lg:px-8 ${
-              location.pathname === "/player-dashboard"
+            className={
+              location.pathname.startsWith("/player-dashboard") || location.pathname.startsWith("/venues")
                 ? "w-full"
-                : "md:mx-auto md:max-w-7xl"
-            }`}
+                : "px-4 py-5 md:px-6 md:py-6 lg:px-8 md:mx-auto md:max-w-7xl"
+            }
           >
             <Outlet />
           </div>

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router";
 import { useAuth } from "../providers/auth-provider";
 import {
@@ -33,13 +33,31 @@ import { toast } from "sonner";
 
 const asset = (path) => `/assets${path}`;
 
-const booking = {
-  venue: "Elite Turf Arena",
-  location: "Powai, Mumbai",
-  sport: "Football",
-  date: "June 18, 2026",
-  time: "6:00 PM - 7:00 PM",
-  price: 1200,
+const getBookingData = () => {
+  try {
+    const saved = sessionStorage.getItem("sportxclub_booking");
+    if (saved) {
+      const data = JSON.parse(saved);
+      return {
+        venue: data.venue,
+        location: "Powai, Mumbai",
+        sport: data.sport,
+        date: data.date,
+        time: data.time,
+        price: data.price,
+      };
+    }
+  } catch (e) {
+    console.error(e);
+  }
+  return {
+    venue: "Elite Turf Arena",
+    location: "Powai, Mumbai",
+    sport: "Football",
+    date: "June 18, 2026",
+    time: "7:00 PM - 8:00 PM",
+    price: 1200,
+  };
 };
 
 const methods = [
@@ -76,6 +94,7 @@ export function Payment() {
   const [paymentMethod, setPaymentMethod] = useState("upi");
   const [coupon, setCoupon] = useState("");
   const [isProcessing, setIsProcessing] = useState(false);
+  const booking = useMemo(() => getBookingData(), []);
 
   useEffect(() => {
     if (!currentUser) {
@@ -129,7 +148,7 @@ export function Payment() {
             </p>
           </div>
 
-          <div className="inline-flex items-center gap-2 rounded-full border border-[#6DFF3B]/18 bg-[#6DFF3B]/10 px-4 py-2 text-sm  text-[#6DFF3B]">
+          <div className="inline-flex items-center gap-2 rounded-full border border-emerald-500/20 bg-emerald-500/10 px-4 py-2 text-sm text-emerald-600 dark:border-[#6DFF3B]/18 dark:bg-[#6DFF3B]/10 dark:text-[#6DFF3B]">
             <ShieldCheck className="h-4 w-4" />
             Secure payment
           </div>
@@ -140,8 +159,8 @@ export function Payment() {
             <div
               key={step}
               className={`rounded-[20px] border p-4 ${index === 3
-                  ? "border-[#6DFF3B]/30 bg-[#6DFF3B]/10"
-                  : "border-white/[0.08] bg-[#101216]"
+                ? "border-[#6DFF3B]/30 bg-[#6DFF3B]/10"
+                : "border-white/[0.08] bg-[#101216]"
                 }`}
             >
               <p className="text-xs uppercase tracking-[0.24em] text-white/45">
@@ -173,8 +192,8 @@ export function Payment() {
                         key={method.id}
                         htmlFor={method.id}
                         className={`flex cursor-pointer items-center justify-between rounded-[20px] border p-4 transition ${paymentMethod === method.id
-                            ? "border-[#6DFF3B]/30 bg-[#6DFF3B]/10"
-                            : "border-white/[0.08] bg-white/[0.03] hover:bg-white/[0.06]"
+                          ? "border-[#6DFF3B]/30 bg-[#6DFF3B]/10"
+                          : "border-white/[0.08] bg-white/[0.03] hover:bg-white/[0.06]"
                           }`}
                       >
                         <div className="flex items-center gap-4">
@@ -385,7 +404,7 @@ export function Payment() {
                       ₹{total.toLocaleString()}
                     </p>
                   </div>
-                  <Badge className="rounded-full border-none bg-[#6DFF3B]/10 px-3 py-1 text-xs  uppercase tracking-[0.18em] text-[#6DFF3B]">
+                  <Badge className="rounded-full border-none bg-emerald-500/10 dark:bg-[#6DFF3B]/10 px-3 py-1 text-xs  uppercase tracking-[0.18em] text-emerald-600 dark:text-[#6DFF3B]">
                     Save ₹{discount}
                   </Badge>
                 </div>

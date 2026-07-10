@@ -390,7 +390,7 @@ export function Navbar() {
         <div className="mx-auto flex h-[76px] max-w-[1440px] items-center justify-between gap-4 px-6 lg:px-8">
           {/* Left Section: Logo */}
           <div className="flex flex-1 items-center justify-start">
-            <Link to="/" className="flex items-center">
+            <Link to="/" className="flex items-center translate-y-[5px] md:translate-y-[8px]">
               <Logo />
             </Link>
           </div>
@@ -1023,9 +1023,9 @@ export function HeroSection() {
         </AnimatePresence>
       </div>
 
-      <div className="mx-auto flex min-h-[92svh] max-w-[1200px] flex-col justify-start pt-[20svh] items-start px-4 sm:px-6 md:min-h-[94svh] lg:px-8 xl:min-h-[96svh]">
-        <div className="relative w-full max-w-4xl">
-          <div className="relative z-10 flex flex-col items-start text-left w-full max-w-4xl">
+      <div className="mx-auto flex min-h-[92svh] max-w-[1200px] flex-col justify-center items-center px-4 sm:px-6 md:min-h-[94svh] lg:px-8 xl:min-h-[96svh]">
+        <div className="relative w-full max-w-4xl flex flex-col items-center">
+          <div className="relative z-10 flex flex-col items-center text-center w-full max-w-4xl">
             <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
               <Badge
                 className="rounded-full px-4 py-2 text-xs uppercase tracking-[0.26em] border border-[#6DFF3B]/20 bg-[#6DFF3B]/10 text-[#6DFF3B]"
@@ -1036,7 +1036,7 @@ export function HeroSection() {
 
             <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.1 }}>
               <h1
-                className="mt-6 font-light max-w-3xl text-left text-5xl sm:text-7xl tracking-tighter lg:text-[5.2rem] lg:leading-[1.05] !text-white drop-shadow-md"
+                className="mt-6 font-light max-w-3xl text-center text-5xl sm:text-7xl tracking-tighter lg:text-[5.2rem] lg:leading-[1.05] !text-white drop-shadow-md"
               >
                 Play. Book.{" "}
                 <span
@@ -1047,7 +1047,7 @@ export function HeroSection() {
               </h1>
             </motion.div>
 
-            <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.2 }} className="mt-10 flex flex-col sm:flex-row flex-wrap items-center gap-3 w-full sm:w-auto">
+            <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.2 }} className="mt-10 flex flex-col sm:flex-row flex-wrap items-center justify-center gap-3 w-full sm:w-auto">
 
               <Link to="/venues" className="w-full sm:w-auto">
                 <Button
@@ -1449,7 +1449,7 @@ export function SportsBackgroundAnimation() {
 
 export function SportsCategories() {
   return (
-    <section className="py-[100px] relative overflow-hidden">
+    <section className="py-12 md:py-16 relative overflow-hidden">
       <SportsBackgroundAnimation />
       <div className="mx-auto max-w-[1400px] px-4 sm:px-6 lg:px-8">
         <SectionHeading
@@ -1471,7 +1471,7 @@ export function SportsCategories() {
 
 export function DiscoveryRails() {
   return (
-    <section id="how-it-works" className="py-[100px]">
+    <section id="how-it-works" className="py-12 md:py-16">
       <div className="mx-auto max-w-[1400px] px-4 sm:px-6 lg:px-8">
         <div className="grid gap-5 lg:grid-cols-[1.08fr_0.92fr]">
           <Card className="overflow-hidden rounded-[28px] border-white/[0.08] bg-[#101216] shadow-[0_18px_56px_-30px_rgba(0,0,0,0.85)]">
@@ -1576,7 +1576,7 @@ export function DiscoveryRails() {
 
 export function WhySportXClub() {
   return (
-    <section id="about" className="py-[100px]">
+    <section id="about" className="py-12 md:py-16">
       <div className="mx-auto max-w-[1400px] px-4 sm:px-6 lg:px-8">
         <SectionHeading
           eyebrow="Why SportXClub"
@@ -1627,7 +1627,7 @@ export function TournamentCTA() {
   const navigate = useNavigate();
 
   return (
-    <section className="py-[100px]">
+    <section className="py-12 md:py-16">
       <div className="mx-auto max-w-[1400px] px-4 sm:px-6 lg:px-8">
         <div
           className={cn(
@@ -1951,7 +1951,7 @@ export function StoreSection() {
   const isDark = resolvedTheme !== "light";
 
   return (
-    <section className="py-[100px] relative overflow-hidden">
+    <section className="py-12 md:py-16 relative overflow-hidden">
       <style dangerouslySetInnerHTML={{ __html: marqueeStyle }} />
       <div className="mx-auto max-w-[1400px] px-4 sm:px-6 lg:px-8">
         <SectionHeading
@@ -2201,7 +2201,7 @@ export function TurfGallery() {
   const navigate = useNavigate();
 
   return (
-    <section className="py-[100px] relative overflow-hidden">
+    <section className="py-12 md:py-16 relative overflow-hidden">
       <div className="mx-auto max-w-[1400px] px-4 sm:px-6 lg:px-8">
         <SectionHeading
           eyebrow="Gallery"

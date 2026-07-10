@@ -130,6 +130,70 @@ const venueData = [
     badges: [asset("/venues/badge-new.svg")],
     amenities: ["Flood lights", "Shower", "Secure payments"],
   },
+  {
+    id: 7,
+    name: "Champions Sports Arena",
+    location: "Bandra East, Mumbai",
+    city: "Mumbai",
+    sport: "Football",
+    rating: 4.8,
+    reviews: 150,
+    price: 1100,
+    distance: 3.2,
+    availableToday: true,
+    availability: "Slots available now",
+    image: asset("/venues/turf-1.webp"),
+    badges: [asset("/venues/badge-top-rated.svg")],
+    amenities: ["Flood lights", "Changing room", "Verified venue"],
+  },
+  {
+    id: 8,
+    name: "Ace Tennis Academy",
+    location: "Powai, Mumbai",
+    city: "Mumbai",
+    sport: "Tennis",
+    rating: 4.9,
+    reviews: 95,
+    price: 1250,
+    distance: 1.5,
+    availableToday: true,
+    availability: "Evening slots open",
+    image: asset("/sports/cat-padel.webp"),
+    badges: [asset("/venues/badge-new.svg")],
+    amenities: ["Flood lights", "Pro coaching", "Parking"],
+  },
+  {
+    id: 9,
+    name: "Super Cricket Club",
+    location: "Andheri West, Mumbai",
+    city: "Mumbai",
+    sport: "Cricket",
+    rating: 4.6,
+    reviews: 112,
+    price: 1000,
+    distance: 4.4,
+    availableToday: true,
+    availability: "Prime slots open",
+    image: asset("/venues/turf-2.webp"),
+    badges: [asset("/venues/badge-top-rated.svg")],
+    amenities: ["Flood lights", "Wi-Fi", "Secure payments"],
+  },
+  {
+    id: 10,
+    name: "Smash & Drive Badminton",
+    location: "Andheri West, Mumbai",
+    city: "Mumbai",
+    sport: "Badminton",
+    rating: 4.7,
+    reviews: 84,
+    price: 1400,
+    distance: 4.6,
+    availableToday: false,
+    availability: "Available tomorrow",
+    image: asset("/venues/turf-3.webp"),
+    badges: [asset("/venues/badge-new.svg")],
+    amenities: ["Flood lights", "Locker room", "Real reviews"],
+  },
 ];
 
 const sports = [
@@ -228,60 +292,70 @@ export function VenueBooking() {
       )}
     >
       <section
-        className="border-b border-white/[0.08]"
-        style={{
-          backgroundImage: isDark
-            ? "linear-gradient(180deg,rgba(109,255,59,0.04),rgba(5,5,5,0))"
-            : "none",
-        }}
+        className="always-dark relative overflow-hidden border-b border-white/[0.08] bg-[#060813] min-h-[380px] md:min-h-[480px] flex items-center py-12 md:py-16 text-white"
       >
-        <div className="mx-auto max-w-[1400px] px-4 py-6 sm:px-6 lg:px-8 lg:py-8">
+        {/* Abstract Glowing Sports Field Background */}
+        <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
+          <img
+            src="/assets/venues/playground-banner.png"
+            alt="Sports Playground"
+            className="w-full h-full object-cover"
+          />
+          {/* Main green pitch glow */}
+          <div className="absolute -bottom-[30%] left-1/2 -translate-x-1/2 w-[80%] h-[60%] rounded-full bg-emerald-500/10 blur-[120px] pointer-events-none" />
+          {/* Spotlight glows */}
+          <div className="absolute -top-[10%] left-[20%] w-[35%] h-[35%] rounded-full bg-blue-500/10 blur-[100px] pointer-events-none" />
+          <div className="absolute -top-[10%] right-[20%] w-[35%] h-[35%] rounded-full bg-emerald-500/8 blur-[100px] pointer-events-none" />
+          {/* Subtle grid pattern overlay */}
+          <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.015)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.015)_1px,transparent_1px)] bg-[size:40px_40px] opacity-35" />
+        </div>
+
+        <div className="relative z-10 mx-auto max-w-[1400px] px-4 sm:px-6 lg:px-8 w-full">
           <div className="flex flex-col gap-5">
             <div className="max-w-3xl space-y-3">
-              <p className="text-[0.72rem] uppercase tracking-[0.36em] text-[#6DFF3B]/85">
+              <p className="text-[0.72rem] uppercase tracking-[0.36em] text-[#6DFF3B]">
                 Venues
               </p>
               <h1 className="text-3xl tracking-tight text-white md:text-5xl font-black">
-                Discover venues the BookMyShow way.
+                Find & Book Premium Venues Near You.
               </h1>
-              <p className="max-w-2xl text-sm leading-7 text-white/64 md:text-base">
-                Search by sport, choose your city, compare venue trust
-                signals, and book the right slot without confusion.
+              <p className="max-w-2xl text-sm leading-7 text-white/80 md:text-base">
+                Search by sport, check real-time slot availability, and book your sports venue instantly with SportXClub.
               </p>
             </div>
 
-            <Card className="rounded-[24px] border-white/[0.08] bg-[#101216]">
-              <CardContent className="p-4 md:p-5">
-                <div className="grid gap-3 grid-cols-1 sm:grid-cols-[2.5fr_1.2fr_auto] items-center">
-                  <label className="relative block">
-                    <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-white/45" />
-                    <Input
-                      value={query}
-                      onChange={(event) => setQuery(event.target.value)}
-                      placeholder="Search sports, venues, or tournaments"
-                      className="h-12 rounded-[18px] border-white/[0.08] bg-[#050505]/70 pl-11 text-white placeholder:text-white/35 w-full"
-                    />
-                  </label>
+            <div className="rounded-[24px] border border-white/10 bg-black/60 backdrop-blur-md shadow-2xl p-4 md:p-5">
+              <div className="grid gap-3 grid-cols-1 sm:grid-cols-[2.5fr_1.2fr_135px] items-center">
+                <label className="relative block">
+                  <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-white/50" />
+                  <input
+                    type="text"
+                    value={query}
+                    onChange={(event) => setQuery(event.target.value)}
+                    placeholder="Search sports, venues, or tournaments"
+                    className="h-12 rounded-[18px] border border-white/10 bg-black/40 pl-11 text-white placeholder:text-white/40 w-full hover:border-[#6DFF3B]/30 focus:border-[#6DFF3B] focus:outline-none transition-colors text-sm"
+                  />
+                </label>
 
-                  <Select value={sortBy} onValueChange={setSortBy}>
-                    <SelectTrigger className="h-12 rounded-[18px] border-white/[0.08] bg-[#050505]/70 text-white">
-                      <SelectValue placeholder="Sort by" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {sorts.map((item) => (
-                        <SelectItem key={item} value={item}>
-                          {item}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                <Select value={sortBy} onValueChange={setSortBy}>
+                  <SelectTrigger className="h-12 rounded-[18px] !border-white/10 !bg-black/40 !text-white hover:!bg-black/60 hover:border-[#6DFF3B]/30 transition-colors">
+                    <SelectValue placeholder="Sort by" />
+                  </SelectTrigger>
+                  <SelectContent className="theme-adaptive rounded-[18px] border-white/[0.08] bg-[#101216] text-white" style={{ backgroundColor: '#101216', borderColor: 'rgba(255,255,255,0.08)', color: 'white' }}>
+                    {sorts.map((item) => (
+                      <SelectItem key={item} value={item} className="rounded-[12px] my-1 data-[highlighted]:bg-[#6DFF3B]/10 data-[highlighted]:text-[#6DFF3B] cursor-pointer focus:bg-[#6DFF3B]/10 focus:text-[#6DFF3B]">
+                        {item}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
 
-                  <Button className="h-12 rounded-[18px] bg-[#6DFF3B] px-7  text-[#050505] hover:bg-[#86ff60]">
-                    Search
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
+                <Button className="h-12 w-full rounded-[18px] bg-[#6DFF3B] px-5 text-[#050505] hover:bg-[#86ff60] font-semibold transition-all">
+                  Search
+                  <ArrowRight className="ml-1.5 h-4 w-4 shrink-0" />
+                </Button>
+              </div>
+            </div>
 
             <div className="flex flex-wrap gap-2">
               {sports.map((item) => (
@@ -290,10 +364,10 @@ export function VenueBooking() {
                   type="button"
                   onClick={() => setSport(item)}
                   className={cn(
-                    "rounded-full border px-4 py-2 text-sm transition",
+                    "rounded-full border px-5 py-2.5 text-sm font-medium transition cursor-pointer shadow-md",
                     sport === item
-                      ? "border-[#6DFF3B]/30 bg-[#6DFF3B]/10 text-[#6DFF3B]"
-                      : "border-white/[0.08] bg-white/[0.03] text-white/68 hover:border-white/[0.16] hover:bg-white/[0.06]",
+                      ? "border-transparent bg-[#6DFF3B] text-[#050505] shadow-[0_4px_12px_rgba(109,255,59,0.25)]"
+                      : "border-white/10 bg-black/40 text-white/80 hover:border-white/20 hover:bg-black/60",
                   )}
                 >
                   {item}

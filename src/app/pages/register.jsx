@@ -236,7 +236,7 @@ export function RegisterPage() {
 
 
       {/* HEADER LOGO */}
-      <div className="w-full max-w-xl flex items-center justify-center mb-[1px] z-10">
+      <div className="w-full max-w-xl flex items-center justify-center mb-[-12px] md:mb-[-22px] z-10">
         <Link to="/" className="flex items-center gap-3">
           <Logo />
         </Link>
