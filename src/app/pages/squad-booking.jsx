@@ -39,7 +39,8 @@ export function SquadBookingPage() {
   };
 
   const [selectedDate, setSelectedDate] = useState("2026-07-11");
-  const [selectedSlot, setSelectedSlot] = useState("7:00 PM - 8:00 PM");
+  const [startTime, setStartTime] = useState("19:00");
+  const [playHours, setPlayHours] = useState(1);
   const [paymentMode, setPaymentMode] = useState("split"); // "split" | "full"
   const [venue] = useState({
     name: "Elite Turf Arena",
@@ -47,12 +48,13 @@ export function SquadBookingPage() {
     price: 1200,
   });
 
-  const costPerPlayer = Math.round(venue.price / squadLobby.maxSize);
-  const amountToPayNow = paymentMode === "full" ? venue.price : costPerPlayer;
+  const totalPrice = venue.price * playHours;
+  const costPerPlayer = Math.round(totalPrice / squadLobby.maxSize);
+  const amountToPayNow = paymentMode === "full" ? totalPrice : costPerPlayer;
 
   const handleCheckout = () => {
     toast.success(paymentMode === "full"
-      ? `Full squad booking payment of ₹${venue.price} successful!`
+      ? `Full squad booking payment of ₹${totalPrice} successful!`
       : `Squad cost-split payment of ₹${costPerPlayer} successful!`
     );
     setTimeout(() => {
@@ -62,7 +64,7 @@ export function SquadBookingPage() {
 
   return (
     <div className="theme-adaptive bg-[#050505] text-white min-h-screen">
-      <div className="mx-auto max-w-[1400px] px-4 py-6 pb-28 sm:px-6 lg:px-8 lg:py-8 lg:pb-8">
+      <div className="mx-auto max-w-[1400px] px-4 py-6 pb-6 sm:px-6 lg:px-8 lg:py-8 lg:pb-8">
         {/* Back Link */}
         <Link
           to="/players"
@@ -112,16 +114,25 @@ export function SquadBookingPage() {
 
                 <div className="grid gap-4 sm:grid-cols-2">
                   <div className="space-y-2">
-                    <label className="text-[10px] uppercase tracking-wider text-white/45 font-semibold block">Time Slot</label>
-                    <select
-                      value={selectedSlot}
-                      onChange={(e) => setSelectedSlot(e.target.value)}
+                    <label className="text-[10px] uppercase tracking-wider text-white/45 font-semibold block">Start Time</label>
+                    <input
+                      type="time"
+                      value={startTime}
+                      onChange={(e) => setStartTime(e.target.value)}
                       className="w-full h-11 px-3 rounded-xl border border-white/[0.08] bg-[#101216] text-sm text-white focus:outline-none focus:border-[#6DFF3B] cursor-pointer"
-                    >
-                      <option value="6:00 PM - 7:00 PM">6:00 PM - 7:00 PM</option>
-                      <option value="7:00 PM - 8:00 PM">7:00 PM - 8:00 PM</option>
-                      <option value="8:00 PM - 9:00 PM">8:00 PM - 9:00 PM</option>
-                    </select>
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <label className="text-[10px] uppercase tracking-wider text-white/45 font-semibold block">Duration (Hours)</label>
+                    <input
+                      type="number"
+                      min={1}
+                      max={12}
+                      value={playHours}
+                      onChange={(e) => setPlayHours(Math.max(1, parseInt(e.target.value) || 1))}
+                      className="w-full h-11 px-3 rounded-xl border border-white/[0.08] bg-[#101216] text-sm text-white focus:outline-none focus:border-[#6DFF3B] cursor-pointer"
+                    />
                   </div>
 
                   <div className="space-y-2">
@@ -132,7 +143,7 @@ export function SquadBookingPage() {
                       className="w-full h-11 px-3 rounded-xl border border-white/[0.08] bg-[#101216] text-sm text-white focus:outline-none focus:border-[#6DFF3B] cursor-pointer"
                     >
                       <option value="split">🟢 Cost Split (Pay ₹{costPerPlayer} share)</option>
-                      <option value="full">💳 Full Payment (Pay ₹{venue.price} total)</option>
+                      <option value="full">💳 Full Payment (Pay ₹{totalPrice} total)</option>
                     </select>
                   </div>
                 </div>
@@ -150,7 +161,7 @@ export function SquadBookingPage() {
                 <div className="space-y-2.5 text-sm">
                   <div className="flex justify-between text-white/70">
                     <span>Total Turf Booking Cost:</span>
-                    <span>₹{venue.price}</span>
+                    <span>₹{totalPrice}</span>
                   </div>
                   {paymentMode === "split" && (
                     <div className="flex justify-between text-white/70">
@@ -170,7 +181,7 @@ export function SquadBookingPage() {
                   </div>
                 ) : (
                   <div className="p-3 rounded-xl bg-[#6DFF3B]/5 border border-[#6DFF3B]/20 text-xs text-white/80 leading-relaxed font-medium">
-                    ⚡ <strong>Full Payment details:</strong> You are paying the full slot booking amount (₹{venue.price}) now. Other squad members will not be charged or asked to split.
+                    ⚡ <strong>Full Payment details:</strong> You are paying the full slot booking amount (₹{totalPrice}) now. Other squad members will not be charged or asked to split.
                   </div>
                 )}
               </CardContent>

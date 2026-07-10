@@ -216,3 +216,29 @@ html, body {
   scrollbar-width: none; /* Firefox */
   -ms-overflow-style: none; /* IE/Edge */
 }
+
+/* Always dark overrides for Hero card layout items to preserve high contrast text on image backgrounds */
+.text-always-white {
+  color: #ffffff !important;
+}
+.text-always-white-90 {
+  color: rgba(255, 255, 255, 0.9) !important;
+}
+.bg-always-black-40 {
+  background-color: rgba(0, 0, 0, 0.4) !important;
+}
+.border-always-white-20 {
+  border-color: rgba(255, 255, 255, 0.2) !important;
+}
+
+/* Force-remove all borders from Sports Categories section items and containers */
+.sports-categories-container,
+.sports-categories-container *,
+.sports-categories-container button,
+.sports-categories-container span,
+.sports-categories-container div,
+.sports-categories-container img {
+  border: none !important;
+  border-width: 0px !important;
+  outline: none !important;
+}

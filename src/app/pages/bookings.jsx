@@ -59,7 +59,7 @@ export function BookingsPage() {
   const [selectedPlayers, setSelectedPlayers] = useState("4 Players");
 
   return (
-    <div className="space-y-5 px-4 py-4 pb-[calc(10rem+env(safe-area-inset-bottom))]">
+    <div className="space-y-5 px-4 py-4 pb-6">
       <div className="space-y-5">
         <motion.section
           initial={{ opacity: 0, y: 12 }}

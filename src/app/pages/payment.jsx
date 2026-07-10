@@ -124,7 +124,7 @@ export function Payment() {
 
   return (
     <div className="theme-adaptive bg-[#050505] text-white">
-      <div className="mx-auto max-w-[1400px] px-4 py-6 pb-28 sm:px-6 lg:px-8 lg:py-8 lg:pb-8">
+      <div className="mx-auto max-w-[1400px] px-4 py-6 pb-6 sm:px-6 lg:px-8 lg:py-8 lg:pb-8">
         <Button
           variant="ghost"
           className="mb-6 -ml-2 inline-flex gap-2 rounded-full border border-white/[0.08] bg-white/[0.03] px-4 py-2 text-white/72 hover:bg-white/[0.06]"

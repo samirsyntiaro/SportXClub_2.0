@@ -117,72 +117,91 @@ export function MobileAppBar() {
       return false;
     }
     return true;
-  });
+  });  return (
+    <>
+      <header className="sticky top-0 z-45 border-b border-border/40 bg-background/88 pt-[env(safe-area-inset-top)] backdrop-blur-2xl md:hidden">
+        <div className="flex h-16 items-center justify-between px-4">
+          {/* Left: Brand Identity */}
+          <div className="flex items-center gap-2">
+            <Link to="/" className="shrink-0 flex items-center h-[58px] w-auto translate-y-[4px]">
+              <Logo className="h-full" />
+            </Link>
+            <div className="min-w-0 flex items-center">
+              {/* Preferred Location Selector (BookMyShow style) */}
+              <button
+                onClick={() => setIsOpen(true)}
+                className="flex items-center gap-1 text-[11px] font-medium text-primary active:opacity-70 text-left leading-none cursor-pointer"
+              >
+                <MapPin className="h-3.5 w-3.5 shrink-0" />
+                <span className="truncate max-w-[90px] leading-none">
+                  {city === "All" ? "All Areas" : city}
+                </span>
+                <ChevronDown className="h-3 w-3 shrink-0 text-primary/80" />
+              </button>
+            </div>
+          </div>
 
-  return (
-    <header className="sticky top-0 z-45 border-b border-border/40 bg-background/88 pt-[env(safe-area-inset-top)] backdrop-blur-2xl md:hidden">
-      <div className="flex h-16 items-center justify-between px-4">
-        {/* Left: Brand Identity */}
-        <div className="flex items-center gap-2">
-          <Link to="/" className="shrink-0 flex items-center h-10 w-auto">
-            <Logo />
-          </Link>
-          <div className="min-w-0 flex flex-col justify-center">
-            {/* Preferred Location Selector (BookMyShow style) */}
-            <button
-              onClick={() => setIsOpen(true)}
-              className="flex items-center gap-0.5 mt-1 text-xs  text-primary active:opacity-70 text-left leading-none cursor-pointer"
+          {/* Right: Actions */}
+          <div className="flex items-center gap-2">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => setMenuOpen(!menuOpen)}
+              className="h-10.5 w-10.5 rounded-full border border-border/60 bg-background/60 text-foreground shadow-xs backdrop-blur-md cursor-pointer"
+              aria-label="Toggle Menu"
             >
-              <MapPin className="h-3 w-3 shrink-0" />
-              <span className="truncate max-w-[80px]">
-                {city === "All" ? "All Areas" : city}
-              </span>
-              <ChevronDown className="h-3 w-3 shrink-0 text-primary/80" />
-            </button>
+              {menuOpen ? (
+                <X className="h-4.5 w-4.5" />
+              ) : (
+                <Menu className="h-4.5 w-4.5" />
+              )}
+            </Button>
           </div>
         </div>
+      </header>
 
-        {/* Right: Actions */}
-        <div className="flex items-center gap-2">
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => setMenuOpen(!menuOpen)}
-            className="h-10.5 w-10.5 rounded-full border border-border/60 bg-background/60 text-foreground shadow-xs backdrop-blur-md cursor-pointer"
-            aria-label="Toggle Menu"
-          >
-            {menuOpen ? (
-              <X className="h-4.5 w-4.5" />
-            ) : (
-              <Menu className="h-4.5 w-4.5" />
-            )}
-          </Button>
-        </div>
-      </div>
-
-      {/* Hamburger Dropdown Drawer for Mobile */}
+      {/* Hamburger Side Drawer for Mobile */}
       <AnimatePresence>
         {menuOpen && (
           <>
             {/* Backdrop */}
-            <div
-              className="fixed inset-x-0 bottom-0 top-[calc(64px+env(safe-area-inset-top))] z-40 bg-black/25 backdrop-blur-xs"
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 0.5 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm"
               onClick={() => setMenuOpen(false)}
             />
 
-            {/* Menu container */}
+            {/* Menu container - Slides from right to left */}
             <motion.div
-              initial={{ opacity: 0, y: -15 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -15 }}
-              transition={{ duration: 0.2, ease: "easeOut" }}
-              className="absolute top-full left-0 right-0 z-50 border-b shadow-2xl px-6 py-5 flex flex-col gap-4 bg-background border-border max-h-[calc(100vh-80px-env(safe-area-inset-top))] overflow-y-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
+              initial={{ x: "100%" }}
+              animate={{ x: 0 }}
+              exit={{ x: "100%" }}
+              transition={{ type: "spring", damping: 25, stiffness: 220 }}
+              className="fixed inset-y-0 right-0 z-55 w-[280px] max-w-[80vw] bg-[#f8faf9] dark:bg-[#020617] border-l border-border shadow-2xl flex flex-col pt-[env(safe-area-inset-top)] pb-[env(safe-area-inset-bottom)]"
             >
+              {/* Drawer Header */}
+              <div className="flex h-16 items-center justify-between px-5 border-b border-border/40">
+                <Link to="/" onClick={() => setMenuOpen(false)} className="shrink-0 flex items-center h-10 w-auto translate-y-[2px]">
+                  <Logo className="h-full" />
+                </Link>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => setMenuOpen(false)}
+                  className="h-10 w-10 rounded-full border border-border/60 bg-background/60 text-foreground shadow-xs cursor-pointer"
+                  aria-label="Close Menu"
+                >
+                  <X className="h-4.5 w-4.5" />
+                </Button>
+              </div>
+
               {/* Menu list items */}
-              <div className="flex flex-col">
+              <div className="flex-1 overflow-y-auto px-5 py-4 flex flex-col divide-y divide-border/30">
                 {menuItems.map((item) => {
                   const itemContent = (
-                    <div className="flex items-center justify-between w-full py-4 px-1 border-b border-border/40 transition-colors duration-150 hover:bg-muted/40 group">
+                    <div className="flex items-center justify-between w-full py-4 px-1 group transition-colors duration-150">
                       <div className="flex items-center gap-3">
                         {item.isCart && (
                           <ShoppingCart className="h-5 w-5 text-primary" />
@@ -193,7 +212,7 @@ export function MobileAppBar() {
                         <span
                           className={cn(
                             "text-sm tracking-wide text-left transition-colors duration-150",
-                            item.isGreen ? "text-primary" : "text-foreground group-hover:text-primary",
+                            item.isGreen ? "text-primary font-medium" : "text-foreground group-hover:text-primary",
                           )}
                         >
                           {item.label}
@@ -226,8 +245,8 @@ export function MobileAppBar() {
                 })}
               </div>
 
-              {/* Theme Toggle inside Menu */}
-              <div className="flex items-center justify-between py-4 px-1">
+              {/* Theme Toggle inside Menu Drawer Footer */}
+              <div className="border-t border-border/40 p-5 bg-muted/20 flex items-center justify-between">
                 <span className="text-sm tracking-wide text-left text-foreground">Theme</span>
                 <ThemeToggleButton className="h-9 w-9 rounded-full border border-border/60 shadow-xs cursor-pointer" />
               </div>
@@ -255,7 +274,7 @@ export function MobileAppBar() {
               animate={{ y: 0 }}
               exit={{ y: "100%" }}
               transition={{ type: "spring", damping: 25, stiffness: 220 }}
-              className="fixed bottom-0 inset-x-0 rounded-t-[32px] border-t border-border bg-card p-6 shadow-[0_-10px_40px_rgba(0,0,0,0.3)] z-50 max-h-[85vh] overflow-y-auto"
+              className="fixed bottom-0 inset-x-0 rounded-t-[32px] border-t border-border bg-card p-6 shadow-[0_-10px_40px_rgba(0,0,0,0.3)] z-55 max-h-[85vh] overflow-y-auto"
             >
               <div className="mx-auto w-12 h-1 bg-muted rounded-full mb-4" />
               <h3 className="text-lg  text-foreground">
@@ -305,11 +324,12 @@ export function MobileAppBar() {
           </>
         )}
       </AnimatePresence>
-    </header>
+    </>
   );
 }
 
-export function MobileBottomNav({ activeTab }) {
+export function MobileBottomNav
+({ activeTab }) {
   const { currentUser } = useAuth();
   return (
     <nav className="fixed inset-x-0 bottom-0 z-50 md:hidden">
