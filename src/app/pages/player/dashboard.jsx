@@ -444,11 +444,10 @@ export function PlayerDashboard() {
                 </div>
 
                 <Badge
-                  className={`font-bold px-3 py-1 rounded-full text-xs transition-colors duration-300 ${
-                    matchStatus === "CONFIRMED"
+                  className={`font-bold px-3 py-1 rounded-full text-xs transition-colors duration-300 ${matchStatus === "CONFIRMED"
                       ? "bg-[#6DFF3B]/15 text-[#6DFF3B] border border-[#6DFF3B]/30"
                       : "bg-red-500/15 text-red-400 border border-red-500/30"
-                  }`}
+                    }`}
                 >
                   {matchStatus}
                 </Badge>
@@ -766,11 +765,10 @@ export function PlayerDashboard() {
                   <DialogTrigger asChild>
                     <Button
                       variant="ghost"
-                      className={`text-red-400 hover:text-red-300 hover:bg-red-500/10 rounded-xl transition-all ${
-                        matchStatus === "CANCELLED"
+                      className={`text-red-400 hover:text-red-300 hover:bg-red-500/10 rounded-xl transition-all ${matchStatus === "CANCELLED"
                           ? "opacity-0 pointer-events-none w-0 h-0 p-0"
                           : ""
-                      }`}
+                        }`}
                     >
                       <Ban className="mr-2 h-4 w-4" /> Cancel Booking
                     </Button>
@@ -1269,11 +1267,10 @@ export function PlayerDashboard() {
                         className="focus:outline-none transition-all scale-100 hover:scale-110"
                       >
                         <Star
-                          className={`h-8 w-8 transition-colors ${
-                            star <= (hoverRating || userRating)
+                          className={`h-8 w-8 transition-colors ${star <= (hoverRating || userRating)
                               ? "text-yellow-500 fill-yellow-500"
                               : "text-zinc-700 hover:text-yellow-400"
-                          }`}
+                            }`}
                         />
                       </button>
                     ))}

@@ -12,7 +12,6 @@ import {
   MapPin,
   Search,
   ShieldCheck,
-  SlidersHorizontal,
   Star,
   TimerReset,
 } from "lucide-react";
@@ -143,12 +142,6 @@ const sports = [
 ];
 const locations = ["All", "Mumbai", "Thane", "Navi Mumbai"];
 const sorts = ["Recommended", "Rating", "Price: Low to High", "Distance"];
-const bookingFlow = [
-  { label: "Search", detail: "City and sport" },
-  { label: "Filter", detail: "Price, rating, distance" },
-  { label: "Compare", detail: "Trust and availability" },
-  { label: "Book", detail: "Pick a slot" },
-];
 
 export function VenueBooking() {
   const { resolvedTheme } = useTheme();
@@ -244,58 +237,31 @@ export function VenueBooking() {
       >
         <div className="mx-auto max-w-[1400px] px-4 py-6 sm:px-6 lg:px-8 lg:py-8">
           <div className="flex flex-col gap-5">
-            <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
-              <div className="max-w-3xl">
-                <p className="text-[0.72rem]  uppercase tracking-[0.36em] text-[#6DFF3B]/85">
-                  Venues
-                </p>
-                <h1 className="mt-3 text-3xl  tracking-tight text-white md:text-5xl">
-                  Discover venues the BookMyShow way.
-                </h1>
-                <p className="mt-4 max-w-2xl text-sm leading-7 text-white/64 md:text-base">
-                  Search by sport, choose your city, compare venue trust
-                  signals, and book the right slot without confusion.
-                </p>
-              </div>
-
-              <div className="flex flex-wrap gap-3">
-                <div className="inline-flex items-center gap-2 rounded-full border border-white/[0.08] bg-[#101216] px-4 py-2 text-sm text-white/72">
-                  <MapPin className="h-4 w-4 text-[#6DFF3B]" />
-                  Mumbai
-                  <ChevronDown className="h-4 w-4 text-white/35" />
-                </div>
-                <div className="inline-flex items-center gap-2 rounded-full border border-[#6DFF3B]/18 bg-[#6DFF3B]/10 px-4 py-2 text-sm  text-[#6DFF3B]">
-                  <ShieldCheck className="h-4 w-4" />
-                  Verified venues
-                </div>
-              </div>
+            <div className="max-w-3xl space-y-3">
+              <p className="text-[0.72rem] uppercase tracking-[0.36em] text-[#6DFF3B]/85">
+                Venues
+              </p>
+              <h1 className="text-3xl tracking-tight text-white md:text-5xl font-black">
+                Discover venues the BookMyShow way.
+              </h1>
+              <p className="max-w-2xl text-sm leading-7 text-white/64 md:text-base">
+                Search by sport, choose your city, compare venue trust
+                signals, and book the right slot without confusion.
+              </p>
             </div>
 
             <Card className="rounded-[24px] border-white/[0.08] bg-[#101216]">
               <CardContent className="p-4 md:p-5">
-                <div className="grid gap-3 lg:grid-cols-[1.6fr_0.8fr_0.8fr_auto]">
+                <div className="grid gap-3 grid-cols-1 sm:grid-cols-[2.5fr_1.2fr_auto] items-center">
                   <label className="relative block">
                     <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-white/45" />
                     <Input
                       value={query}
                       onChange={(event) => setQuery(event.target.value)}
                       placeholder="Search sports, venues, or tournaments"
-                      className="h-12 rounded-[18px] border-white/[0.08] bg-[#050505]/70 pl-11 text-white placeholder:text-white/35"
+                      className="h-12 rounded-[18px] border-white/[0.08] bg-[#050505]/70 pl-11 text-white placeholder:text-white/35 w-full"
                     />
                   </label>
-
-                  <Select value={location} onValueChange={handleLocationChange}>
-                    <SelectTrigger className="h-12 rounded-[18px] border-white/[0.08] bg-[#050505]/70 text-white">
-                      <SelectValue placeholder="Location" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {locations.map((item) => (
-                        <SelectItem key={item} value={item}>
-                          {item}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
 
                   <Select value={sortBy} onValueChange={setSortBy}>
                     <SelectTrigger className="h-12 rounded-[18px] border-white/[0.08] bg-[#050505]/70 text-white">
@@ -334,27 +300,6 @@ export function VenueBooking() {
                 </button>
               ))}
             </div>
-
-            <div className="grid gap-3 md:grid-cols-4">
-              {bookingFlow.map((step, index) => (
-                <div
-                  key={step.label}
-                  className="rounded-[20px] border border-white/[0.08] bg-[#101216] p-4"
-                >
-                  <div className="flex items-center gap-3">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-full border border-[#6DFF3B]/18 bg-[#6DFF3B]/10 text-sm  text-[#6DFF3B]">
-                      {index + 1}
-                    </div>
-                    <div>
-                      <p className="text-sm  text-white">{step.label}</p>
-                      <p className="mt-1 text-xs text-white/52">
-                        {step.detail}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
           </div>
         </div>
       </section>
@@ -376,41 +321,71 @@ export function VenueBooking() {
               </div>
 
               <div className="space-y-3">
-                <p className="text-sm  text-white/78">Sport</p>
-                <div className="flex flex-wrap gap-2">
-                  {sports.slice(1).map((item) => (
-                    <button
-                      key={item}
-                      type="button"
-                      onClick={() => setSport(item)}
-                      className={cn(
-                        "rounded-full border px-3 py-1.5 text-xs  transition",
-                        sport === item
-                          ? "border-[#6DFF3B]/30 bg-[#6DFF3B]/10 text-[#6DFF3B]"
-                          : "border-white/[0.08] bg-white/[0.03] text-white/68 hover:bg-white/[0.06]",
-                      )}
-                    >
-                      {item}
-                    </button>
-                  ))}
-                </div>
+                <p className="text-sm text-white/78">Sport</p>
+                <Select value={sport} onValueChange={setSport}>
+                  <SelectTrigger className="h-10 rounded-xl border-white/[0.08] bg-[#050505]/50 text-white cursor-pointer">
+                    <SelectValue placeholder="All Sports" />
+                  </SelectTrigger>
+                  <SelectContent className="bg-[#101216] border-white/[0.08] text-white rounded-xl">
+                    {sports.map((item) => (
+                      <SelectItem key={item} value={item} className="cursor-pointer">
+                        {item === "All" ? "All Sports" : item}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
 
               <div className="space-y-3">
-                <p className="text-sm  text-white/78">Price per hour</p>
-                <div className="rounded-[18px] border border-white/[0.08] bg-white/[0.03] p-4">
-                  <Slider
-                    value={priceRange}
-                    min={500}
-                    max={2000}
-                    step={50}
-                    onValueChange={setPriceRange}
-                    className="py-3"
-                  />
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <p className="text-sm text-white/78">Price per hour</p>
+                    <span className="text-xs text-[#6DFF3B] font-semibold bg-[#6DFF3B]/10 px-2 py-0.5 rounded-full">
+                      ₹{priceRange[0]} - ₹{priceRange[1]}+
+                    </span>
+                  </div>
 
-                  <div className="mt-2 flex items-center justify-between text-xs text-white/48">
-                    <span>₹{priceRange[0]}</span>
-                    <span>₹{priceRange[1]}+</span>
+                  <div className="rounded-[24px] border border-white/[0.08] bg-[#050505]/40 p-5 space-y-4">
+                    {/* Price Histogram chart */}
+                    <div className="flex items-end justify-between h-14 px-2 pt-2">
+                      {[15, 25, 35, 55, 75, 95, 80, 60, 45, 30, 50, 65, 85, 55, 35, 20, 10, 5].map((height, idx) => {
+                        const barPrice = 500 + idx * ((2000 - 500) / 18);
+                        const isActive = barPrice >= priceRange[0] && barPrice <= priceRange[1];
+                        return (
+                          <div
+                            key={idx}
+                            className={cn(
+                              "w-full mx-[2px] rounded-t-sm transition-all duration-300",
+                              isActive ? "bg-primary" : "bg-white/[0.08]"
+                            )}
+                            style={{
+                              height: `${height}%`,
+                            }}
+                          />
+                        );
+                      })}
+                    </div>
+
+                    <Slider
+                      value={priceRange}
+                      min={500}
+                      max={2000}
+                      step={50}
+                      onValueChange={setPriceRange}
+                      className="py-1 cursor-pointer"
+                    />
+
+                    <div className="flex items-center gap-3 pt-1">
+                      <div className="flex-1 rounded-xl border border-white/[0.08] bg-[#101216]/50 p-2 text-center">
+                        <p className="text-[10px] text-white/40 uppercase">Min Price</p>
+                        <p className="text-sm font-medium text-white">₹{priceRange[0]}</p>
+                      </div>
+                      <div className="text-white/35 text-xs">-</div>
+                      <div className="flex-1 rounded-xl border border-white/[0.08] bg-[#101216]/50 p-2 text-center">
+                        <p className="text-[10px] text-white/40 uppercase">Max Price</p>
+                        <p className="text-sm font-medium text-white">₹{priceRange[1]}+</p>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -475,23 +450,6 @@ export function VenueBooking() {
               <span className="text-white">{filteredVenues.length}</span> venues
               in your area
             </p>
-            <div className="flex flex-wrap gap-2">
-              {[
-                "Sort: Recommended",
-                "Sport",
-                "Location",
-                "Price",
-                "Rating",
-              ].map((chip) => (
-                <span
-                  key={chip}
-                  className="inline-flex items-center gap-2 rounded-full border border-white/[0.08] bg-white/[0.03] px-3 py-1.5 text-xs text-white/64"
-                >
-                  <SlidersHorizontal className="h-3.5 w-3.5 text-[#6DFF3B]" />
-                  {chip}
-                </span>
-              ))}
-            </div>
           </div>
 
           {filteredVenues.length > 0 ? (
@@ -504,8 +462,8 @@ export function VenueBooking() {
                   transition={{ duration: 0.35, delay: index * 0.04 }}
                   whileHover={{ y: -6 }}
                 >
-                  <Link 
-                    to={`/venues/${venue.id}`} 
+                  <Link
+                    to={`/venues/${venue.id}`}
                     className="block h-full"
                     onClick={(e) => {
                       if (!currentUser) {
@@ -567,7 +525,7 @@ export function VenueBooking() {
                           <Badge className="rounded-full border border-white/[0.08] bg-white/[0.04] px-3 py-1 text-[0.68rem] uppercase tracking-[0.16em] text-white/72">
                             {venue.sport}
                           </Badge>
-                          <Badge className="rounded-full border border-[#6DFF3B]/20 bg-[#6DFF3B]/10 px-3 py-1 text-[0.68rem] uppercase tracking-[0.16em] text-[#6DFF3B]">
+                          <Badge className="rounded-full border border-emerald-500/20 bg-emerald-500/10 dark:border-[#6DFF3B]/20 dark:bg-[#6DFF3B]/10 px-3 py-1 text-[0.68rem] uppercase tracking-[0.16em] text-emerald-600 dark:text-[#6DFF3B]">
                             {venue.availableToday
                               ? "Available today"
                               : "Limited slots"}

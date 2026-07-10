@@ -9,14 +9,14 @@
   --card-foreground: #0f172a;
   --popover: #ffffff;
   --popover-foreground: #0f172a;
-  --primary: #22c55e;
-  --primary-foreground: #ffffff;
+  --primary: #6DFF3B;
+  --primary-foreground: #0f172a;
   --secondary: #0f172a;
   --secondary-foreground: #ffffff;
   --muted: #f3f4f6;
   --muted-foreground: #526075;
-  --accent: #22c55e;
-  --accent-foreground: #ffffff;
+  --accent: #6DFF3B;
+  --accent-foreground: #0f172a;
   --destructive: #ef4444;
   --destructive-foreground: #ffffff;
   --border: rgba(15, 23, 42, 0.07);
@@ -25,7 +25,7 @@
   --switch-background: #e2e8f0;
   --font-weight-medium: 500;
   --font-weight-normal: 400;
-  --ring: #22c55e;
+  --ring: #6DFF3B;
   --radius: 0.75rem;
 
   /* Typography Scale */
@@ -48,8 +48,8 @@
   --card-foreground: #f8fafc;
   --popover: #0f172a;
   --popover-foreground: #f8fafc;
-  --primary: #22c55e;
-  --primary-foreground: #ffffff;
+  --primary: #6DFF3B;
+  --primary-foreground: #020617;
   --secondary: #334155;
   --secondary-foreground: #f8fafc;
   --muted: #1e293b;
@@ -60,13 +60,13 @@
   --destructive-foreground: #ffffff;
   --border: rgba(248, 250, 252, 0.15);
   --input: rgba(248, 250, 252, 0.15);
-  --ring: #22c55e;
+  --ring: #6DFF3B;
 }
 
 @theme inline {
   --font-sans: 'Poppins', sans-serif;
   --font-heading: 'Poppins', sans-serif;
-  
+
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -103,21 +103,37 @@
     @apply bg-background text-foreground font-sans antialiased selection:bg-primary/30 selection:text-foreground;
   }
 
-  h1, h2, h3, h4, h5, h6 {
-    @apply font-heading  tracking-tight text-foreground;
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-heading tracking-tight text-foreground;
   }
 
-  h1 { @apply text-4xl lg:text-5xl leading-tight; }
-  h2 { @apply text-3xl lg:text-4xl leading-tight; }
-  h3 { @apply text-2xl leading-snug; }
-  h4 { @apply text-xl leading-snug; }
+  h1 {
+    @apply text-4xl lg:text-5xl leading-tight;
+  }
+
+  h2 {
+    @apply text-3xl lg:text-4xl leading-tight;
+  }
+
+  h3 {
+    @apply text-2xl leading-snug;
+  }
+
+  h4 {
+    @apply text-xl leading-snug;
+  }
 
   p {
     @apply text-base text-muted-foreground leading-relaxed;
   }
 
   label {
-    @apply text-sm  leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70;
+    @apply text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70;
   }
 
   button {}
@@ -157,3 +173,7 @@ html:not(.dark) .theme-adaptive [class*="bg-[radial-gradient"] {
   background-image: radial-gradient(circle at top, rgba(34, 197, 94, 0.08), transparent 62%) !important;
 }
 
+/* Google Maps dark mode styling */
+.dark .map-container iframe {
+  filter: invert(90%) hue-rotate(180deg) grayscale(10%) contrast(1.1);
+}

@@ -223,6 +223,13 @@ export const router = createBrowserRouter([
         },
       },
       {
+        path: "/squad-booking",
+        lazy: async () => {
+          const { SquadBookingPage } = await import("./pages/squad-booking");
+          return { Component: SquadBookingPage };
+        },
+      },
+      {
         path: "/teams",
         lazy: async () => {
           const { TeamManagement } = await import("./pages/team-management");

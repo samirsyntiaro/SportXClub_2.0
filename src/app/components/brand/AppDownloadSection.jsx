@@ -267,7 +267,7 @@ export function AppDownloadSection() {
                 </p>
                 <div className="flex gap-1.5 overflow-x-auto no-scrollbar">
                   <span className={`flex items-center gap-1 text-[9px] font-bold px-2.5 py-1 rounded-full shrink-0 ${
-                    isDark ? "bg-[#6DFF3B] text-black" : "bg-[#22C55E] text-white"
+                    isDark ? "bg-[#6DFF3B] text-black" : "bg-[#6DFF3B] text-black"
                   }`}>
                     ⚽ Football
                   </span>
@@ -323,7 +323,7 @@ export function AppDownloadSection() {
                     <span className={`font-bold ${isDark ? "text-white" : "text-slate-800"}`}>₹100 / player</span>
                   </div>
                   <button type="button" className={`w-full py-1.5 rounded-lg font-bold text-[10px] active:scale-95 transition-transform cursor-pointer ${
-                    isDark ? "bg-[#6DFF3B] text-black" : "bg-[#22C55E] text-white hover:bg-[#1f9f4c]"
+                    isDark ? "bg-[#6DFF3B] text-black" : "bg-[#6DFF3B] text-black hover:bg-[#86ff60]"
                   }`}>
                     Join Match
                   </button>

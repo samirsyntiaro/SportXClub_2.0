@@ -148,11 +148,10 @@ export function VenueDetails() {
               key={item}
               type="button"
               onClick={() => setSelectedSport(item)}
-              className={`rounded-full border px-4 py-2 text-sm transition ${
-                selectedSport === item
+              className={`rounded-full border px-4 py-2 text-sm transition ${selectedSport === item
                   ? "border-[#6DFF3B]/30 bg-[#6DFF3B]/10 text-[#6DFF3B]"
                   : "border-white/[0.08] bg-white/[0.03] text-white/68 hover:bg-white/[0.06]"
-              }`}
+                }`}
             >
               {item}
             </button>
@@ -179,7 +178,7 @@ export function VenueDetails() {
           <SelectTrigger className="w-full h-[52px] rounded-[18px] border-white/[0.08] bg-white/[0.03] px-4 text-sm text-white hover:bg-white/[0.06] transition-colors">
             <SelectValue placeholder="Select a time slot" />
           </SelectTrigger>
-          <SelectContent 
+          <SelectContent
             className="theme-adaptive rounded-[18px] border-white/[0.08] bg-[#101216] text-white"
             style={{ backgroundColor: '#101216', borderColor: 'rgba(255,255,255,0.08)', color: 'white' }}
           >
@@ -211,7 +210,7 @@ export function VenueDetails() {
         </div>
       </div>
 
-      <div 
+      <div
         className="block cursor-pointer"
         onClick={() => {
           if (!currentUser) {
@@ -270,23 +269,23 @@ export function VenueDetails() {
 
                 <div className="absolute inset-0 image-overlay bg-[linear-gradient(180deg,rgba(5,5,5,0.06),rgba(5,5,5,0.82))]" />
                 <div className="absolute left-5 top-5 flex flex-wrap gap-2">
-                  <Badge className="rounded-full border border-[#6DFF3B]/20 bg-[#6DFF3B]/10 px-3 py-1 text-[0.68rem] uppercase tracking-[0.2em] text-[#6DFF3B]">
+                  <Badge className="rounded-full border border-emerald-500/20 bg-emerald-500/10 dark:border-[#6DFF3B]/20 dark:bg-[#6DFF3B]/10 px-3 py-1 text-[0.68rem] uppercase tracking-[0.2em] text-emerald-600 dark:text-[#6DFF3B]">
                     Verified venue
                   </Badge>
-                  <Badge className="rounded-full border border-white/[0.08] bg-[#050505]/70 px-3 py-1 text-[0.68rem] uppercase tracking-[0.2em] text-white/78">
+                  <Badge className="rounded-full border border-white/[0.08] bg-[#050505]/70 px-3 py-1 text-[0.68rem] uppercase tracking-[0.2em] text-[#ffffff]/78">
                     Secure payment
                   </Badge>
                 </div>
                 <div className="absolute right-5 top-5 flex gap-3">
                   <button
                     type="button"
-                    className="flex h-11 w-11 items-center justify-center rounded-full border border-white/[0.08] bg-[#050505]/70 text-white/80 backdrop-blur-md"
+                    className="flex h-11 w-11 items-center justify-center rounded-full border border-white/[0.08] bg-[#050505]/70 text-[#ffffff]/80 backdrop-blur-md"
                   >
                     <Heart className="h-4 w-4" />
                   </button>
                   <button
                     type="button"
-                    className="flex h-11 w-11 items-center justify-center rounded-full border border-white/[0.08] bg-[#050505]/70 text-white/80 backdrop-blur-md"
+                    className="flex h-11 w-11 items-center justify-center rounded-full border border-white/[0.08] bg-[#050505]/70 text-[#ffffff]/80 backdrop-blur-md"
                   >
                     <Share2 className="h-4 w-4" />
                   </button>
@@ -295,10 +294,10 @@ export function VenueDetails() {
                   <p className="text-sm uppercase tracking-[0.26em] text-[#6DFF3B]/80">
                     Sports venue
                   </p>
-                  <h1 className="mt-3 text-3xl  tracking-tight text-white md:text-5xl">
+                  <h1 className="mt-3 text-3xl  tracking-tight text-[#ffffff] md:text-5xl">
                     {venue.name}
                   </h1>
-                  <div className="mt-4 flex flex-wrap items-center gap-3 text-sm text-white/72">
+                  <div className="mt-4 flex flex-wrap items-center gap-3 text-sm text-[#ffffff]/72">
                     <span className="inline-flex items-center gap-2">
                       <MapPin className="h-4 w-4 text-[#6DFF3B]" />
                       {venue.location}
@@ -376,11 +375,10 @@ export function VenueDetails() {
               {bookingFlow.map((step, index) => (
                 <div
                   key={step}
-                  className={`rounded-[20px] border p-4 ${
-                    index === 2
+                  className={`rounded-[20px] border p-4 ${index === 2
                       ? "border-[#6DFF3B]/30 bg-[#6DFF3B]/10"
                       : "border-white/[0.08] bg-[#101216]"
-                  }`}
+                    }`}
                 >
                   <p className="text-xs uppercase tracking-[0.24em] text-white/45">
                     Step {index + 1}
@@ -390,50 +388,50 @@ export function VenueDetails() {
               ))}
             </div>
 
-            <div className="grid gap-6 lg:grid-cols-[1fr_0.9fr]">
-              <Card className="rounded-[28px] border-white/[0.08] bg-[#101216]">
-                <CardContent className="p-6 md:p-8">
-                  <h2 className="text-xl  text-white">Amenities</h2>
-                  <div className="mt-5 grid gap-3 sm:grid-cols-2">
-                    {amenities.map((amenity) => {
-                      const Icon = amenity.icon;
-                      return (
-                        <div
-                          key={amenity.label}
-                          className="flex items-center gap-3 rounded-[18px] border border-white/[0.08] bg-white/[0.03] px-4 py-3"
-                        >
-                          <div className="flex h-10 w-10 items-center justify-center rounded-full border border-[#6DFF3B]/18 bg-[#6DFF3B]/10">
-                            <Icon className="h-4 w-4 text-[#6DFF3B]" />
-                          </div>
-                          <span className="text-sm text-white/72">
-                            {amenity.label}
-                          </span>
+            <Card className="rounded-[28px] border-white/[0.08] bg-[#101216]">
+              <CardContent className="p-6 md:p-8">
+                <h2 className="text-xl  text-white">Amenities</h2>
+                <div className="mt-5 grid gap-3 sm:grid-cols-2">
+                  {amenities.map((amenity) => {
+                    const Icon = amenity.icon;
+                    return (
+                      <div
+                        key={amenity.label}
+                        className="flex items-center gap-3 rounded-[18px] border border-white/[0.08] bg-white/[0.03] px-4 py-3"
+                      >
+                        <div className="flex h-10 w-10 items-center justify-center rounded-full border border-[#6DFF3B]/18 bg-[#6DFF3B]/10">
+                          <Icon className="h-4 w-4 text-[#6DFF3B]" />
                         </div>
-                      );
-                    })}
-                  </div>
-                </CardContent>
-              </Card>
+                        <span className="text-sm text-white/72">
+                          {amenity.label}
+                        </span>
+                      </div>
+                    );
+                  })}
+                </div>
+              </CardContent>
+            </Card>
 
-              <Card className="rounded-[28px] border-white/[0.08] bg-[#101216]">
-                <CardContent className="p-6 md:p-8">
-                  <h2 className="text-xl  text-white">Location map</h2>
-                  <div className="mt-5 rounded-[22px] border border-dashed border-white/[0.12] bg-[linear-gradient(135deg,rgba(109,255,59,0.08),rgba(255,255,255,0.03))] p-6">
-                    <div className="flex h-52 flex-col items-center justify-center rounded-[18px] border border-white/[0.08] bg-[#050505]/70 text-center">
-                      <MapPin className="h-8 w-8 text-[#6DFF3B]" />
-                      <p className="mt-4 text-sm  text-white">
-                        Interactive map placeholder
-                      </p>
-                      <p className="mt-2 max-w-sm text-xs leading-6 text-white/52">
-                        Show the exact venue pin, nearby transit, and
-                        neighborhood context here.
-                      </p>
-                    </div>
+            <Card className="rounded-[28px] border-white/[0.08] bg-[#101216]">
+              <CardContent className="p-6 md:p-8">
+                <h2 className="text-xl  text-white">Location map</h2>
+                <div className="mt-5 rounded-[22px] border border-dashed border-white/[0.12] bg-[linear-gradient(135deg,rgba(109,255,59,0.08),rgba(255,255,255,0.03))] p-6">
+                  <div className="h-52 w-full overflow-hidden rounded-[18px] border border-white/[0.08] bg-[#050505]/70 map-container">
+                    <iframe
+                      width="100%"
+                      height="100%"
+                      frameBorder="0"
+                      style={{ border: 0 }}
+                      src={`https://maps.google.com/maps?q=${encodeURIComponent(venue.address)}&t=&z=15&ie=UTF8&iwloc=&output=embed`}
+                      allowFullScreen
+                      title="Google Map"
+                      className="w-full h-full"
+                    />
                   </div>
-                  <p className="mt-4 text-sm text-white/58">{venue.address}</p>
-                </CardContent>
-              </Card>
-            </div>
+                </div>
+                <p className="mt-4 text-sm text-white/58">{venue.address}</p>
+              </CardContent>
+            </Card>
 
             <Card className="rounded-[28px] border-white/[0.08] bg-[#101216]">
               <CardContent className="p-6 md:p-8">

@@ -222,15 +222,15 @@ function HeroParticles() {
           animate={
             isDark
               ? {
-                  y: [0, -14, 0],
-                  opacity: [0.12, 0.7, 0.12],
-                  scale: [1, 1.35, 1],
-                }
+                y: [0, -14, 0],
+                opacity: [0.12, 0.7, 0.12],
+                scale: [1, 1.35, 1],
+              }
               : {
-                  y: [0, -10, 0],
-                  opacity: [0.03, 0.12, 0.03],
-                  scale: [1, 1.12, 1],
-                }
+                y: [0, -10, 0],
+                opacity: [0.03, 0.12, 0.03],
+                scale: [1, 1.12, 1],
+              }
           }
           transition={{
             duration: isDark ? 5 + (index % 4) : 8 + (index % 4),
@@ -878,7 +878,7 @@ export function Navbar() {
                   </Link>
                 );
               })}
-              
+
               {/* Theme Toggle inside Menu */}
               <div className="flex items-center justify-between w-full py-4 px-3 border-b border-slate-100 dark:border-white/[0.05] transition-colors duration-150">
                 <span className={cn("text-sm tracking-wide", isDark ? "text-white/90" : "text-slate-800")}>
@@ -1166,7 +1166,7 @@ function MoreSportsCard() {
                 className={cn(
                   "h-full w-full object-cover",
                   !isDark &&
-                    "brightness-[1.05] contrast-[1.08] saturate-[1.08]",
+                  "brightness-[1.05] contrast-[1.08] saturate-[1.08]",
                 )}
               />
             ))}
@@ -1528,8 +1528,8 @@ export function DiscoveryRails() {
 
             <CardContent className="space-y-4 p-6">
               {events.map((event) => (
-                <div 
-                  key={event.title} 
+                <div
+                  key={event.title}
                   className="block cursor-pointer"
                   onClick={() => {
                     if (!currentUser) {
@@ -1653,7 +1653,7 @@ export function TournamentCTA() {
                 "absolute inset-0",
                 isDark
                   ? "bg-[linear-gradient(90deg,rgba(5,5,5,0.96)_0%,rgba(5,5,5,0.85)_45%,rgba(5,5,5,0.25)_100%)]"
-                  : "bg-[linear-gradient(90deg,rgba(245,245,245,0.96)_0%,rgba(245,245,245,0.85)_45%,rgba(245,245,245,0.25)_100%)]",
+                  : "bg-[linear-gradient(90deg,rgba(245,245,245,0.55)_0%,rgba(245,245,245,0.40)_45%,rgba(245,245,245,0.10)_100%)]",
               )}
             />
           </div>
@@ -1911,7 +1911,40 @@ const storeProducts = [
     image:
       "https://images.unsplash.com/photo-1579952363873-27f3bade9f55?w=500&q=80",
   },
+  {
+    id: 5,
+    name: "Elite Series Pickleball Paddle",
+    category: "Equipment",
+    price: "₹2,499",
+    rating: "4.8",
+    image:
+      "https://images.unsplash.com/photo-1595435934249-5df7ed86e1c0?w=500&q=80",
+  },
+  {
+    id: 6,
+    name: "Premium Leather Cricket Ball",
+    category: "Accessories",
+    price: "₹899",
+    rating: "4.7",
+    image:
+      "https://images.unsplash.com/photo-1546519638-68e109498ffc?w=500&q=80",
+  },
 ];
+
+const marqueeStyle = `
+  @keyframes marqueeStore {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+  .animate-marquee-store {
+    display: flex;
+    width: max-content;
+    animation: marqueeStore 24s linear infinite;
+  }
+  .animate-marquee-store:hover {
+    animation-play-state: paused;
+  }
+`;
 
 export function StoreSection() {
   const { resolvedTheme } = useTheme();
@@ -1919,23 +1952,27 @@ export function StoreSection() {
 
   return (
     <section className="py-[100px] relative overflow-hidden">
+      <style dangerouslySetInnerHTML={{ __html: marqueeStyle }} />
       <div className="mx-auto max-w-[1400px] px-4 sm:px-6 lg:px-8">
         <SectionHeading
           eyebrow="Pro Store"
           title="Sport Related Facilities & Equipment"
           description="Gear up with the best sports merchandise and equipment. Delivered straight to your venue or home."
         />
+      </div>
 
-        <div className="mt-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      {/* Infinite scrolling marquee slider track */}
+      <div className="relative overflow-hidden w-full mt-12 py-4">
+        {/* Gradient fade edge masks */}
+        <div className="absolute left-0 top-0 bottom-0 w-24 bg-gradient-to-r from-white dark:from-[#050505] to-transparent z-10 pointer-events-none opacity-30" />
+        <div className="absolute right-0 top-0 bottom-0 w-24 bg-gradient-to-l from-white dark:from-[#050505] to-transparent z-10 pointer-events-none opacity-30" />
+
+        <div className="animate-marquee-store flex gap-6">
+          {/* First list iteration */}
           {storeProducts.map((product) => (
-            <motion.div
-              key={product.id}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5 }}
-              whileHover={{ y: -5 }}
-              className="group"
+            <div
+              key={`first-${product.id}`}
+              className="w-[280px] sm:w-[310px] shrink-0"
             >
               <div
                 className={cn(
@@ -1945,7 +1982,7 @@ export function StoreSection() {
                     : "border-slate-200 bg-white shadow-sm hover:shadow-xl hover:border-emerald-500/30",
                 )}
               >
-                <div className="aspect-[4/3] w-full overflow-hidden bg-slate-100">
+                <div className="aspect-[4/3] w-full overflow-hidden bg-slate-100 relative">
                   <ImageWithFallback
                     src={product.image}
                     alt={product.name}
@@ -1978,17 +2015,17 @@ export function StoreSection() {
                   </span>
                   <h3
                     className={cn(
-                      "text-lg leading-tight mb-3 line-clamp-2",
+                      "text-base leading-tight mb-3 line-clamp-2 h-10",
                       isDark ? "text-white" : "text-slate-900",
                     )}
                   >
                     {product.name}
                   </h3>
 
-                  <div className="mt-auto flex items-center justify-between pt-4 border-t border-dashed border-white/10">
+                  <div className="mt-auto flex items-center justify-between pt-4 border-t border-dashed border-slate-200 dark:border-white/10">
                     <span
                       className={cn(
-                        "text-xl",
+                        "text-lg font-bold",
                         isDark ? "text-[#6DFF3B]" : "text-emerald-600",
                       )}
                     >
@@ -2009,10 +2046,93 @@ export function StoreSection() {
                   </div>
                 </div>
               </div>
-            </motion.div>
+            </div>
+          ))}
+
+          {/* Second copy for seamless looping */}
+          {storeProducts.map((product) => (
+            <div
+              key={`second-${product.id}`}
+              className="w-[280px] sm:w-[310px] shrink-0"
+            >
+              <div
+                className={cn(
+                  "relative flex flex-col h-full overflow-hidden rounded-3xl border transition-all duration-300",
+                  isDark
+                    ? "border-white/[0.08] bg-[#101216] hover:border-[#6DFF3B]/30 hover:shadow-[0_0_20px_rgba(109,255,59,0.05)]"
+                    : "border-slate-200 bg-white shadow-sm hover:shadow-xl hover:border-emerald-500/30",
+                )}
+              >
+                <div className="aspect-[4/3] w-full overflow-hidden bg-slate-100 relative">
+                  <ImageWithFallback
+                    src={product.image}
+                    alt={product.name}
+                    className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
+                  />
+
+                  <div className="absolute top-4 right-4">
+                    <Badge
+                      className={cn(
+                        "rounded-full px-2 py-1 flex items-center gap-1",
+                        isDark
+                          ? "bg-[#050505]/80 text-[#6DFF3B] border border-[#6DFF3B]/30"
+                          : "bg-white/90 text-emerald-700 border border-emerald-200",
+                      )}
+                    >
+                      <Star className="h-3 w-3 fill-current" />
+                      <span className="text-xs">{product.rating}</span>
+                    </Badge>
+                  </div>
+                </div>
+
+                <div className="flex flex-col flex-1 p-5">
+                  <span
+                    className={cn(
+                      "text-xs uppercase tracking-wider mb-2",
+                      isDark ? "text-white/50" : "text-slate-500",
+                    )}
+                  >
+                    {product.category}
+                  </span>
+                  <h3
+                    className={cn(
+                      "text-base leading-tight mb-3 line-clamp-2 h-10",
+                      isDark ? "text-white" : "text-slate-900",
+                    )}
+                  >
+                    {product.name}
+                  </h3>
+
+                  <div className="mt-auto flex items-center justify-between pt-4 border-t border-dashed border-slate-200 dark:border-white/10">
+                    <span
+                      className={cn(
+                        "text-lg font-bold",
+                        isDark ? "text-[#6DFF3B]" : "text-emerald-600",
+                      )}
+                    >
+                      {product.price}
+                    </span>
+                    <Button
+                      size="sm"
+                      className={cn(
+                        "rounded-full px-4 text-xs tracking-wide transition-all group",
+                        isDark
+                          ? "border border-[#6DFF3B] bg-transparent text-white hover:bg-[#6DFF3B] hover:text-[#050505]"
+                          : "border border-[#6DFF3B] bg-transparent text-slate-800 hover:bg-[#6DFF3B] hover:text-[#050505]",
+                      )}
+                    >
+                      <ShoppingCart className="h-3.5 w-3.5 mr-1.5" />
+                      Add
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            </div>
           ))}
         </div>
+      </div>
 
+      <div className="mx-auto max-w-[1400px] px-4 sm:px-6 lg:px-8">
         <div className="mt-10 flex justify-center">
           <Button
             variant="outline"

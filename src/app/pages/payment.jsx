@@ -139,11 +139,10 @@ export function Payment() {
           {checkoutFlow.map((step, index) => (
             <div
               key={step}
-              className={`rounded-[20px] border p-4 ${
-                index === 3
+              className={`rounded-[20px] border p-4 ${index === 3
                   ? "border-[#6DFF3B]/30 bg-[#6DFF3B]/10"
                   : "border-white/[0.08] bg-[#101216]"
-              }`}
+                }`}
             >
               <p className="text-xs uppercase tracking-[0.24em] text-white/45">
                 Step {index + 1}
@@ -173,11 +172,10 @@ export function Payment() {
                       <Label
                         key={method.id}
                         htmlFor={method.id}
-                        className={`flex cursor-pointer items-center justify-between rounded-[20px] border p-4 transition ${
-                          paymentMethod === method.id
+                        className={`flex cursor-pointer items-center justify-between rounded-[20px] border p-4 transition ${paymentMethod === method.id
                             ? "border-[#6DFF3B]/30 bg-[#6DFF3B]/10"
                             : "border-white/[0.08] bg-white/[0.03] hover:bg-white/[0.06]"
-                        }`}
+                          }`}
                       >
                         <div className="flex items-center gap-4">
                           <RadioGroupItem
@@ -340,7 +338,7 @@ export function Payment() {
 
                 <div className="grid gap-3 rounded-[22px] border border-white/[0.08] bg-white/[0.03] p-4">
                   <div className="flex items-center gap-3 text-sm text-white/72">
-                    <Badge className="rounded-full border border-[#6DFF3B]/20 bg-[#6DFF3B]/10 px-3 py-1 text-[0.68rem] uppercase tracking-[0.18em] text-[#6DFF3B]">
+                    <Badge className="rounded-full border border-emerald-500/20 bg-emerald-500/10 dark:border-[#6DFF3B]/20 dark:bg-[#6DFF3B]/10 px-3 py-1 text-[0.68rem] uppercase tracking-[0.18em] text-emerald-600 dark:text-[#6DFF3B]">
                       {booking.sport}
                     </Badge>
                   </div>

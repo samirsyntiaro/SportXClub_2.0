@@ -187,7 +187,7 @@ export function HomeDashboard() {
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="text-primary hover:text-primary hover:bg-primary/10"
+                  className="text-emerald-700 hover:text-emerald-800 dark:text-[#6DFF3B] dark:hover:text-[#6DFF3B] hover:bg-emerald-50 dark:hover:bg-[#6DFF3B]/10 font-semibold"
                 >
                   View History
                   <ArrowRight className="ml-2 h-4 w-4" />
@@ -202,7 +202,7 @@ export function HomeDashboard() {
                   key={booking.id}
                   className="group flex flex-col sm:flex-row sm:items-center gap-4 p-4 rounded-xl border border-border/40 bg-muted/30 hover:bg-muted/50 hover:border-primary/30 transition-all"
                 >
-                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
+                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-emerald-100 dark:bg-[#6DFF3B]/10 text-emerald-700 dark:text-[#6DFF3B] group-hover:bg-emerald-700 dark:group-hover:bg-[#6DFF3B] group-hover:text-white dark:group-hover:text-black transition-colors">
                     <Calendar className="h-6 w-6" />
                   </div>
                   <div className="flex-1 min-w-0 space-y-1">
@@ -210,7 +210,7 @@ export function HomeDashboard() {
                       <h4 className=" text-base truncate">{booking.venue}</h4>
                       <Badge
                         variant="outline"
-                        className="bg-background/50 border-primary/20 text-primary"
+                        className="bg-background/50 border-emerald-500/20 text-emerald-700 dark:text-[#6DFF3B] dark:border-[#6DFF3B]/20"
                       >
                         {booking.sport}
                       </Badge>
