@@ -235,7 +235,7 @@ export function Layout() {
         >
           <div
             className={
-              location.pathname.startsWith("/player-dashboard") || location.pathname.startsWith("/venues") || location.pathname.startsWith("/bookings")
+              location.pathname.startsWith("/player-dashboard") || location.pathname.startsWith("/venues")
                 ? "w-full"
                 : "px-4 py-5 md:px-6 md:py-6 lg:px-8 md:mx-auto md:max-w-7xl"
             }

@@ -270,58 +270,7 @@ export function MobileHomePage() {
   const firstName = currentUser?.fullName ? currentUser.fullName.split(" ")[0] : "Rohan";
   const displayCity = currentUser?.city || "Mumbai Central";
 
-  const categoriesRef = useRef(null);
-
-  useEffect(() => {
-    const container = categoriesRef.current;
-    if (!container) return;
-
-    let animationFrameId;
-    let lastTime = 0;
-    const speed = 25; // pixels per second
-
-    const scroll = (time) => {
-      if (!lastTime) lastTime = time;
-      const delta = (time - lastTime) / 1000;
-      lastTime = time;
-
-      if (!container.dataset.userInteracting) {
-        container.scrollLeft += speed * delta;
-
-        // Wrap around smoothly to create infinite scroll feel
-        if (container.scrollLeft >= container.scrollWidth - container.clientWidth - 1) {
-          container.scrollLeft = 0;
-        }
-      }
-
-      animationFrameId = requestAnimationFrame(scroll);
-    };
-
-    const setInteracting = () => {
-      container.dataset.userInteracting = "true";
-    };
-    const stopInteracting = () => {
-      setTimeout(() => {
-        container.dataset.userInteracting = "";
-        lastTime = 0;
-      }, 1500);
-    };
-
-    container.addEventListener("touchstart", setInteracting, { passive: true });
-    container.addEventListener("touchend", stopInteracting, { passive: true });
-    container.addEventListener("mousedown", setInteracting);
-    container.addEventListener("mouseup", stopInteracting);
-
-    animationFrameId = requestAnimationFrame(scroll);
-
-    return () => {
-      cancelAnimationFrame(animationFrameId);
-      container.removeEventListener("touchstart", setInteracting);
-      container.removeEventListener("touchend", stopInteracting);
-      container.removeEventListener("mousedown", setInteracting);
-      container.removeEventListener("mouseup", stopInteracting);
-    };
-  }, []);
+  // Sports categories use Framer Motion marquee for infinite auto-scrolling
 
   const bgImages = [
     "/assets/hero/unique-hero.jpg",
@@ -379,37 +328,45 @@ export function MobileHomePage() {
 
           <section className="space-y-3">
             <SectionHeader title="Sports categories" action="More" />
-            <div
-              ref={categoriesRef}
-              className="flex gap-3 overflow-x-auto pb-1 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden sports-categories-container"
-            >
-              {sportsCategories.map((item) => (
-                <motion.button
-                  key={item.name}
-                  whileTap={{ scale: 0.96 }}
-                  className="flex min-w-[76px] shrink-0 flex-col items-center gap-2 group"
-                >
-                  <span
-                    className={cn(
-                      "flex h-[72px] w-[72px] items-center justify-center rounded-[20px] bg-gradient-to-br shadow-sm transition-all group-hover:shadow-md",
-                      item.accent,
-                    )}
+            <div className="relative overflow-hidden">
+              <motion.div
+                className="flex gap-3 w-max"
+                animate={{ x: ["0%", "-50%"] }}
+                transition={{
+                  duration: 16,
+                  repeat: Infinity,
+                  repeatType: "loop",
+                  ease: "linear",
+                }}
+              >
+                {[...sportsCategories, ...sportsCategories].map((item, index) => (
+                  <motion.button
+                    key={`${item.name}-${index}`}
+                    whileTap={{ scale: 0.96 }}
+                    className="flex min-w-[76px] shrink-0 flex-col items-center gap-2 group cursor-pointer"
                   >
-                    <span className="flex h-[56px] w-[56px] overflow-hidden rounded-xl bg-background/90 relative">
-                      <ImageWithFallback
-                        src={item.image}
-                        alt={item.name}
-                        loading="lazy"
-                        decoding="async"
-                        className="h-full w-full object-cover transition-transform duration-300 hover:scale-110"
-                      />
+                    <span
+                      className={cn(
+                        "flex h-[72px] w-[72px] items-center justify-center rounded-[20px] bg-gradient-to-br shadow-sm transition-all group-hover:shadow-md border-none",
+                        item.accent,
+                      )}
+                    >
+                      <span className="flex h-[56px] w-[56px] overflow-hidden rounded-xl bg-background/90 relative border-none">
+                        <ImageWithFallback
+                          src={item.image}
+                          alt={item.name}
+                          loading="lazy"
+                          decoding="async"
+                          className="h-full w-full object-cover transition-transform duration-300 hover:scale-110"
+                        />
+                      </span>
                     </span>
-                  </span>
-                  <span className="text-center text-[0.75rem]  leading-tight text-muted-foreground">
-                    {item.name}
-                  </span>
-                </motion.button>
-              ))}
+                    <span className="text-center text-[0.75rem] leading-tight text-muted-foreground">
+                      {item.name}
+                    </span>
+                  </motion.button>
+                ))}
+              </motion.div>
             </div>
           </section>
 
@@ -507,15 +464,6 @@ export function MobileHomePage() {
                     </div>
                   </div>
                 </motion.article>
-              ))}
-            </div>
-          </section>
-
-          <section className="space-y-3">
-            <SectionHeader title="Offers" />
-            <div className="flex gap-3 overflow-x-auto pb-1 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
-              {offers.map((offer) => (
-                <CarouselCard key={offer.title} {...offer} />
               ))}
             </div>
           </section>

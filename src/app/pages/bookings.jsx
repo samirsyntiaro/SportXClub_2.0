@@ -59,13 +59,13 @@ export function BookingsPage() {
   const [selectedPlayers, setSelectedPlayers] = useState("4 Players");
 
   return (
-    <div className="space-y-5 px-4 py-4 pb-6">
+    <div className="space-y-5 py-2 pb-6 w-full max-w-full overflow-x-hidden min-w-0 px-0.5">
       <div className="space-y-5">
         <motion.section
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3 }}
-          className="rounded-[28px] border border-primary/10 bg-gradient-to-br from-primary/10 via-card to-card p-4 shadow-[0_18px_42px_-30px_rgba(15,23,42,0.35)]"
+          className="rounded-[28px] border border-primary/10 bg-gradient-to-br from-primary/10 via-card to-card p-4 shadow-[0_18px_42px_-30px_rgba(15,23,42,0.35)] w-full min-w-0 overflow-hidden"
         >
           <div className="flex items-start justify-between gap-4">
             <div>
@@ -153,8 +153,8 @@ export function BookingsPage() {
           </div>
         </section>
 
-        <section className="grid gap-4 lg:grid-cols-[1.05fr_0.95fr]">
-          <Card className="rounded-[28px] border-border/60 bg-card shadow-[0_12px_34px_-26px_rgba(15,23,42,0.35)]">
+        <section className="grid gap-4 lg:grid-cols-[1.05fr_0.95fr] w-full min-w-0 overflow-hidden">
+          <Card className="rounded-[28px] border-border/60 bg-card shadow-[0_12px_34px_-26px_rgba(15,23,42,0.35)] w-full min-w-0 overflow-hidden">
             <CardContent className="space-y-5 p-4">
               <div className="flex items-start justify-between gap-4">
                 <div>
@@ -231,7 +231,7 @@ export function BookingsPage() {
             </CardContent>
           </Card>
 
-          <Card className="rounded-[28px] border-border/60 bg-card shadow-[0_12px_34px_-26px_rgba(15,23,42,0.35)]">
+          <Card className="rounded-[28px] border-border/60 bg-card shadow-[0_12px_34px_-26px_rgba(15,23,42,0.35)] w-full min-w-0 overflow-hidden">
             <CardContent className="space-y-4 p-4">
               <div className="flex items-center justify-between">
                 <div>
@@ -274,7 +274,7 @@ export function BookingsPage() {
                 </p>
               </div>
 
-              <Button className="h-12 w-full rounded-[18px] bg-primary  text-primary-foreground shadow-[0_12px_24px_-18px_rgba(34,197,94,0.8)] hover:bg-primary/90">
+              <Button className="h-12 w-1/2 flex mx-auto justify-center items-center gap-2 rounded-[18px] bg-primary text-primary-foreground shadow-[0_12px_24px_-18px_rgba(34,197,94,0.8)] hover:bg-primary/90">
                 Confirm booking
                 <ArrowRight className="h-4 w-4" />
               </Button>
