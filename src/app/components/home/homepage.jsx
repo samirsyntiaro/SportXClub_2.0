@@ -94,6 +94,7 @@ const moreSports = [
   { label: "Padel", image: asset("/sports/cat-padel.webp") },
   { label: "Box MMA", image: asset("/sports/cat-boxmma.webp") },
   { label: "More", image: asset("/sports/cat-swimming.webp") },
+  { label: "Badminton", image: asset("/sports/cat-badminton.webp") },
 ];
 
 const offers = [
