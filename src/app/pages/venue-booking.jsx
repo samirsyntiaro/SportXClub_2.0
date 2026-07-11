@@ -1,5 +1,5 @@
 import { useMemo, useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router";
+import { Link, useNavigate, useLocation } from "react-router";
 import { toast } from "sonner";
 import { useAuth } from "../providers/auth-provider";
 import { motion, AnimatePresence } from "motion/react";
@@ -214,11 +214,21 @@ export function VenueBooking() {
   const isDark = resolvedTheme !== "light";
   const { currentUser } = useAuth();
   const navigate = useNavigate();
+  const locationState = useLocation();
   const [query, setQuery] = useState("");
   const [sport, setSport] = useState("All");
   const [location, setLocation] = useState(
     () => localStorage.getItem("preferred-city") || "All",
   );
+
+  useEffect(() => {
+    if (locationState.state?.search) {
+      setQuery(locationState.state.search);
+    }
+    if (locationState.state?.openFilters) {
+      setFilterOpen(true);
+    }
+  }, [locationState]);
 
   useEffect(() => {
     const handleCityChange = (e) => {

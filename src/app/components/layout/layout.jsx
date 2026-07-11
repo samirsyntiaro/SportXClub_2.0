@@ -133,6 +133,17 @@ export function Layout() {
   const { currentUser } = useAuth();
   const displayName = currentUser?.fullName || "John Doe";
 
+  const hideMobileNav = useMemo(() => {
+    const path = location.pathname;
+    const isVenueDetails = /^\/venues\/\w+/.test(path);
+    return (
+      isVenueDetails ||
+      path.startsWith("/payment") ||
+      path.startsWith("/booking-success") ||
+      path.startsWith("/squad-booking")
+    );
+  }, [location.pathname]);
+
   return (
     <div className="flex flex-col min-h-dvh bg-background text-foreground">
       {/* Desktop Top Navbar */}
@@ -231,7 +242,11 @@ export function Layout() {
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -10 }}
           transition={{ duration: 0.22, ease: "easeOut" }}
-          className="flex-1 pb-[calc(104px+env(safe-area-inset-bottom))] md:pb-0"
+          className={`flex-1 md:pb-0 ${
+            hideMobileNav
+              ? "pb-[calc(76px+env(safe-area-inset-bottom))]"
+              : "pb-[calc(104px+env(safe-area-inset-bottom))]"
+          }`}
         >
           <div
             className={
@@ -244,7 +259,7 @@ export function Layout() {
           </div>
         </motion.main>
 
-        <MobileBottomNav activeTab={mobileTab} />
+        {!hideMobileNav && <MobileBottomNav activeTab={mobileTab} />}
       </div>
     </div>
   );

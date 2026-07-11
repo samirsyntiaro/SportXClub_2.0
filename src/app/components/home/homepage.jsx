@@ -1009,7 +1009,7 @@ export function HeroSection() {
   }, [bgImages.length]);
 
   return (
-    <section className="relative isolate overflow-hidden bg-white dark:bg-[#050505]">
+    <section className="always-dark relative isolate overflow-hidden bg-[#060813]">
       <div className="absolute inset-0 -z-20 overflow-hidden">
         <AnimatePresence mode="popLayout">
           <motion.div
@@ -1046,6 +1046,12 @@ export function HeroSection() {
                   Compete.
                 </span>
               </h1>
+            </motion.div>
+
+            <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.15 }}>
+              <p className="mt-6 text-center text-lg sm:text-xl md:text-2xl font-light tracking-wider text-white/90 max-w-2xl mx-auto">
+                Let's begin where the game never stops
+              </p>
             </motion.div>
 
             <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.2 }} className="mt-10 flex flex-col sm:flex-row flex-wrap items-center justify-center gap-3 w-full sm:w-auto">

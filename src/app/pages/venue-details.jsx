@@ -161,26 +161,10 @@ export function VenueDetails() {
     };
   }, [isMobileBookingOpen]);
 
-  const renderBookingFlow = (isMobile = false) => (
-    <div
-      className={`flex flex-col space-y-5 h-full overflow-y-auto ${isMobile ? "px-6 pb-[120px] pt-6" : "p-6"}`}
-    >
-      <div className="flex items-start justify-between gap-4">
-        <div>
-          <p className="text-xs  uppercase tracking-[0.28em] text-white/45">
-            Booking flow
-          </p>
-          <h2 className="mt-2 text-xl  text-white">
-            Select sport, date, and slot
-          </h2>
-        </div>
-        <div className="flex h-12 w-12 items-center justify-center shrink-0 rounded-full border border-[#6DFF3B]/18 bg-[#6DFF3B]/10">
-          <Calendar className="h-5 w-5 text-[#6DFF3B]" />
-        </div>
-      </div>
-
+  const renderBookingFields = () => (
+    <div className="space-y-5">
       <div className="space-y-3">
-        <p className="text-sm  text-white/78">Select sport</p>
+        <p className="text-sm text-white/78">Select sport</p>
         <Select value={selectedSport} onValueChange={setSelectedSport}>
           <SelectTrigger className="w-1/2 h-[52px] rounded-[18px] border-white/[0.08] bg-white/[0.03] px-4 text-sm text-white hover:bg-white/[0.06] transition-colors">
             <SelectValue placeholder="Select a sport" />
@@ -203,7 +187,7 @@ export function VenueDetails() {
       </div>
 
       <div className="space-y-3">
-        <p className="text-sm  text-white/78">Select date</p>
+        <p className="text-sm text-white/78">Select date</p>
         <label className="flex items-center gap-3 rounded-[18px] border border-white/[0.08] bg-white/[0.03] px-4 py-3">
           <Calendar className="h-4 w-4 text-[#6DFF3B]" />
           <input
@@ -216,7 +200,7 @@ export function VenueDetails() {
       </div>
 
       <div className="space-y-3">
-        <p className="text-sm  text-white/78">Select start time</p>
+        <p className="text-sm text-white/78">Select start time</p>
         <label className="flex items-center gap-3 rounded-[18px] border border-white/[0.08] bg-white/[0.03] px-4 py-3">
           <Calendar className="h-4 w-4 text-[#6DFF3B]" />
           <input
@@ -229,7 +213,7 @@ export function VenueDetails() {
       </div>
 
       <div className="space-y-3">
-        <p className="text-sm  text-white/78">How many hours to play</p>
+        <p className="text-sm text-white/78">How many hours to play</p>
         <Input
           type="number"
           min={1}
@@ -271,7 +255,11 @@ export function VenueDetails() {
           </div>
         </div>
       </div>
+    </div>
+  );
 
+  const renderBookingActions = () => (
+    <div className="space-y-3">
       <div
         className="block cursor-pointer"
         onClick={() => {
@@ -296,22 +284,43 @@ export function VenueDetails() {
         </Button>
       </div>
 
-      <div className="grid grid-cols-2 gap-3 pb-8">
+      <div className="grid grid-cols-2 gap-3">
         <Button
           variant="ghost"
-          className="h-11 rounded-[16px] border border-white/[0.08] bg-white/[0.03] text-white hover:bg-white/[0.06]"
+          className="h-11 rounded-[16px] border border-white/[0.08] bg-white/[0.03] text-white hover:bg-white/[0.06] w-full"
         >
           <Phone className="h-4 w-4 mr-2" />
           Call venue
         </Button>
         <Button
           variant="ghost"
-          className="h-11 rounded-[16px] border border-white/[0.08] bg-white/[0.03] text-white hover:bg-white/[0.06]"
+          className="h-11 rounded-[16px] border border-white/[0.08] bg-white/[0.03] text-white hover:bg-white/[0.06] w-full"
         >
           <Menu className="h-4 w-4 mr-2" />
           Compare
         </Button>
       </div>
+    </div>
+  );
+
+  const renderBookingFlow = () => (
+    <div className="flex flex-col space-y-5 p-6">
+      <div className="flex items-start justify-between gap-4">
+        <div>
+          <p className="text-xs uppercase tracking-[0.28em] text-white/45">
+            Booking flow
+          </p>
+          <h2 className="mt-2 text-xl text-white">
+            Select sport, date, and slot
+          </h2>
+        </div>
+        <div className="flex h-12 w-12 items-center justify-center shrink-0 rounded-full border border-[#6DFF3B]/18 bg-[#6DFF3B]/10">
+          <Calendar className="h-5 w-5 text-[#6DFF3B]" />
+        </div>
+      </div>
+
+      {renderBookingFields()}
+      {renderBookingActions()}
     </div>
   );
 
@@ -329,7 +338,7 @@ export function VenueDetails() {
         <div className="mt-6 grid gap-8 lg:grid-cols-[minmax(0,1.35fr)_390px]">
           <div className="space-y-6">
             <div className="overflow-hidden rounded-[28px] border border-white/[0.08] bg-[#101216]">
-              <div className="relative aspect-[16/9] overflow-hidden">
+              <div className="relative w-full h-[280px] sm:h-auto sm:aspect-[16/9] overflow-hidden">
                 <ImageWithFallback
                   src={gallery[0]}
                   alt={venue.name}
@@ -360,7 +369,7 @@ export function VenueDetails() {
                     <Share2 className="h-4 w-4 text-white" />
                   </button>
                 </div>
-                <div className="absolute bottom-5 left-5 max-w-xl">
+                <div className="absolute bottom-4 left-4 right-4 md:bottom-5 md:left-5 md:max-w-xl">
                   <p className="text-sm uppercase tracking-[0.26em] text-[#6DFF3B]/80">
                     Sports venue
                   </p>
@@ -380,11 +389,11 @@ export function VenueDetails() {
                 </div>
               </div>
 
-              <div className="grid gap-2 p-4 md:grid-cols-4">
+              <div className="grid grid-cols-2 gap-2.5 p-4 md:grid-cols-4">
                 {gallery.map((image, index) => (
                   <div
                     key={image}
-                    className="relative aspect-[4/3] overflow-hidden rounded-[20px]"
+                    className="relative aspect-[4/3] w-full overflow-hidden rounded-[20px]"
                   >
                     <ImageWithFallback
                       src={image}
@@ -565,7 +574,7 @@ export function VenueDetails() {
           </aside>
         </div>
 
-        <div className="fixed inset-x-0 bottom-0 z-40 border-t border-white/[0.08] bg-[#050505]/94 px-4 py-3 backdrop-blur-2xl lg:hidden">
+        <div className="fixed inset-x-0 bottom-0 z-40 border-t border-white/[0.08] bg-[#050505]/94 px-4 pt-3.5 pb-[calc(14px+env(safe-area-inset-bottom))] backdrop-blur-2xl lg:hidden">
           <div className="mx-auto flex max-w-[1400px] items-center justify-between gap-3">
             <div>
               <p className="text-xs uppercase tracking-[0.24em] text-white/45">
@@ -608,10 +617,22 @@ export function VenueDetails() {
                 transition={{ type: "spring", damping: 25, stiffness: 200 }}
                 className="fixed inset-x-0 bottom-0 z-50 flex max-h-[85vh] flex-col rounded-t-[28px] border-t border-white/[0.08] bg-[#101216] lg:hidden"
               >
-                <div className="flex items-center justify-center pt-3 pb-1">
+                {/* Grab handle */}
+                <div className="flex items-center justify-center pt-3 pb-1 shrink-0">
                   <div className="h-1.5 w-12 rounded-full bg-white/20" />
                 </div>
-                {renderBookingFlow(true)}
+                {/* Sticky Header */}
+                <div className="px-6 pt-2 pb-4 border-b border-white/[0.06] shrink-0">
+                  <h2 className="text-xl text-white font-semibold">Select sport, date, and slot</h2>
+                </div>
+                {/* Scrollable Fields */}
+                <div className="flex-1 overflow-y-auto px-6 py-4">
+                  {renderBookingFields()}
+                </div>
+                {/* Sticky Footer Actions */}
+                <div className="px-6 py-4 border-t border-white/[0.06] bg-[#101216] shrink-0 pb-[calc(16px+env(safe-area-inset-bottom))]">
+                  {renderBookingActions()}
+                </div>
               </motion.div>
             </>
           )}

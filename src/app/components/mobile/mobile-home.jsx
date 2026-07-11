@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
+import { toast } from "sonner";
 import { motion, AnimatePresence } from "motion/react";
 import {
   ArrowRight,
@@ -22,6 +23,20 @@ import { MobileAppBar, MobileBottomNav } from "./mobile-chrome";
 import { useAuth } from "../../providers/auth-provider";
 
 const asset = (path) => `/assets${path}`;
+
+const marqueeStyle = `
+  @keyframes marquee-categories {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+  .animate-marquee-categories {
+    display: flex;
+    animation: marquee-categories 16s linear infinite;
+  }
+  .animate-marquee-categories:hover {
+    animation-play-state: paused;
+  }
+`;
 
 const sportsCategories = [
   {
@@ -206,32 +221,107 @@ function SectionHeader({ title, action = "View all" }) {
 }
 
 function SearchBar() {
+  const navigate = useNavigate();
+  const [query, setQuery] = useState("");
+  const [isListening, setIsListening] = useState(false);
+
+  const handleSearch = (e) => {
+    if (e.key === "Enter") {
+      navigate("/venues", { state: { search: query } });
+    }
+  };
+
+  const startVoiceSearch = () => {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SpeechRecognition) {
+      toast.error("Voice search is not supported in this browser.");
+      return;
+    }
+
+    const recognition = new SpeechRecognition();
+    recognition.lang = "en-US";
+
+    recognition.onstart = () => {
+      setIsListening(true);
+      toast.info("Listening... Speak now");
+    };
+
+    recognition.onresult = (event) => {
+      const transcript = event.results[0][0].transcript;
+      setQuery(transcript);
+      setIsListening(false);
+      toast.success(`Search query set to: "${transcript}"`);
+      setTimeout(() => {
+        navigate("/venues", { state: { search: transcript } });
+      }, 800);
+    };
+
+    recognition.onerror = (event) => {
+      setIsListening(false);
+      console.error(event.error);
+      toast.error("Voice recognition failed. Please try again.");
+    };
+
+    recognition.onend = () => {
+      setIsListening(false);
+    };
+
+    recognition.start();
+  };
+
   return (
-    <div className="rounded-[24px] border border-border/60 bg-card/80 p-3 shadow-[0_14px_30px_-24px_rgba(15,23,42,0.35)] backdrop-blur-xl transition focus-within:border-primary/30 focus-within:ring-4 focus-within:ring-primary/10">
-      <div className="flex items-center gap-2">
-        <div className="flex h-11 flex-1 items-center gap-3 rounded-[18px] border border-border/60 bg-background/90 px-4">
-          <Search className="h-4.5 w-4.5 shrink-0 text-muted-foreground" />
-          <input
-            type="search"
-            placeholder="Search venues, sports or tournaments"
-            className="w-full bg-transparent text-sm text-foreground outline-none placeholder:text-muted-foreground"
-          />
+    <div className="relative">
+      <div className={cn(
+        "rounded-[24px] border border-border/60 bg-card/80 p-3 shadow-[0_14px_30px_-24px_rgba(15,23,42,0.35)] backdrop-blur-xl transition",
+        isListening ? "border-primary/50 ring-4 ring-primary/10" : "focus-within:border-primary/30 focus-within:ring-4 focus-within:ring-primary/10"
+      )}>
+        <div className="flex items-center gap-2">
+          <div className="flex h-11 flex-1 items-center gap-3 rounded-[18px] border border-border/60 bg-background/90 px-4">
+            <Search className="h-4.5 w-4.5 shrink-0 text-muted-foreground" />
+            <input
+              type="search"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              onKeyDown={handleSearch}
+              placeholder={isListening ? "Listening..." : "Search venues, sports or tournaments"}
+              className="w-full bg-transparent text-sm text-foreground outline-none placeholder:text-muted-foreground"
+              disabled={isListening}
+            />
+          </div>
+          <button
+            type="button"
+            onClick={startVoiceSearch}
+            className={cn(
+              "flex h-11 w-11 items-center justify-center rounded-[18px] border text-foreground shadow-sm transition-all duration-300 cursor-pointer",
+              isListening
+                ? "border-red-500 bg-red-500/20 text-red-500 animate-pulse"
+                : "border-border/60 bg-background/90 hover:bg-muted"
+            )}
+            aria-label="Voice search"
+          >
+            <Mic className={cn("h-4.5 w-4.5", isListening && "scale-110")} />
+          </button>
+          <button
+            type="button"
+            onClick={() => navigate("/venues", { state: { openFilters: true } })}
+            className="flex h-11 w-11 items-center justify-center rounded-[18px] border border-primary/20 bg-primary/10 text-primary shadow-sm hover:bg-primary/20 transition-all cursor-pointer"
+            aria-label="Open filters"
+          >
+            <SlidersHorizontal className="h-4.5 w-4.5" />
+          </button>
         </div>
-        <button
-          type="button"
-          className="flex h-11 w-11 items-center justify-center rounded-[18px] border border-border/60 bg-background/90 text-foreground shadow-sm"
-          aria-label="Voice search"
-        >
-          <Mic className="h-4.5 w-4.5" />
-        </button>
-        <button
-          type="button"
-          className="flex h-11 w-11 items-center justify-center rounded-[18px] border border-primary/20 bg-primary/10 text-primary shadow-sm"
-          aria-label="Open filters"
-        >
-          <SlidersHorizontal className="h-4.5 w-4.5" />
-        </button>
       </div>
+
+      {isListening && (
+        <div className="absolute top-14 left-0 right-0 z-50 flex items-center gap-3 p-3 bg-black/80 backdrop-blur-md rounded-2xl border border-white/10 shadow-2xl animate-fade-in">
+          <div className="flex space-x-1">
+            <div className="w-2.5 h-2.5 bg-primary rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
+            <div className="w-2.5 h-2.5 bg-primary rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
+            <div className="w-2.5 h-2.5 bg-primary rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+          </div>
+          <p className="text-xs text-white/90">Voice search active. Speak turf name, location, or sport...</p>
+        </div>
+      )}
     </div>
   );
 }
@@ -326,32 +416,29 @@ export function MobileHomePage() {
 
           <SearchBar />
 
-          <section className="space-y-3">
+          <section className="space-y-3 sports-categories-container">
             <SectionHeader title="Sports categories" action="More" />
             <div className="relative overflow-hidden">
-              <motion.div
-                className="flex gap-3 w-max"
-                animate={{ x: ["0%", "-50%"] }}
-                transition={{
-                  duration: 16,
-                  repeat: Infinity,
-                  repeatType: "loop",
-                  ease: "linear",
-                }}
-              >
+              <style dangerouslySetInnerHTML={{ __html: marqueeStyle }} />
+              <div className="animate-marquee-categories flex gap-3 w-max">
                 {[...sportsCategories, ...sportsCategories].map((item, index) => (
                   <motion.button
                     key={`${item.name}-${index}`}
                     whileTap={{ scale: 0.96 }}
-                    className="flex min-w-[76px] shrink-0 flex-col items-center gap-2 group cursor-pointer"
+                    style={{ border: 'none', borderWidth: 0, outline: 'none', boxShadow: 'none' }}
+                    className="flex min-w-[76px] shrink-0 flex-col items-center gap-2 group cursor-pointer border-0"
                   >
                     <span
+                      style={{ border: 'none', borderWidth: 0, outline: 'none', boxShadow: 'none' }}
                       className={cn(
-                        "flex h-[72px] w-[72px] items-center justify-center rounded-[20px] bg-gradient-to-br shadow-sm transition-all group-hover:shadow-md border-none",
+                        "flex h-[72px] w-[72px] items-center justify-center rounded-[20px] bg-gradient-to-br transition-all border-0",
                         item.accent,
                       )}
                     >
-                      <span className="flex h-[56px] w-[56px] overflow-hidden rounded-xl bg-background/90 relative border-none">
+                      <span
+                        style={{ border: 'none', borderWidth: 0, outline: 'none', boxShadow: 'none' }}
+                        className="flex h-[56px] w-[56px] overflow-hidden rounded-xl bg-background/90 relative border-0"
+                      >
                         <ImageWithFallback
                           src={item.image}
                           alt={item.name}
@@ -366,7 +453,7 @@ export function MobileHomePage() {
                     </span>
                   </motion.button>
                 ))}
-              </motion.div>
+              </div>
             </div>
           </section>
 
