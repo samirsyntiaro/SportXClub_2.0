@@ -617,13 +617,15 @@ export function PlayerMatching() {
               </div>
             </div>
 
-            <Button
-              onClick={() => setIsCreateLobbyOpen(true)}
-              className="bg-[#6DFF3B] text-black hover:bg-[#86ff60] rounded-xl font-bold px-6 h-12 shadow-lg shadow-[#6DFF3B]/10 hover:shadow-[#6DFF3B]/20 transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] shrink-0 cursor-pointer flex items-center gap-2 text-sm lg:ml-4"
-            >
-              <UserPlus className="h-4.5 w-4.5" />
-              Create Squad Lobby
-            </Button>
+            <div className="w-full flex justify-center lg:w-auto">
+              <Button
+                onClick={() => setIsCreateLobbyOpen(true)}
+                className="bg-[#6DFF3B] text-black hover:bg-[#86ff60] rounded-xl font-bold px-6 h-12 shadow-lg shadow-[#6DFF3B]/10 hover:shadow-[#6DFF3B]/20 transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] shrink-0 cursor-pointer flex items-center gap-2 text-sm lg:ml-4"
+              >
+                <UserPlus className="h-4.5 w-4.5" />
+                Create Squad Lobby
+              </Button>
+            </div>
           </div>
 
           {/* Styled Floating Image on the right side */}

@@ -113,6 +113,34 @@ const shopItems = [
     image:
       "https://images.unsplash.com/photo-1551958219-acbc608c6377?q=80&w=1080",
   },
+  {
+    id: 3,
+    name: "SportX Water Bottle 1L",
+    price: 450,
+    image:
+      "https://images.unsplash.com/photo-1602143407151-7111542de6e8?q=80&w=1080",
+  },
+  {
+    id: 4,
+    name: "Premium Wrist Bands",
+    price: 250,
+    image:
+      "https://images.unsplash.com/photo-1584735935682-2f2b69dff9d2?q=80&w=1080",
+  },
+  {
+    id: 5,
+    name: "SportX Training Bibs",
+    price: 550,
+    image:
+      "https://images.unsplash.com/photo-1517466787929-bc90951d0974?q=80&w=1080",
+  },
+  {
+    id: 6,
+    name: "Agility Ladder 4m",
+    price: 750,
+    image:
+      "https://images.unsplash.com/photo-1601422407692-ec4eeec1d9b3?q=80&w=1080",
+  },
 ];
 
 const amenitiesList = [
@@ -1028,100 +1056,114 @@ export function PlayerDashboard() {
               <ShoppingBag className="h-5 w-5 text-purple-400" /> SportX Pro
               Shop
             </h3>
-            <div className="grid grid-cols-2 gap-4">
-              {shopItems.map((item) => (
-                <motion.div
-                  key={item.id}
-                  whileHover={{ y: -8, rotateX: 2, rotateY: -2, scale: 1.015 }}
-                  transition={{ duration: 0.3 }}
-                  style={{ perspective: 1000 }}
-                  className="bg-gradient-to-br from-card to-card/95 border border-border/80 border-t-white/[0.12] dark:border-t-white/[0.08] shadow-[0_12px_30px_-5px_rgba(0,0,0,0.35),inset_0_1px_1px_rgba(255,255,255,0.05)] rounded-2xl overflow-hidden group"
-                >
-                  <div className="aspect-square w-full relative bg-muted overflow-hidden">
-                    <ImageWithFallback
-                      src={item.image}
-                      alt={item.name}
-                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                    />
-                    <div className="absolute top-2 right-2 bg-black/60 backdrop-blur-md px-2 py-1 rounded-lg border border-white/10">
-                      <p className="text-white font-mono font-bold text-xs">
-                        ₹{item.price}
-                      </p>
+            <div className="relative overflow-hidden w-full py-2">
+              <style dangerouslySetInnerHTML={{__html: `
+                @keyframes marquee-shop {
+                  0% { transform: translate3d(0, 0, 0); }
+                  100% { transform: translate3d(-50%, 0, 0); }
+                }
+                .marquee-shop-container {
+                  display: flex;
+                  gap: 16px;
+                  width: max-content;
+                  animation: marquee-shop 25s linear infinite;
+                }
+                .marquee-shop-container:hover {
+                  animation-play-state: paused;
+                }
+              `}} />
+              <div className="marquee-shop-container">
+                {[...shopItems, ...shopItems].map((item, index) => (
+                  <div
+                    key={`${item.id}-${index}`}
+                    className="w-[170px] shrink-0 bg-gradient-to-br from-card to-card/95 border border-border/80 border-t-white/[0.12] dark:border-t-white/[0.08] shadow-[0_12px_30px_-5px_rgba(0,0,0,0.35),inset_0_1px_1px_rgba(255,255,255,0.05)] rounded-2xl overflow-hidden group transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_20px_38px_-10px_rgba(0,0,0,0.5)]"
+                  >
+                    <div className="aspect-square w-full relative bg-muted overflow-hidden">
+                      <ImageWithFallback
+                        src={item.image}
+                        alt={item.name}
+                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                      />
+                      <div className="absolute top-2 right-2 bg-black/60 backdrop-blur-md px-2 py-1 rounded-lg border border-white/10">
+                        <p className="text-white font-mono font-bold text-xs">
+                          ₹{item.price}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="p-4 space-y-3">
+                      <h4 className="font-medium text-sm text-foreground line-clamp-1">
+                        {item.name}
+                      </h4>
+                      <Dialog
+                        onOpenChange={(open) => {
+                          if (!open) setPurchasedItemId(null);
+                        }}
+                      >
+                        <DialogTrigger asChild>
+                          <Button
+                            size="sm"
+                            className="w-full bg-zinc-800 hover:bg-zinc-700 text-white rounded-xl cursor-pointer"
+                          >
+                            Buy Now
+                          </Button>
+                        </DialogTrigger>
+                        <DialogContent className="bg-background border-border text-foreground">
+                          {purchasedItemId === item.id ? (
+                            <div className="py-8 text-center space-y-4">
+                              <div className="w-16 h-16 bg-[#6DFF3B]/10 border border-[#6DFF3B]/30 text-[#6DFF3B] rounded-full flex items-center justify-center mx-auto">
+                                <CheckCircle2 className="h-10 w-10 animate-bounce" />
+                              </div>
+                              <div className="space-y-1">
+                                <h4 className="font-bold text-xl text-foreground">
+                                  Purchase Successful!
+                                </h4>
+                                <p className="text-sm text-muted-foreground">
+                                  Successfully bought {item.name}
+                                </p>
+                              </div>
+                              <p className="text-xs text-muted-foreground bg-muted/40 py-2 px-4 rounded-full w-fit mx-auto border border-border">
+                                ₹{item.price} deducted from SportX Wallet
+                              </p>
+                            </div>
+                          ) : (
+                            <>
+                              <DialogHeader>
+                                <DialogTitle>Confirm Purchase</DialogTitle>
+                              </DialogHeader>
+                              <div className="py-4 space-y-4 flex flex-col items-center text-center">
+                                <ImageWithFallback
+                                  src={item.image}
+                                  alt={item.name}
+                                  className="w-32 h-32 rounded-xl object-cover mb-2"
+                                />
+                                <p className="font-medium text-lg">{item.name}</p>
+                                <p className="text-2xl font-bold text-[#6DFF3B]">
+                                  ₹{item.price}
+                                </p>
+                                <Button
+                                  className="w-full bg-[#6DFF3B] text-black hover:bg-[#5ce630] mt-4 rounded-xl font-bold cursor-pointer"
+                                  onClick={() => {
+                                    if (walletBalance >= item.price) {
+                                      setWalletBalance(
+                                        (prev) => prev - item.price,
+                                      );
+                                      setPurchasedItemId(item.id);
+                                    }
+                                  }}
+                                >
+                                  {walletBalance >= item.price
+                                    ? "Pay from Wallet"
+                                    : "Insufficient Balance"}
+                                </Button>
+                              </div>
+                            </>
+                          )}
+                        </DialogContent>
+                      </Dialog>
                     </div>
                   </div>
-                  <div className="p-4 space-y-3">
-                    <h4 className="font-medium text-sm text-foreground line-clamp-1">
-                      {item.name}
-                    </h4>
-                    <Dialog
-                      onOpenChange={(open) => {
-                        if (!open) setPurchasedItemId(null);
-                      }}
-                    >
-                      <DialogTrigger asChild>
-                        <Button
-                          size="sm"
-                          className="w-full bg-zinc-800 hover:bg-zinc-700 text-white rounded-xl"
-                        >
-                          Buy Now
-                        </Button>
-                      </DialogTrigger>
-                      <DialogContent className="bg-background border-border text-foreground">
-                        {purchasedItemId === item.id ? (
-                          <div className="py-8 text-center space-y-4">
-                            <div className="w-16 h-16 bg-[#6DFF3B]/10 border border-[#6DFF3B]/30 text-[#6DFF3B] rounded-full flex items-center justify-center mx-auto">
-                              <CheckCircle2 className="h-10 w-10 animate-bounce" />
-                            </div>
-                            <div className="space-y-1">
-                              <h4 className="font-bold text-xl text-foreground">
-                                Purchase Successful!
-                              </h4>
-                              <p className="text-sm text-muted-foreground">
-                                Successfully bought {item.name}
-                              </p>
-                            </div>
-                            <p className="text-xs text-muted-foreground bg-muted/40 py-2 px-4 rounded-full w-fit mx-auto border border-border">
-                              ₹{item.price} deducted from SportX Wallet
-                            </p>
-                          </div>
-                        ) : (
-                          <>
-                            <DialogHeader>
-                              <DialogTitle>Confirm Purchase</DialogTitle>
-                            </DialogHeader>
-                            <div className="py-4 space-y-4 flex flex-col items-center text-center">
-                              <ImageWithFallback
-                                src={item.image}
-                                alt={item.name}
-                                className="w-32 h-32 rounded-xl object-cover mb-2"
-                              />
-                              <p className="font-medium text-lg">{item.name}</p>
-                              <p className="text-2xl font-bold text-[#6DFF3B]">
-                                ₹{item.price}
-                              </p>
-                              <Button
-                                className="w-full bg-[#6DFF3B] text-black hover:bg-[#5ce630] mt-4 rounded-xl font-bold"
-                                onClick={() => {
-                                  if (walletBalance >= item.price) {
-                                    setWalletBalance(
-                                      (prev) => prev - item.price,
-                                    );
-                                    setPurchasedItemId(item.id);
-                                  }
-                                }}
-                              >
-                                {walletBalance >= item.price
-                                  ? "Pay from Wallet"
-                                  : "Insufficient Balance"}
-                              </Button>
-                            </div>
-                          </>
-                        )}
-                      </DialogContent>
-                    </Dialog>
-                  </div>
-                </motion.div>
-              ))}
+                ))}
+              </div>
             </div>
           </div>
         </motion.div>

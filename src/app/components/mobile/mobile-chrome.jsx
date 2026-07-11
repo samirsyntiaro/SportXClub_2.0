@@ -16,6 +16,10 @@ import {
   X,
   ChevronRight,
   ShoppingCart,
+  Activity,
+  Users,
+  MessageSquare,
+  Sparkles,
 } from "lucide-react";
 
 import { Button } from "../ui/button";
@@ -95,29 +99,36 @@ export function MobileAppBar() {
   ];
 
   const menuItems = [
-    { label: "Turf", to: "/venues", hasChevron: true },
-    { label: "Events", to: "/community", hasChevron: true },
-    { label: "Tournaments", to: "/tournaments", hasChevron: true },
+    { label: "Dashboard", to: "/dashboard", icon: Home },
+    { label: "Player Details", to: "/player-dashboard", icon: Activity, requiresAuth: true },
+    { label: "Turfs", to: "/venues", icon: MapPin },
+    { label: "Tournaments", to: "/tournaments", icon: Trophy },
+    { label: "Players", to: "/players", icon: Users, requiresAuth: true },
+    { label: "Community", to: "/community", icon: MessageSquare, requiresAuth: true },
+    { label: "AI Assistant", to: "/ai-assistant", icon: Sparkles },
+    { label: "Teams", to: "/teams", icon: Users, requiresAuth: true },
     {
       label: "Notifications",
       to: "/dashboard",
-      hasChevron: true,
-      isNotification: true,
+      icon: Bell,
       badge: 3,
+      requiresAuth: true,
     },
     {
       label: "Cart",
       to: "/bookings",
-      hasChevron: true,
-      isCart: true,
+      icon: ShoppingCart,
       badge: 2,
+      requiresAuth: true,
     },
   ].filter((item) => {
-    if (!currentUser && ["Events"].includes(item.label)) {
+    if (item.requiresAuth && !currentUser) {
       return false;
     }
     return true;
-  });  return (
+  });
+
+  return (
     <>
       <header className="sticky top-0 z-45 border-b border-border/40 bg-background/88 pt-[env(safe-area-inset-top)] backdrop-blur-2xl md:hidden">
         <div className="flex h-16 items-center justify-between px-4">
@@ -200,20 +211,15 @@ export function MobileAppBar() {
               {/* Menu list items */}
               <div className="flex-1 overflow-y-auto px-5 py-4 flex flex-col divide-y divide-border/30">
                 {menuItems.map((item) => {
+                  const Icon = item.icon;
                   const itemContent = (
                     <div className="flex items-center justify-between w-full py-4 px-1 group transition-colors duration-150">
                       <div className="flex items-center gap-3">
-                        {item.isCart && (
-                          <ShoppingCart className="h-5 w-5 text-primary" />
-                        )}
-                        {item.isNotification && (
-                          <Bell className="h-5 w-5 text-primary" />
+                        {Icon && (
+                          <Icon className="h-5 w-5 text-primary" />
                         )}
                         <span
-                          className={cn(
-                            "text-sm tracking-wide text-left transition-colors duration-150",
-                            item.isGreen ? "text-primary font-medium" : "text-foreground group-hover:text-primary",
-                          )}
+                          className="text-sm tracking-wide text-left transition-colors duration-150 text-foreground group-hover:text-primary"
                         >
                           {item.label}
                         </span>
@@ -225,9 +231,7 @@ export function MobileAppBar() {
                             {item.badge}
                           </span>
                         )}
-                        {item.hasChevron && (
-                          <ChevronRight className="h-4 w-4 text-muted-foreground/50 transition-colors duration-150 group-hover:text-primary" />
-                        )}
+                        <ChevronRight className="h-4 w-4 text-muted-foreground/50 transition-colors duration-150 group-hover:text-primary" />
                       </div>
                     </div>
                   );
